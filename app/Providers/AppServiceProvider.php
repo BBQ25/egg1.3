@@ -39,6 +39,15 @@ class AppServiceProvider extends ServiceProvider
             ];
         });
 
+        RateLimiter::for('device-runtime-config', static function (Request $request): array {
+            $serial = strtoupper(trim((string) $request->header('X-Device-Serial', 'unknown')));
+
+            return [
+                Limit::perMinute(120)->by('device-runtime-config-ip:' . (string) $request->ip()),
+                Limit::perMinute(90)->by('device-runtime-config-serial:' . $serial . '|' . (string) $request->ip()),
+            ];
+        });
+
         $appUrl = (string) config('app.url');
         $configuredBasePath = trim((string) config('app.base_path', ''), '/');
 

@@ -8,6 +8,7 @@ use App\Models\DeviceIngestEvent;
 use App\Models\ProductionBatch;
 use App\Support\EggUid;
 use App\Support\EggSizeClass;
+use App\Support\EggWeightRanges;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,23 +22,8 @@ class DeviceIngestController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
-        $serialHeader = Device::normalizeSerial((string) $request->header('X-Device-Serial', ''));
-        $deviceKey = trim((string) $request->header('X-Device-Key', ''));
-
-        if ($serialHeader === '' || $deviceKey === '') {
-            return $this->unauthorizedResponse();
-        }
-
-        $device = Device::query()
-            ->where(function ($query) use ($serialHeader) {
-                $query->where('primary_serial_no', $serialHeader)
-                    ->orWhereHas('aliases', function ($aliasQuery) use ($serialHeader) {
-                        $aliasQuery->where('serial_no', $serialHeader);
-                    });
-            })
-            ->first();
-
-        if (!$device || !$device->is_active || !Hash::check($deviceKey, $device->api_key_hash)) {
+        $device = $this->resolveAuthenticatedDevice($request);
+        if ($device === null) {
             return $this->unauthorizedResponse();
         }
 
@@ -119,12 +105,73 @@ class DeviceIngestController extends Controller
         ], 201);
     }
 
+    public function runtimeConfig(Request $request): JsonResponse
+    {
+        $device = $this->resolveAuthenticatedDevice($request);
+        if ($device === null) {
+            return $this->unauthorizedResponse();
+        }
+
+        $openBatch = ProductionBatch::query()
+            ->where('device_id', (int) $device->id)
+            ->where('farm_id', (int) $device->farm_id)
+            ->where('status', 'open')
+            ->orderByDesc('started_at')
+            ->orderByDesc('id')
+            ->first();
+
+        $weightRanges = [];
+        foreach (EggWeightRanges::current() as $slug => $entry) {
+            $weightRanges[$slug] = [
+                'label' => (string) $entry['label'],
+                'min' => round((float) $entry['min'], 2),
+                'max' => round((float) $entry['max'], 2),
+            ];
+        }
+
+        return response()->json([
+            'ok' => true,
+            'data' => [
+                'server_time' => Carbon::now()->toIso8601String(),
+                'device_serial' => (string) $device->primary_serial_no,
+                'open_batch_code' => $openBatch?->batch_code ? (string) $openBatch->batch_code : null,
+                'refresh_after_seconds' => 60,
+                'weight_ranges' => $weightRanges,
+            ],
+        ]);
+    }
+
     private function unauthorizedResponse(): JsonResponse
     {
         return response()->json([
             'ok' => false,
             'message' => 'Unauthorized device credentials.',
         ], 401);
+    }
+
+    private function resolveAuthenticatedDevice(Request $request): ?Device
+    {
+        $serialHeader = Device::normalizeSerial((string) $request->header('X-Device-Serial', ''));
+        $deviceKey = trim((string) $request->header('X-Device-Key', ''));
+
+        if ($serialHeader === '' || $deviceKey === '') {
+            return null;
+        }
+
+        $device = Device::query()
+            ->where(function ($query) use ($serialHeader) {
+                $query->where('primary_serial_no', $serialHeader)
+                    ->orWhereHas('aliases', function ($aliasQuery) use ($serialHeader) {
+                        $aliasQuery->where('serial_no', $serialHeader);
+                    });
+            })
+            ->first();
+
+        if (!$device || !$device->is_active || !Hash::check($deviceKey, $device->api_key_hash)) {
+            return null;
+        }
+
+        return $device;
     }
 
     private function resolveProductionBatch(Device $device, ?string $batchCode, Carbon $recordedAt): ?ProductionBatch

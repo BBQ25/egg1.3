@@ -436,6 +436,11 @@ $registerRoutes = static function (string $prefix = '', bool $withNames = false)
         $deviceIngestRoute->name('api.devices.ingest');
     }
 
+    $deviceRuntimeConfigRoute = Route::middleware(['throttle:device-runtime-config'])->get($uri('/api/devices/runtime-config'), [DeviceIngestController::class, 'runtimeConfig']);
+    if ($withNames) {
+        $deviceRuntimeConfigRoute->name('api.devices.runtime-config');
+    }
+
     $legacyDocEaseIndexRoute = Route::middleware(['auth', 'geofence', 'doc-ease.enabled', 'doc-ease.access'])->get($uri('/legacy/doc-ease'), [DocEaseController::class, 'index']);
     if ($withNames) {
         $legacyDocEaseIndexRoute->name('legacy.doc-ease.index');
