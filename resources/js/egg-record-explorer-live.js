@@ -102,7 +102,7 @@ if (root) {
         if (!rows.length) {
             rowsHost.innerHTML = `
                 <tr>
-                  <td colspan="6" class="text-center text-body-secondary py-4">No live ingest records matched the current scope.</td>
+                  <td colspan="7" class="text-center text-body-secondary py-4">No live ingest records matched the current scope.</td>
                 </tr>
             `;
 
@@ -116,6 +116,10 @@ if (root) {
               <td><span class="badge bg-label-primary">${escapeHtml(row.size_class)}</span></td>
               <td>${escapeHtml(formatWeight(row.weight_grams))}</td>
               <td>${escapeHtml(row.batch_code || 'Not batched')}</td>
+              <td>
+                <div>${escapeHtml(row.farm_name || 'Unknown farm')}</div>
+                <div class="small text-body-secondary">${escapeHtml(row.owner_name || 'Owner not available')}</div>
+              </td>
               <td>
                 <div>${escapeHtml(row.device_name || 'Unknown device')}</div>
                 <div class="small text-body-secondary">${escapeHtml(row.device_serial || '')}</div>

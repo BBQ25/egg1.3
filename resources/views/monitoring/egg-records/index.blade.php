@@ -363,6 +363,7 @@
                 <th>Size Class</th>
                 <th>Weight</th>
                 <th>Batch</th>
+                <th>Scope</th>
                 <th>Device</th>
               </tr>
             </thead>
@@ -375,13 +376,17 @@
                   <td>{{ $formatWeight($record['weight_grams'] ?? 0) }}</td>
                   <td>{{ $record['batch_code'] ?: 'Not batched' }}</td>
                   <td>
+                    <div>{{ $record['farm_name'] ?? 'Unknown farm' }}</div>
+                    <div class="small text-body-secondary">{{ $record['owner_name'] ?? 'Owner not available' }}</div>
+                  </td>
+                  <td>
                     <div>{{ $record['device_name'] ?? 'Unknown device' }}</div>
                     <div class="small text-body-secondary">{{ $record['device_serial'] ?? '' }}</div>
                   </td>
                 </tr>
               @empty
                 <tr>
-                  <td colspan="6" class="text-center text-body-secondary py-4">No live ingest records matched the current scope.</td>
+                  <td colspan="7" class="text-center text-body-secondary py-4">No live ingest records matched the current scope.</td>
                 </tr>
               @endforelse
             </tbody>

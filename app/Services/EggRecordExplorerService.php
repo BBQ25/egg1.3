@@ -135,6 +135,7 @@ class EggRecordExplorerService
      *     recorded_at:string|null,
      *     created_at:string|null,
      *     farm_name:string|null,
+     *     owner_name:string|null,
      *     device_name:string|null,
      *     device_serial:string|null
      *   }>
@@ -229,6 +230,7 @@ class EggRecordExplorerService
                         'recorded_at' => $row->recorded_at,
                         'created_at' => $row->created_at,
                         'farm_name' => $row->farm_name ? (string) $row->farm_name : null,
+                        'owner_name' => $row->owner_name ? (string) $row->owner_name : null,
                         'device_name' => $row->device_name ? (string) $row->device_name : null,
                         'device_serial' => $row->device_serial ? (string) $row->device_serial : null,
                         'source_ip' => $row->source_ip ? (string) $row->source_ip : null,

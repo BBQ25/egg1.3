@@ -170,6 +170,9 @@ class EggRecordExplorerPageTest extends TestCase
             ->assertJsonPath('pagination.current_page', 1)
             ->assertJsonPath('pagination.last_page', 1)
             ->assertJsonPath('recent_records.0.egg_uid', 'egg-live-002')
+            ->assertJsonPath('recent_records.0.farm_name', 'Live Feed Farm')
+            ->assertJsonPath('recent_records.0.owner_name', $owner->full_name)
+            ->assertJsonPath('recent_records.0.device_serial', 'ESP32-RECORDS-004')
             ->assertJsonPath('recent_records.1.egg_uid', 'egg-live-001')
             ->assertJsonFragment([
                 'size_class' => 'Medium',

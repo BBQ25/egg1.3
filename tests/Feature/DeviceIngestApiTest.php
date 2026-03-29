@@ -41,6 +41,7 @@ class DeviceIngestApiTest extends TestCase
             'device_id' => $device->id,
             'farm_id' => $device->farm_id,
             'owner_user_id' => $device->owner_user_id,
+            'weight_grams' => 61.45,
             'size_class' => 'Large',
             'batch_code' => 'BATCH-001',
             'egg_uid' => 'egg-001',
