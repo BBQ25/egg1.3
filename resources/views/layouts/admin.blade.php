@@ -351,7 +351,7 @@
         <nav
           class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme"
           id="layout-navbar">
-          <div class="navbar-nav-right d-flex align-items-center justify-content-between w-100">
+          <div class="navbar-nav-right d-flex align-items-center w-100">
             <div class="d-xl-none">
               <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large" aria-label="Toggle sidebar">
                 <span class="app-shell-toggle-bars" aria-hidden="true">
@@ -361,7 +361,7 @@
                 </span>
               </a>
             </div>
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3 ms-auto">
               <span class="text-body-secondary">{{ auth()->user()?->full_name }}
                 ({{ auth()->user()?->role?->label() }})</span>
               <form action="{{ route('logout') }}" method="POST" class="d-inline">
