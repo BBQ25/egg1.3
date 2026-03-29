@@ -22,6 +22,7 @@ class AdminDeviceRegistryTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Device Registry');
+        $response->assertSee('Detect ESP32');
     }
 
     public function test_non_admin_user_cannot_access_devices_page(): void

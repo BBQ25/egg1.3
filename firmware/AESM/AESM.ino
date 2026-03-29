@@ -64,6 +64,7 @@
   f = feed one cycle now
   a = toggle automatic feeding
   p = pause feeding
+  i = print device info JSON
   1 = slow speed
   2 = normal speed
   3 = fast speed
@@ -79,6 +80,9 @@ const char* WIFI_PASSWORD = "Password";
 const char* API_BASE_URL = "https://eggs.ryhnsolutions.shop";
 const char* DEVICE_SERIAL = "ESP32-INGEST-001";
 const char* DEVICE_KEY = "replace-with-device-key";
+const char* MODULE_BOARD_NAME = "ESP32 Egg Sorter Controller";
+const char* FIRMWARE_VERSION = "aesm-live-v1";
+const char* DEVICE_INFO_MARKER = "DEVICE_INFO_JSON:";
 const char* NTP_SERVER_PRIMARY = "pool.ntp.org";
 const char* NTP_SERVER_SECONDARY = "time.nist.gov";
 const unsigned long runtimeConfigRefreshMs = 60000UL;
@@ -443,12 +447,14 @@ String buildIso8601Utc(time_t timestampSeconds);
 String generateEggUid(time_t timestampSeconds);
 String deviceSerialTail();
 String deviceMetadataJson(const PendingCloudEvent &event);
+String buildDeviceInfoJson();
 bool extractJsonStringValue(const String &json, const String &key, String &value, bool *wasNull = nullptr);
 bool extractJsonNumberValue(const String &json, const String &key, float &value);
 bool applyWeightRangeFromConfig(const String &json, CloudWeightRange &range);
 void copyTextToBuffer(char *destination, size_t destinationSize, const String &value);
 void printSerialBanner();
 void printSystemStatus();
+void printDeviceInfoJson();
 void handleSerialCommands();
 float constrainPercent(float value, float maxValue);
 void applySpeedProfileSlow();
@@ -874,7 +880,7 @@ String deviceMetadataJson(const PendingCloudEvent &event) {
   json += "\"bssid\":\"" + escapeJson(WiFi.BSSIDstr()) + "\",";
   json += "\"wifi_ssid\":\"" + escapeJson(WiFi.SSID()) + "\",";
   json += "\"rssi_dbm\":" + String(WiFi.RSSI()) + ",";
-  json += "\"firmware_version\":\"aesm-live-v1\",";
+  json += "\"firmware_version\":\"" + escapeJson(String(FIRMWARE_VERSION)) + "\",";
   json += "\"measurement_avg_g\":" + String(event.average_g, 2) + ",";
   json += "\"measurement_median_g\":" + String(event.median_g, 2) + ",";
   json += "\"measurement_trimmed_avg_g\":" + String(event.trimmedAverage_g, 2) + ",";
@@ -882,6 +888,58 @@ String deviceMetadataJson(const PendingCloudEvent &event) {
   json += "\"measurement_sample_count\":" + String(event.sampleCount) + ",";
   json += "\"sort_result\":\"" + escapeJson(event.sortResult) + "\",";
   json += "\"local_class\":\"" + escapeJson(event.localClass) + "\"";
+  json += "}";
+  return json;
+}
+
+String buildDeviceInfoJson() {
+  const String chipModel = String(ESP.getChipModel());
+  const String macAddress = WiFi.macAddress();
+  const uint32_t flashBytes = ESP.getFlashChipSize();
+  const uint32_t psramBytes = ESP.getPsramSize();
+
+  String macAlias = macAddress;
+  macAlias.replace(":", "");
+  macAlias = "MAC-" + macAlias;
+
+  const String mainTechnicalSpecs =
+    String(MODULE_BOARD_NAME) +
+    " | Chip " + chipModel +
+    " rev " + String(ESP.getChipRevision()) +
+    " | " + String(ESP.getCpuFreqMHz()) + " MHz" +
+    " | Firmware " + String(FIRMWARE_VERSION) +
+    " | Wi-Fi + Bluetooth";
+
+  const String processingMemory =
+    "Flash " + String((float) flashBytes / 1048576.0f, 1) + " MB" +
+    " | PSRAM " + (psramBytes > 0 ? String((float) psramBytes / 1048576.0f, 1) + " MB" : String("None")) +
+    " | Heap " + String(ESP.getHeapSize() / 1024U) + " KB" +
+    " | Free Heap " + String(ESP.getFreeHeap() / 1024U) + " KB";
+
+  const String gpioInterfaces =
+    "Gate1 GPIO " + String(GATE1_PIN) +
+    ", Gate2 GPIO " + String(GATE2_PIN) +
+    ", Pusher GPIO " + String(PUSHER_PIN) +
+    ", Pan GPIO " + String(PAN_PIN) +
+    ", Tilt GPIO " + String(TILT_PIN) +
+    " | HX711 | LCD I2C | Wi-Fi | Bluetooth | UART";
+
+  String json = "{";
+  json += "\"module_board_name\":\"" + escapeJson(String(MODULE_BOARD_NAME)) + "\",";
+  json += "\"primary_serial_no\":\"" + escapeJson(String(DEVICE_SERIAL)) + "\",";
+  json += "\"aliases_text\":\"" + escapeJson(macAlias) + "\",";
+  json += "\"firmware_version\":\"" + escapeJson(String(FIRMWARE_VERSION)) + "\",";
+  json += "\"api_base_url\":\"" + escapeJson(String(API_BASE_URL)) + "\",";
+  json += "\"wifi_ssid\":\"" + escapeJson(String(WIFI_SSID)) + "\",";
+  json += "\"mac_address\":\"" + escapeJson(macAddress) + "\",";
+  json += "\"chip_model\":\"" + escapeJson(chipModel) + "\",";
+  json += "\"chip_revision\":" + String(ESP.getChipRevision()) + ",";
+  json += "\"cpu_mhz\":" + String(ESP.getCpuFreqMHz()) + ",";
+  json += "\"flash_bytes\":" + String(flashBytes) + ",";
+  json += "\"psram_bytes\":" + String(psramBytes) + ",";
+  json += "\"main_technical_specs\":\"" + escapeJson(mainTechnicalSpecs) + "\",";
+  json += "\"processing_memory\":\"" + escapeJson(processingMemory) + "\",";
+  json += "\"gpio_interfaces\":\"" + escapeJson(gpioInterfaces) + "\"";
   json += "}";
   return json;
 }
@@ -2591,6 +2649,8 @@ void handleSerialCommands() {
     machinePaused = !machinePaused;
     Serial.print("Paused: ");
     Serial.println(machinePaused ? "YES" : "NO");
+  } else if (cmd == 'i' || cmd == 'I') {
+    printDeviceInfoJson();
   } else if (cmd == '1') {
     applySpeedProfileSlow();
   } else if (cmd == '2') {
@@ -2625,7 +2685,15 @@ void printSystemStatus() {
   Serial.print("Cloud Success : "); Serial.println(cloudSendSuccessCount);
   Serial.print("Cloud Failure : "); Serial.println(cloudSendFailureCount);
   Serial.print("Cloud Pending : "); Serial.println(pendingCloudEvent.pending ? "YES" : "NO");
+  Serial.print("Device ID     : "); Serial.println(DEVICE_SERIAL);
+  Serial.print("Firmware      : "); Serial.println(FIRMWARE_VERSION);
+  Serial.print("MAC           : "); Serial.println(WiFi.macAddress());
   Serial.println("---------------------------------------------");
+}
+
+void printDeviceInfoJson() {
+  Serial.print(DEVICE_INFO_MARKER);
+  Serial.println(buildDeviceInfoJson());
 }
 
 void printSerialBanner() {
@@ -2646,7 +2714,8 @@ void printSerialBanner() {
   Serial.print  ("# Calibration : "); Serial.println(calibration_factor);
   Serial.print  ("# API Base    : "); Serial.println(API_BASE_URL);
   Serial.print  ("# Device ID   : "); Serial.println(DEVICE_SERIAL);
-  Serial.println("# Commands    : s=status r=reset t=tare f=feed a=auto p=pause");
+  Serial.print  ("# Firmware    : "); Serial.println(FIRMWARE_VERSION);
+  Serial.println("# Commands    : s=status r=reset t=tare f=feed a=auto p=pause i=info");
   Serial.println("# Speed Keys  : 1=slow 2=normal 3=fast");
   Serial.println("############################################################");
 }

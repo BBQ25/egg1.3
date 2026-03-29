@@ -56,6 +56,7 @@
         <div class="col-12 col-md-auto">
           <button
             type="button"
+            id="openCreateDeviceModalButton"
             class="btn btn-primary device-toolbar-button"
             data-bs-toggle="modal"
             data-bs-target="#createDeviceModal">
@@ -286,6 +287,20 @@
           <input type="hidden" name="device_form_mode" value="create" />
           <div class="modal-body">
             <div class="row g-3">
+              <div class="col-12">
+                <div class="device-detect-panel">
+                  <div>
+                    <div class="fw-semibold">Detect connected ESP32</div>
+                    <div class="small text-body-secondary">Uses Web Serial in Chrome or Edge over HTTPS to read board details from the USB serial port.</div>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary device-toolbar-button detect-esp32-btn" data-device-detect-target="create">
+                    Detect ESP32
+                  </button>
+                </div>
+                <div class="form-text device-detect-status text-body-secondary" id="create_device_detect_status">
+                  Connect the ESP32 via USB, then click Detect ESP32. Owner and farm still need to be assigned manually.
+                </div>
+              </div>
               <div class="col-12 col-md-6">
                 <label class="form-label" for="create_module_board_name">Module / Board Name</label>
                 <input
@@ -421,6 +436,20 @@
           <input type="hidden" name="device_id" id="edit_device_id" value="" />
           <div class="modal-body">
             <div class="row g-3">
+              <div class="col-12">
+                <div class="device-detect-panel">
+                  <div>
+                    <div class="fw-semibold">Refresh details from connected ESP32</div>
+                    <div class="small text-body-secondary">Reads the current board metadata over USB serial and overwrites the device detail fields below.</div>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary device-toolbar-button detect-esp32-btn" data-device-detect-target="edit">
+                    Detect ESP32
+                  </button>
+                </div>
+                <div class="form-text device-detect-status text-body-secondary" id="edit_device_detect_status">
+                  Connect the ESP32 via USB, then click Detect ESP32 to refresh the board details.
+                </div>
+              </div>
               <div class="col-12 col-md-6">
                 <label class="form-label" for="edit_module_board_name">Module / Board Name</label>
                 <input type="text" id="edit_module_board_name" name="module_board_name" class="form-control" maxlength="120" required />
@@ -580,12 +609,28 @@
       white-space: nowrap;
     }
 
+    .device-detect-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid #d8def3;
+      border-radius: 0.75rem;
+      background: #f8f9ff;
+    }
+
+    .device-detect-status {
+      min-height: 1.25rem;
+    }
+
     @media (max-width: 767.98px) {
       .device-search-form,
       .device-table-pagination {
         width: 100%;
       }
 
+      .device-detect-panel,
       .device-search-form,
       .device-table-footer,
       .device-table-pagination {
@@ -628,12 +673,23 @@
       const createModalElement = document.getElementById('createDeviceModal');
       const editModalElement = document.getElementById('editDeviceModal');
       const showKeyModalElement = document.getElementById('showDeviceKeyModal');
+      const openCreateDeviceModalButton = document.getElementById('openCreateDeviceModalButton');
       const editForm = document.getElementById('edit-device-form');
       const editDeviceIdInput = document.getElementById('edit_device_id');
       const showKeyForm = document.getElementById('show-device-key-form');
       const showDeviceIdInput = document.getElementById('show_device_id');
       const showDeviceSerial = document.getElementById('show_device_serial');
       const showCurrentPasswordInput = document.getElementById('show_current_password');
+      const createFields = {
+        module_board_name: document.getElementById('create_module_board_name'),
+        primary_serial_no: document.getElementById('create_primary_serial_no'),
+        owner_user_id: document.getElementById('create_owner_user_id'),
+        farm_id: document.getElementById('create_farm_id'),
+        aliases_text: document.getElementById('create_aliases_text'),
+        main_technical_specs: document.getElementById('create_main_technical_specs'),
+        processing_memory: document.getElementById('create_processing_memory'),
+        gpio_interfaces: document.getElementById('create_gpio_interfaces'),
+      };
       const editFields = {
         module_board_name: document.getElementById('edit_module_board_name'),
         primary_serial_no: document.getElementById('edit_primary_serial_no'),
@@ -643,6 +699,23 @@
         main_technical_specs: document.getElementById('edit_main_technical_specs'),
         processing_memory: document.getElementById('edit_processing_memory'),
         gpio_interfaces: document.getElementById('edit_gpio_interfaces'),
+      };
+      const detectionContexts = {
+        create: {
+          fields: createFields,
+          statusElement: document.getElementById('create_device_detect_status'),
+        },
+        edit: {
+          fields: editFields,
+          statusElement: document.getElementById('edit_device_detect_status'),
+        },
+      };
+      const deviceInfoMarker = 'DEVICE_INFO_JSON:';
+      const esp32UsbVendorIds = new Set([0x10c4, 0x1a86, 0x0403, 0x303a]);
+      const serialSupportAvailable = typeof navigator !== 'undefined' && 'serial' in navigator;
+      const detectionInFlightByMode = {
+        create: false,
+        edit: false,
       };
 
       const createModal = createModalElement && typeof window.bootstrap !== 'undefined'
@@ -818,6 +891,245 @@
         }
       };
 
+      const setDetectionStatus = (mode, message, tone = 'muted') => {
+        const context = detectionContexts[mode];
+        const statusElement = context ? context.statusElement : null;
+        if (!(statusElement instanceof HTMLElement)) {
+          return;
+        }
+
+        statusElement.textContent = message;
+        statusElement.classList.remove('text-body-secondary', 'text-success', 'text-danger');
+
+        if (tone === 'success') {
+          statusElement.classList.add('text-success');
+        } else if (tone === 'danger') {
+          statusElement.classList.add('text-danger');
+        } else {
+          statusElement.classList.add('text-body-secondary');
+        }
+      };
+
+      const buildAliasesText = (deviceInfo) => {
+        const aliases = [];
+        const rawAliasesText = String(deviceInfo.aliases_text || '').trim();
+        const macAddress = String(deviceInfo.mac_address || '').trim();
+
+        if (rawAliasesText !== '') {
+          aliases.push(...rawAliasesText.split(/\r?\n+/));
+        }
+
+        if (macAddress !== '') {
+          aliases.push('MAC-' + macAddress.replace(/:/g, '').toUpperCase());
+        }
+
+        return Array.from(new Set(
+          aliases
+            .map((value) => String(value || '').trim())
+            .filter((value) => value !== '')
+        )).join('\n');
+      };
+
+      const fillFormFromDetectedDeviceInfo = (mode, deviceInfo) => {
+        const context = detectionContexts[mode];
+        if (!context) {
+          return;
+        }
+
+        const fields = context.fields;
+        const moduleBoardName = String(deviceInfo.module_board_name || '').trim();
+        const primarySerial = String(deviceInfo.primary_serial_no || '').trim();
+        const aliasesText = buildAliasesText(deviceInfo);
+        const mainTechnicalSpecs = String(deviceInfo.main_technical_specs || '').trim();
+        const processingMemory = String(deviceInfo.processing_memory || '').trim();
+        const gpioInterfaces = String(deviceInfo.gpio_interfaces || '').trim();
+
+        if (fields.module_board_name) {
+          fields.module_board_name.value = moduleBoardName;
+        }
+
+        if (fields.primary_serial_no) {
+          fields.primary_serial_no.value = primarySerial;
+        }
+
+        if (fields.aliases_text) {
+          fields.aliases_text.value = aliasesText;
+        }
+
+        if (fields.main_technical_specs) {
+          fields.main_technical_specs.value = mainTechnicalSpecs;
+        }
+
+        if (fields.processing_memory) {
+          fields.processing_memory.value = processingMemory;
+        }
+
+        if (fields.gpio_interfaces) {
+          fields.gpio_interfaces.value = gpioInterfaces;
+        }
+      };
+
+      const requestEsp32Port = async () => {
+        return navigator.serial.requestPort({
+          filters: [
+            { usbVendorId: 0x10c4 },
+            { usbVendorId: 0x1a86 },
+            { usbVendorId: 0x0403 },
+            { usbVendorId: 0x303a },
+          ],
+        });
+      };
+
+      const isLikelyEsp32Port = (port) => {
+        const info = typeof port?.getInfo === 'function' ? port.getInfo() : {};
+        return esp32UsbVendorIds.has(Number(info.usbVendorId || 0));
+      };
+
+      const getAuthorizedEsp32Port = async () => {
+        const ports = await navigator.serial.getPorts();
+        if (!Array.isArray(ports) || ports.length === 0) {
+          return null;
+        }
+
+        const matchingPort = ports.find((port) => isLikelyEsp32Port(port));
+        return matchingPort || ports[0] || null;
+      };
+
+      const readDeviceInfoJsonFromPort = async (port, timeoutMs = 4000) => {
+        if (!port.readable) {
+          throw new Error('Serial port is not readable.');
+        }
+
+        const reader = port.readable.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        const timeoutId = window.setTimeout(() => {
+          reader.cancel().catch(() => {});
+        }, timeoutMs);
+
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+
+            if (done) {
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const markerIndex = buffer.indexOf(deviceInfoMarker);
+
+            if (markerIndex === -1) {
+              continue;
+            }
+
+            const payloadText = buffer.slice(markerIndex + deviceInfoMarker.length).trim();
+            const jsonStart = payloadText.indexOf('{');
+            const jsonEnd = payloadText.lastIndexOf('}');
+
+            if (jsonStart !== -1 && jsonEnd > jsonStart) {
+              return payloadText.slice(jsonStart, jsonEnd + 1);
+            }
+          }
+        } finally {
+          window.clearTimeout(timeoutId);
+          reader.releaseLock();
+        }
+
+        throw new Error('ESP32 did not return device info. Flash the latest AESM.ino firmware and retry.');
+      };
+
+      const detectEsp32DeviceInfo = async (options = {}) => {
+        const requestPermission = options.requestPermission === true;
+        const port = requestPermission
+          ? await requestEsp32Port()
+          : await getAuthorizedEsp32Port();
+
+        if (!port) {
+          throw new Error('No authorized ESP32 serial port is available yet. Click Detect ESP32 once to grant browser access.');
+        }
+
+        const textEncoder = new TextEncoder();
+
+        try {
+          await port.open({
+            baudRate: 115200,
+            dataBits: 8,
+            stopBits: 1,
+            parity: 'none',
+            flowControl: 'none',
+            bufferSize: 4096,
+          });
+
+          await new Promise((resolve) => window.setTimeout(resolve, 200));
+
+          if (!port.writable) {
+            throw new Error('Serial port is not writable.');
+          }
+
+          const writer = port.writable.getWriter();
+
+          try {
+            await writer.write(textEncoder.encode('i\n'));
+          } finally {
+            writer.releaseLock();
+          }
+
+          const payloadText = await readDeviceInfoJsonFromPort(port);
+          return JSON.parse(payloadText);
+        } finally {
+          if (port.readable || port.writable) {
+            await port.close().catch(() => {});
+          }
+        }
+      };
+
+      const isModalShown = (modalElement) => modalElement instanceof HTMLElement && modalElement.classList.contains('show');
+
+      const runEsp32Detection = async (mode, options = {}) => {
+        if (detectionInFlightByMode[mode]) {
+          return;
+        }
+
+        detectionInFlightByMode[mode] = true;
+
+        try {
+          const deviceInfo = await detectEsp32DeviceInfo(options);
+          fillFormFromDetectedDeviceInfo(mode, deviceInfo);
+
+          const serialLabel = String(deviceInfo.primary_serial_no || '').trim();
+          const firmwareLabel = String(deviceInfo.firmware_version || '').trim();
+          const successSuffix = firmwareLabel !== '' ? ' (' + firmwareLabel + ')' : '';
+          setDetectionStatus(mode, 'Detected ' + (serialLabel !== '' ? serialLabel : 'ESP32 board') + successSuffix + '. Review the values before saving.', 'success');
+        } catch (error) {
+          if (options.silent !== true) {
+            const message = error instanceof Error && error.message
+              ? error.message
+              : 'Unable to detect ESP32 details. Close other serial tools and retry.';
+            setDetectionStatus(mode, message, 'danger');
+            console.error(error);
+          }
+        } finally {
+          detectionInFlightByMode[mode] = false;
+        }
+      };
+
+      const maybeAutoDetectEsp32 = async (mode) => {
+        if (!serialSupportAvailable) {
+          return;
+        }
+
+        await runEsp32Detection(mode, { requestPermission: false, silent: true });
+      };
+
+      const autoDetectEsp32FromGesture = async (mode) => {
+        if (!serialSupportAvailable) {
+          return;
+        }
+
+        setDetectionStatus(mode, 'Detecting connected ESP32 from this browser action...', 'muted');
+        await runEsp32Detection(mode, { requestPermission: true, silent: false });
+      };
+
       document.querySelectorAll('.farm-select').forEach((farmSelect) => {
         farmSelect.addEventListener('change', function () {
           refreshFarmLocationTextFromSelection(farmSelect);
@@ -837,6 +1149,76 @@
 
         refreshFarmOptions(ownerSelect, currentFarmId);
       });
+
+      document.querySelectorAll('.detect-esp32-btn').forEach((button) => {
+        const mode = button.getAttribute('data-device-detect-target') === 'edit' ? 'edit' : 'create';
+
+        if (!serialSupportAvailable) {
+          button.disabled = true;
+          setDetectionStatus(mode, 'ESP32 auto-detect requires desktop Chrome or Edge with Web Serial support.', 'danger');
+          return;
+        }
+
+        button.addEventListener('click', async function () {
+          const originalLabel = button.textContent;
+          button.disabled = true;
+          button.textContent = 'Detecting...';
+          setDetectionStatus(mode, 'Waiting for ESP32 serial selection and device response...', 'muted');
+
+          try {
+            await runEsp32Detection(mode, { requestPermission: true, silent: false });
+          } finally {
+            button.disabled = false;
+            button.textContent = originalLabel;
+          }
+        });
+      });
+
+      if (openCreateDeviceModalButton instanceof HTMLElement && serialSupportAvailable) {
+        openCreateDeviceModalButton.addEventListener('click', function (event) {
+          if (!event.isTrusted) {
+            return;
+          }
+
+          autoDetectEsp32FromGesture('create');
+        });
+      }
+
+      if (serialSupportAvailable && createModalElement) {
+        createModalElement.addEventListener('shown.bs.modal', function () {
+          setDetectionStatus('create', 'Checking for an already authorized ESP32 serial port...', 'muted');
+          maybeAutoDetectEsp32('create').then(() => {
+            if (String(createFields.primary_serial_no?.value || '').trim() === '') {
+              setDetectionStatus('create', 'No auto-detected ESP32 yet. Click Detect ESP32 if this browser has not been granted port access before.', 'muted');
+            }
+          });
+        });
+      }
+
+      if (serialSupportAvailable && editModalElement) {
+        editModalElement.addEventListener('shown.bs.modal', function () {
+          setDetectionStatus('edit', 'Checking for an already authorized ESP32 serial port...', 'muted');
+          maybeAutoDetectEsp32('edit').then(() => {
+            if (String(editFields.primary_serial_no?.value || '').trim() === '') {
+              setDetectionStatus('edit', 'No auto-detected ESP32 yet. Click Detect ESP32 if this browser has not been granted port access before.', 'muted');
+            }
+          });
+        });
+      }
+
+      if (serialSupportAvailable && typeof navigator.serial?.addEventListener === 'function') {
+        navigator.serial.addEventListener('connect', function () {
+          if (isModalShown(createModalElement)) {
+            setDetectionStatus('create', 'ESP32 connected. Checking for board details...', 'muted');
+            maybeAutoDetectEsp32('create');
+          }
+
+          if (isModalShown(editModalElement)) {
+            setDetectionStatus('edit', 'ESP32 connected. Checking for board details...', 'muted');
+            maybeAutoDetectEsp32('edit');
+          }
+        });
+      }
 
       const hydrateEditForm = (payload) => {
         if (!editForm) {
@@ -863,7 +1245,7 @@
       };
 
       document.querySelectorAll('.edit-device-btn').forEach((button) => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function (event) {
           hydrateEditForm({
             device_id: button.getAttribute('data-device-id'),
             module_board_name: button.getAttribute('data-module-board-name'),
@@ -875,6 +1257,12 @@
             processing_memory: button.getAttribute('data-processing-memory'),
             gpio_interfaces: button.getAttribute('data-gpio-interfaces'),
           });
+
+          if (!event.isTrusted) {
+            return;
+          }
+
+          autoDetectEsp32FromGesture('edit');
         });
       });
 
