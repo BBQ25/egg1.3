@@ -5,14 +5,31 @@
   $sneatAssetsBase = $sneatBase . '/assets';
   $sneatFontsBase = $sneatBase . '/fonts';
   $brandLogoUrl = $sneatAssetsBase . '/img/logo.png?v=20260220';
-  $duskIconResource = static function (string $relativePath): string {
+  $resolveInlineMimeType = static function (string $absolutePath): string {
+      if (function_exists('mime_content_type')) {
+          $detectedMimeType = @mime_content_type($absolutePath);
+
+          if (is_string($detectedMimeType) && $detectedMimeType !== '') {
+              return $detectedMimeType;
+          }
+      }
+
+      return match (strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION))) {
+          'gif' => 'image/gif',
+          'jpg', 'jpeg' => 'image/jpeg',
+          'svg' => 'image/svg+xml',
+          'webp' => 'image/webp',
+          default => 'image/png',
+      };
+  };
+  $duskIconResource = static function (string $relativePath) use ($resolveInlineMimeType): string {
       $absolutePath = resource_path(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $relativePath));
 
       if (!is_file($absolutePath) || !is_readable($absolutePath)) {
           return '';
       }
 
-      $mimeType = mime_content_type($absolutePath) ?: 'image/png';
+      $mimeType = $resolveInlineMimeType($absolutePath);
 
       return 'data:' . $mimeType . ';base64,' . base64_encode(file_get_contents($absolutePath));
   };

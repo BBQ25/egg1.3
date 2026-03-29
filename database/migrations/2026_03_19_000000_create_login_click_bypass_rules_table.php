@@ -20,11 +20,13 @@ return new class extends Migration
             $table->string('rule_label', 120)->default('');
             $table->unsignedInteger('click_count');
             $table->unsignedInteger('window_seconds');
-            $table->foreignId('target_user_id')->constrained('users')->cascadeOnDelete();
+            $table->unsignedInteger('target_user_id');
             $table->boolean('is_enabled')->default(true);
-            $table->foreignId('created_by_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedInteger('created_by_user_id')->nullable();
             $table->timestamps();
 
+            $table->foreign('target_user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('created_by_user_id')->references('id')->on('users')->nullOnDelete();
             $table->unique(['click_count', 'window_seconds'], 'login_click_bypass_rule_pattern');
             $table->index(['is_enabled', 'target_user_id'], 'login_click_bypass_enabled_target');
         });

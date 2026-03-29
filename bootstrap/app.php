@@ -10,10 +10,17 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
-foreach (['TMP', 'TEMP'] as $tempVariable) {
-    putenv($tempVariable.'=C:\\laragon\\tmp');
-    $_ENV[$tempVariable] = 'C:\\laragon\\tmp';
-    $_SERVER[$tempVariable] = 'C:\\laragon\\tmp';
+// Normalize temp env vars across local Laragon and Linux hosts.
+$tempDirectory = rtrim((string) (sys_get_temp_dir() ?: ''), DIRECTORY_SEPARATOR);
+if ($tempDirectory !== '') {
+    foreach (['TMP', 'TEMP', 'TMPDIR'] as $tempVariable) {
+        if (function_exists('putenv')) {
+            @putenv($tempVariable.'='.$tempDirectory);
+        }
+
+        $_ENV[$tempVariable] = $tempDirectory;
+        $_SERVER[$tempVariable] = $tempDirectory;
+    }
 }
 
 $csrfExceptions = ['api/devices/ingest'];
