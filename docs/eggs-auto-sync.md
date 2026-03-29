@@ -12,7 +12,8 @@ Intended workflow:
 2. Test locally.
 3. Commit and push to `origin/main`.
 4. GitHub sends a signed webhook to `/ops/deploy/github`.
-5. The server starts the sync script immediately.
+5. The webhook writes a site-local deploy trigger file.
+6. A tiny dispatcher cron sees that trigger and starts the sync script on the next minute.
 5. Refresh `https://eggs.ryhnsolutions.shop`.
 
 The script is designed to touch only the `eggs.ryhnsolutions.shop` site:
@@ -31,9 +32,11 @@ Webhook setup:
 - event: `Just the push event`
 - branch filter is enforced server-side as `main`
 - secret: must match `EGGS_DEPLOY_WEBHOOK_SECRET` in the live `.env`
+- trigger file default: `storage/app/deploy/github-webhook-trigger.json`
 
 Notes:
 
-- The webhook route only accepts signed requests and only triggers deploys for `BBQ25/egg1.3` pushes to `main`.
+- The webhook route only accepts signed requests and only queues deploys for `BBQ25/egg1.3` pushes to `main`.
+- The dispatcher cron no longer polls GitHub blindly; it only runs a deploy when the webhook trigger file changes.
 - Future manual hotfixes made only on the server can be overwritten by the next GitHub sync.
 - The safe source of truth is the local repo plus GitHub.

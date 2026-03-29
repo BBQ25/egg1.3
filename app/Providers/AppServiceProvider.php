@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\DeployTriggerRunner;
-use App\Support\ShellDeployTriggerRunner;
+use App\Support\FileDeployTriggerRunner;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use App\Support\UiFont;
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(DeployTriggerRunner::class, ShellDeployTriggerRunner::class);
+        $this->app->singleton(DeployTriggerRunner::class, FileDeployTriggerRunner::class);
     }
 
     /**

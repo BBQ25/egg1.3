@@ -84,39 +84,33 @@ class GithubDeployWebhookController extends Controller
             ], 202);
         }
 
-        $scriptPath = trim((string) config('deploy.github.script', base_path('scripts/eggs-auto-sync.sh')));
-        if ($scriptPath === '' || !is_file($scriptPath)) {
-            Log::error('GitHub deploy webhook script is missing.', [
-                'script' => $scriptPath,
-            ]);
-
-            return response()->json([
-                'message' => 'Deploy script not found.',
-            ], 500);
-        }
-
-        $logFile = trim((string) config('deploy.github.log_file', '/www/wwwlogs/eggs-auto-sync.log'));
-        $result = $this->deployTriggerRunner->trigger($scriptPath, $logFile);
-        if (!($result['ok'] ?? false)) {
-            Log::error('GitHub deploy webhook failed to start deploy script.', $result + [
-                'script' => $scriptPath,
-            ]);
-
-            return response()->json([
-                'message' => 'Failed to start deploy.',
-            ], 500);
-        }
-
-        Log::info('Accepted GitHub deploy webhook.', [
+        $triggerFile = trim((string) config('deploy.github.trigger_file', storage_path('app/deploy/github-webhook-trigger.json')));
+        $result = $this->deployTriggerRunner->queue($triggerFile, [
             'repository' => $receivedRepository,
             'ref' => $receivedRef,
             'after' => (string) ($payload['after'] ?? ''),
-            'pid' => $result['pid'] ?? null,
+            'queued_at' => now()->toIso8601String(),
+        ]);
+        if (!($result['ok'] ?? false)) {
+            Log::error('GitHub deploy webhook failed to queue deploy.', $result + [
+                'trigger_file' => $triggerFile,
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to queue deploy.',
+            ], 500);
+        }
+
+        Log::info('Queued GitHub deploy webhook.', [
+            'repository' => $receivedRepository,
+            'ref' => $receivedRef,
+            'after' => (string) ($payload['after'] ?? ''),
+            'trigger_file' => $result['trigger_file'] ?? $triggerFile,
         ]);
 
         return response()->json([
-            'message' => 'deploy accepted',
-            'pid' => $result['pid'] ?? null,
+            'message' => 'deploy queued',
+            'queued_at' => $result['queued_at'] ?? null,
         ], 202);
     }
 

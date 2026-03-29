@@ -5,7 +5,8 @@ namespace App\Contracts;
 interface DeployTriggerRunner
 {
     /**
-     * @return array{ok: bool, pid?: int|null, exit_code?: int, command?: string, error?: string}
+     * @param  array<string, mixed>  $payload
+     * @return array{ok: bool, queued_at?: string|null, trigger_file?: string, error?: string}
      */
-    public function trigger(string $scriptPath, string $logFile): array;
+    public function queue(string $triggerFile, array $payload): array;
 }

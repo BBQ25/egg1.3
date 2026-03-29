@@ -37,13 +37,14 @@ class GithubDeployWebhookTest extends TestCase
         {
             public int $calls = 0;
 
-            public function trigger(string $scriptPath, string $logFile): array
+            public function queue(string $triggerFile, array $payload): array
             {
                 $this->calls++;
 
                 return [
                     'ok' => true,
-                    'pid' => 4321,
+                    'queued_at' => '2026-03-29T00:00:00+08:00',
+                    'trigger_file' => $triggerFile,
                 ];
             }
         };
@@ -54,8 +55,7 @@ class GithubDeployWebhookTest extends TestCase
         config()->set('deploy.github.secret', 'top-secret');
         config()->set('deploy.github.repository', 'BBQ25/egg1.3');
         config()->set('deploy.github.branch', 'main');
-        config()->set('deploy.github.script', base_path('scripts/eggs-auto-sync.sh'));
-        config()->set('deploy.github.log_file', storage_path('logs/eggs-auto-sync.log'));
+        config()->set('deploy.github.trigger_file', storage_path('app/deploy/github-webhook-trigger.json'));
 
         $payload = json_encode([
             'ref' => 'refs/heads/main',
@@ -69,8 +69,8 @@ class GithubDeployWebhookTest extends TestCase
 
         $response->assertAccepted();
         $response->assertJson([
-            'message' => 'deploy accepted',
-            'pid' => 4321,
+            'message' => 'deploy queued',
+            'queued_at' => '2026-03-29T00:00:00+08:00',
         ]);
         $this->assertSame(1, $fakeRunner->calls);
     }
@@ -81,13 +81,13 @@ class GithubDeployWebhookTest extends TestCase
         {
             public int $calls = 0;
 
-            public function trigger(string $scriptPath, string $logFile): array
+            public function queue(string $triggerFile, array $payload): array
             {
                 $this->calls++;
 
                 return [
                     'ok' => true,
-                    'pid' => 9999,
+                    'queued_at' => '2026-03-29T00:00:00+08:00',
                 ];
             }
         };
@@ -121,13 +121,13 @@ class GithubDeployWebhookTest extends TestCase
         {
             public int $calls = 0;
 
-            public function trigger(string $scriptPath, string $logFile): array
+            public function queue(string $triggerFile, array $payload): array
             {
                 $this->calls++;
 
                 return [
                     'ok' => true,
-                    'pid' => 7777,
+                    'queued_at' => '2026-03-29T00:00:00+08:00',
                 ];
             }
         };
