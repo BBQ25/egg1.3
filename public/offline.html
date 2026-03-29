@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Egg1.3 Offline</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #f4faf7 0%, #ffffff 100%);
+      color: #1d2a23;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(520px, 100%);
+      background: #ffffff;
+      border: 1px solid #d6e5dc;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(15, 76, 58, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.5;
+      color: #3a4b42;
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-live="polite">
+    <h1>You are offline</h1>
+    <p>
+      Egg1.3 cannot reach the server right now. Reconnect to the internet and refresh to continue
+      real-time monitoring.
+    </p>
+  </main>
+</body>
+</html>

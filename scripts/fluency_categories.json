@@ -1,0 +1,854 @@
+[
+  {
+    "href": "/icons/set/3d--style-fluency",
+    "label": "3D"
+  },
+  {
+    "href": "/icons/set/add--style-fluency",
+    "label": "Add"
+  },
+  {
+    "href": "/icons/set/address--style-fluency",
+    "label": "Address"
+  },
+  {
+    "href": "/icons/set/admin--style-fluency",
+    "label": "Admin"
+  },
+  {
+    "href": "/icons/set/airplane--style-fluency",
+    "label": "Airplane"
+  },
+  {
+    "href": "/icons/set/alphabet--style-fluency",
+    "label": "Alphabet"
+  },
+  {
+    "href": "/icons/set/animals--style-fluency",
+    "label": "Animals"
+  },
+  {
+    "href": "/icons/set/app--style-fluency",
+    "label": "App"
+  },
+  {
+    "href": "/icons/set/app-store--style-fluency",
+    "label": "App Store"
+  },
+  {
+    "href": "/icons/set/apple--style-fluency",
+    "label": "Apple"
+  },
+  {
+    "href": "/icons/set/apple-touch--style-fluency",
+    "label": "Apple Touch"
+  },
+  {
+    "href": "/icons/set/application--style-fluency",
+    "label": "Application"
+  },
+  {
+    "href": "/icons/set/arrows--style-fluency",
+    "label": "Arrows"
+  },
+  {
+    "href": "/icons/set/avatar--style-fluency",
+    "label": "Avatar"
+  },
+  {
+    "href": "/icons/set/back--style-fluency",
+    "label": "Back"
+  },
+  {
+    "href": "/icons/set/bank--style-fluency",
+    "label": "Bank"
+  },
+  {
+    "href": "/icons/set/battery--style-fluency",
+    "label": "Battery"
+  },
+  {
+    "href": "/icons/set/bike--style-fluency",
+    "label": "Bike"
+  },
+  {
+    "href": "/icons/set/birthday--style-fluency",
+    "label": "Birthday"
+  },
+  {
+    "href": "/icons/set/black--style-fluency",
+    "label": "Black"
+  },
+  {
+    "href": "/icons/set/blogger--style-fluency",
+    "label": "Blogger"
+  },
+  {
+    "href": "/icons/set/book--style-fluency",
+    "label": "Book"
+  },
+  {
+    "href": "/icons/set/brain--style-fluency",
+    "label": "Brain"
+  },
+  {
+    "href": "/icons/set/building--style-fluency",
+    "label": "Building"
+  },
+  {
+    "href": "/icons/set/bus--style-fluency",
+    "label": "Bus"
+  },
+  {
+    "href": "/icons/set/business--style-fluency",
+    "label": "Business"
+  },
+  {
+    "href": "/icons/set/calculation--style-fluency",
+    "label": "Calculation"
+  },
+  {
+    "href": "/icons/set/calendar--style-fluency",
+    "label": "Calendar"
+  },
+  {
+    "href": "/icons/set/call--style-fluency",
+    "label": "Call"
+  },
+  {
+    "href": "/icons/set/camera--style-fluency",
+    "label": "Camera"
+  },
+  {
+    "href": "/icons/set/car--style-fluency",
+    "label": "Car"
+  },
+  {
+    "href": "/icons/set/cellphone--style-fluency",
+    "label": "Cellphone"
+  },
+  {
+    "href": "/icons/set/characters--style-fluency",
+    "label": "Characters"
+  },
+  {
+    "href": "/icons/set/chat--style-fluency",
+    "label": "Chat"
+  },
+  {
+    "href": "/icons/set/check--style-fluency",
+    "label": "Check"
+  },
+  {
+    "href": "/icons/set/christmas--style-fluency",
+    "label": "Christmas"
+  },
+  {
+    "href": "/icons/set/circle--style-fluency",
+    "label": "Circle"
+  },
+  {
+    "href": "/icons/set/clean--style-fluency",
+    "label": "Clean"
+  },
+  {
+    "href": "/icons/set/clock--style-fluency",
+    "label": "Clock"
+  },
+  {
+    "href": "/icons/set/closed--style-fluency",
+    "label": "Closed"
+  },
+  {
+    "href": "/icons/set/cloud--style-fluency",
+    "label": "Cloud"
+  },
+  {
+    "href": "/icons/set/coffee--style-fluency",
+    "label": "Coffee"
+  },
+  {
+    "href": "/icons/set/computer--style-fluency",
+    "label": "Computer"
+  },
+  {
+    "href": "/icons/set/contacts--style-fluency",
+    "label": "Contacts"
+  },
+  {
+    "href": "/icons/set/cool--style-fluency",
+    "label": "Cool"
+  },
+  {
+    "href": "/icons/set/create--style-fluency",
+    "label": "Create"
+  },
+  {
+    "href": "/icons/set/credit-card--style-fluency",
+    "label": "Credit Card"
+  },
+  {
+    "href": "/icons/set/dashboard--style-fluency",
+    "label": "Dashboard"
+  },
+  {
+    "href": "/icons/set/data--style-fluency",
+    "label": "Data"
+  },
+  {
+    "href": "/icons/set/database--style-fluency",
+    "label": "Database"
+  },
+  {
+    "href": "/icons/set/delete--style-fluency",
+    "label": "Delete"
+  },
+  {
+    "href": "/icons/set/desktop--style-fluency",
+    "label": "Desktop"
+  },
+  {
+    "href": "/icons/set/document--style-fluency",
+    "label": "Document"
+  },
+  {
+    "href": "/icons/set/e-commerce--style-fluency",
+    "label": "E-commerce"
+  },
+  {
+    "href": "/icons/set/ecommerce--style-fluency",
+    "label": "Ecommerce"
+  },
+  {
+    "href": "/icons/set/edit--style-fluency",
+    "label": "Edit"
+  },
+  {
+    "href": "/icons/set/editing--style-fluency",
+    "label": "Editing"
+  },
+  {
+    "href": "/icons/set/education--style-fluency",
+    "label": "Education"
+  },
+  {
+    "href": "/icons/set/email--style-fluency",
+    "label": "Email"
+  },
+  {
+    "href": "/icons/set/emoji--style-fluency",
+    "label": "Emoji"
+  },
+  {
+    "href": "/icons/set/event--style-fluency",
+    "label": "Event"
+  },
+  {
+    "href": "/icons/set/excel--style-fluency",
+    "label": "Excel"
+  },
+  {
+    "href": "/icons/set/eye--style-fluency",
+    "label": "Eye"
+  },
+  {
+    "href": "/icons/set/facebook--style-fluency",
+    "label": "Facebook"
+  },
+  {
+    "href": "/icons/set/family--style-fluency",
+    "label": "Family"
+  },
+  {
+    "href": "/icons/set/fax--style-fluency",
+    "label": "Fax"
+  },
+  {
+    "href": "/icons/set/files--style-fluency",
+    "label": "Files"
+  },
+  {
+    "href": "/icons/set/filter--style-fluency",
+    "label": "Filter"
+  },
+  {
+    "href": "/icons/set/finance--style-fluency",
+    "label": "Finance"
+  },
+  {
+    "href": "/icons/set/find--style-fluency",
+    "label": "Find"
+  },
+  {
+    "href": "/icons/set/fire--style-fluency",
+    "label": "Fire"
+  },
+  {
+    "href": "/icons/set/flags--style-fluency",
+    "label": "Flags"
+  },
+  {
+    "href": "/icons/set/flower--style-fluency",
+    "label": "Flower"
+  },
+  {
+    "href": "/icons/set/folders--style-fluency",
+    "label": "Folders"
+  },
+  {
+    "href": "/icons/set/font--style-fluency",
+    "label": "Font"
+  },
+  {
+    "href": "/icons/set/food--style-fluency",
+    "label": "Food"
+  },
+  {
+    "href": "/icons/set/games--style-fluency",
+    "label": "Games"
+  },
+  {
+    "href": "/icons/set/gaming--style-fluency",
+    "label": "Gaming"
+  },
+  {
+    "href": "/icons/set/gear--style-fluency",
+    "label": "Gear"
+  },
+  {
+    "href": "/icons/set/globe--style-fluency",
+    "label": "Globe"
+  },
+  {
+    "href": "/icons/set/gmail--style-fluency",
+    "label": "Gmail"
+  },
+  {
+    "href": "/icons/set/google--style-fluency",
+    "label": "Google"
+  },
+  {
+    "href": "/icons/set/group--style-fluency",
+    "label": "Group"
+  },
+  {
+    "href": "/icons/set/hamburger--style-fluency",
+    "label": "Hamburger"
+  },
+  {
+    "href": "/icons/set/hand--style-fluency",
+    "label": "Hand"
+  },
+  {
+    "href": "/icons/set/hands--style-fluency",
+    "label": "Hands"
+  },
+  {
+    "href": "/icons/set/health--style-fluency",
+    "label": "Health"
+  },
+  {
+    "href": "/icons/set/healthcare--style-fluency",
+    "label": "Healthcare"
+  },
+  {
+    "href": "/icons/set/heart--style-fluency",
+    "label": "Heart"
+  },
+  {
+    "href": "/icons/set/help--style-fluency",
+    "label": "Help"
+  },
+  {
+    "href": "/icons/set/home--style-fluency",
+    "label": "Home"
+  },
+  {
+    "href": "/icons/set/hotel--style-fluency",
+    "label": "Hotel"
+  },
+  {
+    "href": "/icons/set/house--style-fluency",
+    "label": "House"
+  },
+  {
+    "href": "/icons/set/household--style-fluency",
+    "label": "Household"
+  },
+  {
+    "href": "/icons/set/human--style-fluency",
+    "label": "Human"
+  },
+  {
+    "href": "/icons/set/industrial--style-fluency",
+    "label": "Industrial"
+  },
+  {
+    "href": "/icons/set/info--style-fluency",
+    "label": "Info"
+  },
+  {
+    "href": "/icons/set/instagram--style-fluency",
+    "label": "Instagram"
+  },
+  {
+    "href": "/icons/set/internet--style-fluency",
+    "label": "Internet"
+  },
+  {
+    "href": "/icons/set/ios--style-fluency",
+    "label": "iOS"
+  },
+  {
+    "href": "/icons/set/iphone--style-fluency",
+    "label": "iPhone"
+  },
+  {
+    "href": "/icons/set/key--style-fluency",
+    "label": "Key"
+  },
+  {
+    "href": "/icons/set/laptop--style-fluency",
+    "label": "Laptop"
+  },
+  {
+    "href": "/icons/set/light-bulb--style-fluency",
+    "label": "Light Bulb"
+  },
+  {
+    "href": "/icons/set/like--style-fluency",
+    "label": "Like"
+  },
+  {
+    "href": "/icons/set/line--style-fluency",
+    "label": "Line"
+  },
+  {
+    "href": "/icons/set/link--style-fluency",
+    "label": "Link"
+  },
+  {
+    "href": "/icons/set/linkedin--style-fluency",
+    "label": "Linkedin"
+  },
+  {
+    "href": "/icons/set/location--style-fluency",
+    "label": "Location"
+  },
+  {
+    "href": "/icons/set/lock--style-fluency",
+    "label": "Lock"
+  },
+  {
+    "href": "/icons/set/login--style-fluency",
+    "label": "Login"
+  },
+  {
+    "href": "/icons/set/logos--style-fluency",
+    "label": "Logos"
+  },
+  {
+    "href": "/icons/set/love--style-fluency",
+    "label": "Love"
+  },
+  {
+    "href": "/icons/set/mac--style-fluency",
+    "label": "Mac"
+  },
+  {
+    "href": "/icons/set/magnifying-glass--style-fluency",
+    "label": "Magnifying Glass"
+  },
+  {
+    "href": "/icons/set/man--style-fluency",
+    "label": "Man"
+  },
+  {
+    "href": "/icons/set/map--style-fluency",
+    "label": "Map"
+  },
+  {
+    "href": "/icons/set/marketing--style-fluency",
+    "label": "Marketing"
+  },
+  {
+    "href": "/icons/set/medical--style-fluency",
+    "label": "Medical"
+  },
+  {
+    "href": "/icons/set/menu--style-fluency",
+    "label": "Menu"
+  },
+  {
+    "href": "/icons/set/message--style-fluency",
+    "label": "Message"
+  },
+  {
+    "href": "/icons/set/messaging--style-fluency",
+    "label": "Messaging"
+  },
+  {
+    "href": "/icons/set/microphone--style-fluency",
+    "label": "Microphone"
+  },
+  {
+    "href": "/icons/set/mobile--style-fluency",
+    "label": "Mobile"
+  },
+  {
+    "href": "/icons/set/money--style-fluency",
+    "label": "Money"
+  },
+  {
+    "href": "/icons/set/mouse--style-fluency",
+    "label": "Mouse"
+  },
+  {
+    "href": "/icons/set/movie--style-fluency",
+    "label": "Movie"
+  },
+  {
+    "href": "/icons/set/music--style-fluency",
+    "label": "Music"
+  },
+  {
+    "href": "/icons/set/navigate--style-fluency",
+    "label": "Navigate"
+  },
+  {
+    "href": "/icons/set/networking--style-fluency",
+    "label": "Networking"
+  },
+  {
+    "href": "/icons/set/new--style-fluency",
+    "label": "New"
+  },
+  {
+    "href": "/icons/set/newspaper--style-fluency",
+    "label": "Newspaper"
+  },
+  {
+    "href": "/icons/set/note--style-fluency",
+    "label": "Note"
+  },
+  {
+    "href": "/icons/set/notification--style-fluency",
+    "label": "Notification"
+  },
+  {
+    "href": "/icons/set/office--style-fluency",
+    "label": "Office"
+  },
+  {
+    "href": "/icons/set/pdf--style-fluency",
+    "label": "PDF"
+  },
+  {
+    "href": "/icons/set/pencil--style-fluency",
+    "label": "Pencil"
+  },
+  {
+    "href": "/icons/set/people--style-fluency",
+    "label": "People"
+  },
+  {
+    "href": "/icons/set/person--style-fluency",
+    "label": "Person"
+  },
+  {
+    "href": "/icons/set/phone--style-fluency",
+    "label": "Phone"
+  },
+  {
+    "href": "/icons/set/photo-and-video--style-fluency",
+    "label": "Photo and Video"
+  },
+  {
+    "href": "/icons/set/photography--style-fluency",
+    "label": "Photography"
+  },
+  {
+    "href": "/icons/set/photos--style-fluency",
+    "label": "Photos"
+  },
+  {
+    "href": "/icons/set/photoshop--style-fluency",
+    "label": "Photoshop"
+  },
+  {
+    "href": "/icons/set/pink--style-fluency",
+    "label": "Pink"
+  },
+  {
+    "href": "/icons/set/pixel--style-fluency",
+    "label": "Pixel"
+  },
+  {
+    "href": "/icons/set/plan--style-fluency",
+    "label": "Plan"
+  },
+  {
+    "href": "/icons/set/play--style-fluency",
+    "label": "Play"
+  },
+  {
+    "href": "/icons/set/plus--style-fluency",
+    "label": "Plus"
+  },
+  {
+    "href": "/icons/set/popular--style-fluency",
+    "label": "Popular Free"
+  },
+  {
+    "href": "/icons/set/powerpoint--style-fluency",
+    "label": "Powerpoint"
+  },
+  {
+    "href": "/icons/set/present--style-fluency",
+    "label": "Present"
+  },
+  {
+    "href": "/icons/set/print--style-fluency",
+    "label": "Print"
+  },
+  {
+    "href": "/icons/set/printing--style-fluency",
+    "label": "Printing"
+  },
+  {
+    "href": "/icons/set/product--style-fluency",
+    "label": "Product"
+  },
+  {
+    "href": "/icons/set/profile--style-fluency",
+    "label": "Profile"
+  },
+  {
+    "href": "/icons/set/project--style-fluency",
+    "label": "Project"
+  },
+  {
+    "href": "/icons/set/question-mark--style-fluency",
+    "label": "Question Mark"
+  },
+  {
+    "href": "/icons/set/red--style-fluency",
+    "label": "Red"
+  },
+  {
+    "href": "/icons/set/refresh--style-fluency",
+    "label": "Refresh"
+  },
+  {
+    "href": "/icons/set/religion--style-fluency",
+    "label": "Religion"
+  },
+  {
+    "href": "/icons/set/report--style-fluency",
+    "label": "Report"
+  },
+  {
+    "href": "/icons/set/sales--style-fluency",
+    "label": "Sales"
+  },
+  {
+    "href": "/icons/set/samsung--style-fluency",
+    "label": "Samsung"
+  },
+  {
+    "href": "/icons/set/save--style-fluency",
+    "label": "Save"
+  },
+  {
+    "href": "/icons/set/school--style-fluency",
+    "label": "School"
+  },
+  {
+    "href": "/icons/set/search--style-fluency",
+    "label": "Search"
+  },
+  {
+    "href": "/icons/set/security--style-fluency",
+    "label": "Security"
+  },
+  {
+    "href": "/icons/set/server--style-fluency",
+    "label": "Server"
+  },
+  {
+    "href": "/icons/set/service--style-fluency",
+    "label": "Service"
+  },
+  {
+    "href": "/icons/set/settings--style-fluency",
+    "label": "Settings"
+  },
+  {
+    "href": "/icons/set/share--style-fluency",
+    "label": "Share"
+  },
+  {
+    "href": "/icons/set/shipping--style-fluency",
+    "label": "Shipping"
+  },
+  {
+    "href": "/icons/set/shop--style-fluency",
+    "label": "Shop"
+  },
+  {
+    "href": "/icons/set/shopping--style-fluency",
+    "label": "Shopping"
+  },
+  {
+    "href": "/icons/set/shopping-cart--style-fluency",
+    "label": "Shopping Cart"
+  },
+  {
+    "href": "/icons/set/skype--style-fluency",
+    "label": "Skype"
+  },
+  {
+    "href": "/icons/set/smartphone--style-fluency",
+    "label": "Smartphone"
+  },
+  {
+    "href": "/icons/set/smile--style-fluency",
+    "label": "Smile"
+  },
+  {
+    "href": "/icons/set/smiley-face--style-fluency",
+    "label": "Smiley Face"
+  },
+  {
+    "href": "/icons/set/social-media--style-fluency",
+    "label": "Social Media"
+  },
+  {
+    "href": "/icons/set/sound--style-fluency",
+    "label": "Sound"
+  },
+  {
+    "href": "/icons/set/sport--style-fluency",
+    "label": "Sport"
+  },
+  {
+    "href": "/icons/set/stars--style-fluency",
+    "label": "Stars"
+  },
+  {
+    "href": "/icons/set/statistic--style-fluency",
+    "label": "Statistic"
+  },
+  {
+    "href": "/icons/set/steam--style-fluency",
+    "label": "Steam"
+  },
+  {
+    "href": "/icons/set/style--style-fluency",
+    "label": "Style"
+  },
+  {
+    "href": "/icons/set/sun--style-fluency",
+    "label": "Sun"
+  },
+  {
+    "href": "/icons/set/technology--style-fluency",
+    "label": "Technology"
+  },
+  {
+    "href": "/icons/set/text--style-fluency",
+    "label": "Text"
+  },
+  {
+    "href": "/icons/set/thumbs-up--style-fluency",
+    "label": "Thumbs Up"
+  },
+  {
+    "href": "/icons/set/tick--style-fluency",
+    "label": "Tick"
+  },
+  {
+    "href": "/icons/set/time--style-fluency",
+    "label": "Time"
+  },
+  {
+    "href": "/icons/set/time-and-date--style-fluency",
+    "label": "Time And Date"
+  },
+  {
+    "href": "/icons/set/tools--style-fluency",
+    "label": "Tools"
+  },
+  {
+    "href": "/icons/set/travel--style-fluency",
+    "label": "Travel"
+  },
+  {
+    "href": "/icons/set/trees--style-fluency",
+    "label": "Trees"
+  },
+  {
+    "href": "/icons/set/truck--style-fluency",
+    "label": "Truck"
+  },
+  {
+    "href": "/icons/set/tumblr--style-fluency",
+    "label": "Tumblr"
+  },
+  {
+    "href": "/icons/set/tv--style-fluency",
+    "label": "TV"
+  },
+  {
+    "href": "/icons/set/twitter--style-fluency",
+    "label": "Twitter"
+  },
+  {
+    "href": "/icons/set/user--style-fluency",
+    "label": "User"
+  },
+  {
+    "href": "/icons/set/video--style-fluency",
+    "label": "Video"
+  },
+  {
+    "href": "/icons/set/warning--style-fluency",
+    "label": "Warning"
+  },
+  {
+    "href": "/icons/set/weather--style-fluency",
+    "label": "Weather"
+  },
+  {
+    "href": "/icons/set/website--style-fluency",
+    "label": "Website"
+  },
+  {
+    "href": "/icons/set/whatsapp--style-fluency",
+    "label": "Whatsapp"
+  },
+  {
+    "href": "/icons/set/white--style-fluency",
+    "label": "White"
+  },
+  {
+    "href": "/icons/set/wifi--style-fluency",
+    "label": "WiFi"
+  },
+  {
+    "href": "/icons/set/windows--style-fluency",
+    "label": "Windows"
+  },
+  {
+    "href": "/icons/set/woman--style-fluency",
+    "label": "Woman"
+  },
+  {
+    "href": "/icons/set/work--style-fluency",
+    "label": "Work"
+  },
+  {
+    "href": "/icons/set/youtube--style-fluency",
+    "label": "YouTube"
+  }
+]

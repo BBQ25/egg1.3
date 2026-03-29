@@ -1,0 +1,205 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - link "Site logo" [ref=e6] [cursor=pointer]:
+          - /url: http://localhost/sumacot/egg1.3/dashboard
+          - img "Site logo" [ref=e8]
+        - link "Collapse sidebar" [ref=e9] [cursor=pointer]:
+          - /url: javascript:void(0);
+      - list [ref=e11]:
+        - listitem [ref=e12]: Administration
+        - listitem [ref=e13]:
+          - link "User List" [ref=e14] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/admin/users
+            - img [ref=e15]
+            - generic [ref=e16]: User List
+        - listitem [ref=e17]:
+          - link "Devices" [ref=e18] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/admin/devices
+            - img [ref=e19]
+            - generic [ref=e20]: Devices
+        - listitem [ref=e21]:
+          - link "Settings" [ref=e22] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img [ref=e23]
+            - generic [ref=e24]: Settings
+        - listitem [ref=e25]:
+          - link "Farm & Map" [ref=e26] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/admin/maps/farms
+            - img [ref=e27]
+            - generic [ref=e28]: Farm & Map
+        - listitem [ref=e29]:
+          - link "Guide Center" [ref=e30] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/guides
+            - img [ref=e31]
+            - generic [ref=e32]: Guide Center
+        - listitem [ref=e33]:
+          - link "Machine Blueprint" [ref=e34] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/machine-blueprint
+            - img [ref=e35]
+            - generic [ref=e36]: Machine Blueprint
+        - listitem [ref=e37]: Forms & Tables
+        - listitem [ref=e38]:
+          - link "Form Elements" [ref=e39] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - generic [ref=e41]: Form Elements
+        - listitem [ref=e42]: Misc
+        - listitem [ref=e43]:
+          - button "Logout" [ref=e45] [cursor=pointer]:
+            - generic [ref=e47]: Logout
+    - generic [ref=e48]:
+      - navigation [ref=e49]:
+        - generic [ref=e51]:
+          - generic [ref=e52]: Playwright Admin (Admin)
+          - button "Logout" [ref=e54] [cursor=pointer]
+      - generic [ref=e57]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: Machine Layout
+            - heading "Automated Egg Weighing and Sorting Device Blueprint" [level=3] [ref=e63]
+            - paragraph [ref=e64]: This page presents the actual device image stored in the project so the machine layout can be reviewed directly from the system without relying on a recreated schematic.
+          - generic [ref=e65]:
+            - img "Actual egg sorting device image" [ref=e66]
+            - generic:
+              - generic:
+                - generic: "Red: Que Ramp"
+              - generic:
+                - generic: "Green: Weighing Section"
+              - generic:
+                - generic: "Violet: Chute"
+              - generic:
+                - generic: "Yellow: Section Bins (Reject, Jumbo, Extra-Large, Large, Medium, Small, Pullet, Pewee)"
+        - generic [ref=e68]:
+          - article [ref=e69]:
+            - heading "Color Legend" [level=6] [ref=e70]
+            - generic [ref=e71]: "Red: Que Ramp"
+            - generic [ref=e73]: "Green: Weighing Section"
+            - generic [ref=e75]: "Violet: Chute"
+            - generic [ref=e77]: "Yellow: Section Bins"
+          - article [ref=e79]:
+            - heading "Sorting Bins" [level=6] [ref=e80]
+            - paragraph [ref=e81]: Reject, Jumbo, Extra-Large, Large, Medium, Small, Pullet, and Pewee are grouped under the highlighted section bins call-out for presentation and device orientation.
+          - article [ref=e82]:
+            - heading "Use Case" [level=6] [ref=e83]
+            - paragraph [ref=e84]: This page can be used as a presentation, documentation, or operator reference view when explaining the physical device layout to poultry owners, staff, and evaluators.
+        - generic [ref=e86]:
+          - article [ref=e87]:
+            - heading "Upper Conveyor Feed" [level=6] [ref=e88]
+            - paragraph [ref=e89]: The inclined double-rail lane guides eggs from the entry point toward the weighing section while limiting lateral movement.
+          - article [ref=e90]:
+            - heading "Weighing Chamber" [level=6] [ref=e91]
+            - paragraph [ref=e92]: The rectangular middle chamber represents the measurement zone where the load-cell based reading is captured before classification.
+          - article [ref=e93]:
+            - heading "Bin Array" [level=6] [ref=e94]
+            - paragraph [ref=e95]: The tapered lower body collects eggs into the designated classification bins after the servo-driven routing action.
+  - generic [ref=e96]:
+    - link [ref=e97] [cursor=pointer]:
+      - /url: javascript:void(0)
+    - generic [ref=e98]:
+      - heading "Template Customizer" [level=6] [ref=e99]
+      - paragraph [ref=e100]: Customize and preview in real time
+      - generic [ref=e101]:
+        - link "Reset Customizer" [ref=e102] [cursor=pointer]:
+          - /url: javascript:void(0)
+        - link [ref=e104] [cursor=pointer]:
+          - /url: javascript:void(0)
+    - generic [ref=e106]:
+      - generic [ref=e107]:
+        - heading "Theming" [level=5] [ref=e108]
+        - generic [ref=e109]:
+          - generic [ref=e110]: Primary Color
+          - button "toggle color picker dialog" [ref=e130] [cursor=pointer]
+        - generic [ref=e131]:
+          - generic [ref=e132]: Theme
+          - generic [ref=e133]:
+            - generic [ref=e139] [cursor=pointer]: Light
+            - generic [ref=e145] [cursor=pointer]: Dark
+            - generic [ref=e151] [cursor=pointer]: System
+        - generic [ref=e152]:
+          - generic [ref=e153]: Skins
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - main [ref=e220] [cursor=pointer]:
+                - generic [ref=e222]:
+                  - heading "404" [level=1] [ref=e223]
+                  - generic [ref=e224]: Not Found
+              - generic [ref=e157] [cursor=pointer]: Default
+            - generic [ref=e158]:
+              - main [ref=e227] [cursor=pointer]:
+                - generic [ref=e229]:
+                  - heading "404" [level=1] [ref=e230]
+                  - generic [ref=e231]: Not Found
+              - generic [ref=e160] [cursor=pointer]: Bordered
+        - generic [ref=e161]:
+          - generic [ref=e162]: Semi Dark
+          - checkbox [ref=e163]
+        - separator [ref=e167]
+      - generic [ref=e168]:
+        - heading "Layout" [level=5] [ref=e169]
+        - generic [ref=e170]:
+          - generic [ref=e171]: Menu (Navigation)
+          - generic [ref=e172]:
+            - generic [ref=e173]:
+              - main [ref=e234] [cursor=pointer]:
+                - generic [ref=e236]:
+                  - heading "404" [level=1] [ref=e237]
+                  - generic [ref=e238]: Not Found
+              - generic [ref=e175] [cursor=pointer]: Expanded
+            - generic [ref=e176]:
+              - main [ref=e241] [cursor=pointer]:
+                - generic [ref=e243]:
+                  - heading "404" [level=1] [ref=e244]
+                  - generic [ref=e245]: Not Found
+              - generic [ref=e178] [cursor=pointer]: Collapsed
+        - generic [ref=e188]:
+          - generic [ref=e189]: Navbar Type
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - main [ref=e248] [cursor=pointer]:
+                - generic [ref=e250]:
+                  - heading "404" [level=1] [ref=e251]
+                  - generic [ref=e252]: Not Found
+              - generic [ref=e193] [cursor=pointer]: Sticky
+            - generic [ref=e194]:
+              - main [ref=e255] [cursor=pointer]:
+                - generic [ref=e257]:
+                  - heading "404" [level=1] [ref=e258]
+                  - generic [ref=e259]: Not Found
+              - generic [ref=e196] [cursor=pointer]: Static
+            - generic [ref=e197]:
+              - main [ref=e262] [cursor=pointer]:
+                - generic [ref=e264]:
+                  - heading "404" [level=1] [ref=e265]
+                  - generic [ref=e266]: Not Found
+              - generic [ref=e199] [cursor=pointer]: Hidden
+        - generic [ref=e200]:
+          - generic [ref=e201]: Content
+          - generic [ref=e202]:
+            - generic [ref=e203]:
+              - main [ref=e269] [cursor=pointer]:
+                - generic [ref=e271]:
+                  - heading "404" [level=1] [ref=e272]
+                  - generic [ref=e273]: Not Found
+              - generic [ref=e205] [cursor=pointer]: Compact
+            - generic [ref=e206]:
+              - main [ref=e276] [cursor=pointer]:
+                - generic [ref=e278]:
+                  - heading "404" [level=1] [ref=e279]
+                  - generic [ref=e280]: Not Found
+              - generic [ref=e208] [cursor=pointer]: Wide
+        - generic [ref=e209]:
+          - generic [ref=e210]: Direction
+          - generic [ref=e211]:
+            - generic [ref=e212]:
+              - main [ref=e283] [cursor=pointer]:
+                - generic [ref=e285]:
+                  - heading "404" [level=1] [ref=e286]
+                  - generic [ref=e287]: Not Found
+              - generic [ref=e214] [cursor=pointer]: Left to Right (En)
+            - generic [ref=e215]:
+              - main [ref=e290] [cursor=pointer]:
+                - generic [ref=e292]:
+                  - heading "404" [level=1] [ref=e293]
+                  - generic [ref=e294]: Not Found
+              - generic [ref=e217] [cursor=pointer]: Right to Left (Ar)

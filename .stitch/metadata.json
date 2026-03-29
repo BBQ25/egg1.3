@@ -1,0 +1,28 @@
+{
+  "name": "projects/7130479851483612059",
+  "projectId": "7130479851483612059",
+  "title": "APEWSD Admin UI",
+  "visibility": "PRIVATE",
+  "createTime": "2026-03-10T04:27:30.898830Z",
+  "updateTime": "2026-03-10T04:27:30.898830Z",
+  "projectType": "PROJECT_DESIGN",
+  "origin": "STITCH",
+  "deviceType": "DESKTOP",
+  "designTheme": {},
+  "screens": {
+    "admin-settings": {
+      "id": "622970c0abf54e2d90fb17b90634554f",
+      "sourceScreen": "projects/7130479851483612059/screens/622970c0abf54e2d90fb17b90634554f",
+      "title": "Admin Settings Dashboard",
+      "width": 2560,
+      "height": 2126,
+      "localHtml": ".stitch/designs/admin-settings.html",
+      "localScreenshot": ".stitch/designs/admin-settings.png"
+    }
+  },
+  "metadata": {
+    "systemName": "Real-Time Monitoring System of the Automated Poultry Egg Weighing and Sorting Device",
+    "frontendBase": "Laravel Blade + Sneat",
+    "userRole": "OWNER"
+  }
+}

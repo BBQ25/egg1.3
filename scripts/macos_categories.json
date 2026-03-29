@@ -1,0 +1,854 @@
+[
+  {
+    "href": "/icons/set/3d--os-macos",
+    "label": "3D"
+  },
+  {
+    "href": "/icons/set/add--os-macos",
+    "label": "Add"
+  },
+  {
+    "href": "/icons/set/address--os-macos",
+    "label": "Address"
+  },
+  {
+    "href": "/icons/set/admin--os-macos",
+    "label": "Admin"
+  },
+  {
+    "href": "/icons/set/airplane--os-macos",
+    "label": "Airplane"
+  },
+  {
+    "href": "/icons/set/alphabet--os-macos",
+    "label": "Alphabet"
+  },
+  {
+    "href": "/icons/set/animals--os-macos",
+    "label": "Animals"
+  },
+  {
+    "href": "/icons/set/app--os-macos",
+    "label": "App"
+  },
+  {
+    "href": "/icons/set/app-store--os-macos",
+    "label": "App Store"
+  },
+  {
+    "href": "/icons/set/apple--os-macos",
+    "label": "Apple"
+  },
+  {
+    "href": "/icons/set/apple-touch--os-macos",
+    "label": "Apple Touch"
+  },
+  {
+    "href": "/icons/set/application--os-macos",
+    "label": "Application"
+  },
+  {
+    "href": "/icons/set/arrows--os-macos",
+    "label": "Arrows"
+  },
+  {
+    "href": "/icons/set/avatar--os-macos",
+    "label": "Avatar"
+  },
+  {
+    "href": "/icons/set/back--os-macos",
+    "label": "Back"
+  },
+  {
+    "href": "/icons/set/bank--os-macos",
+    "label": "Bank"
+  },
+  {
+    "href": "/icons/set/battery--os-macos",
+    "label": "Battery"
+  },
+  {
+    "href": "/icons/set/bike--os-macos",
+    "label": "Bike"
+  },
+  {
+    "href": "/icons/set/birthday--os-macos",
+    "label": "Birthday"
+  },
+  {
+    "href": "/icons/set/black--os-macos",
+    "label": "Black"
+  },
+  {
+    "href": "/icons/set/blogger--os-macos",
+    "label": "Blogger"
+  },
+  {
+    "href": "/icons/set/book--os-macos",
+    "label": "Book"
+  },
+  {
+    "href": "/icons/set/brain--os-macos",
+    "label": "Brain"
+  },
+  {
+    "href": "/icons/set/building--os-macos",
+    "label": "Building"
+  },
+  {
+    "href": "/icons/set/bus--os-macos",
+    "label": "Bus"
+  },
+  {
+    "href": "/icons/set/business--os-macos",
+    "label": "Business"
+  },
+  {
+    "href": "/icons/set/calculation--os-macos",
+    "label": "Calculation"
+  },
+  {
+    "href": "/icons/set/calendar--os-macos",
+    "label": "Calendar"
+  },
+  {
+    "href": "/icons/set/call--os-macos",
+    "label": "Call"
+  },
+  {
+    "href": "/icons/set/camera--os-macos",
+    "label": "Camera"
+  },
+  {
+    "href": "/icons/set/car--os-macos",
+    "label": "Car"
+  },
+  {
+    "href": "/icons/set/cellphone--os-macos",
+    "label": "Cellphone"
+  },
+  {
+    "href": "/icons/set/characters--os-macos",
+    "label": "Characters"
+  },
+  {
+    "href": "/icons/set/chat--os-macos",
+    "label": "Chat"
+  },
+  {
+    "href": "/icons/set/check--os-macos",
+    "label": "Check"
+  },
+  {
+    "href": "/icons/set/christmas--os-macos",
+    "label": "Christmas"
+  },
+  {
+    "href": "/icons/set/circle--os-macos",
+    "label": "Circle"
+  },
+  {
+    "href": "/icons/set/clean--os-macos",
+    "label": "Clean"
+  },
+  {
+    "href": "/icons/set/clock--os-macos",
+    "label": "Clock"
+  },
+  {
+    "href": "/icons/set/closed--os-macos",
+    "label": "Closed"
+  },
+  {
+    "href": "/icons/set/cloud--os-macos",
+    "label": "Cloud"
+  },
+  {
+    "href": "/icons/set/coffee--os-macos",
+    "label": "Coffee"
+  },
+  {
+    "href": "/icons/set/computer--os-macos",
+    "label": "Computer"
+  },
+  {
+    "href": "/icons/set/contacts--os-macos",
+    "label": "Contacts"
+  },
+  {
+    "href": "/icons/set/cool--os-macos",
+    "label": "Cool"
+  },
+  {
+    "href": "/icons/set/create--os-macos",
+    "label": "Create"
+  },
+  {
+    "href": "/icons/set/credit-card--os-macos",
+    "label": "Credit Card"
+  },
+  {
+    "href": "/icons/set/dashboard--os-macos",
+    "label": "Dashboard"
+  },
+  {
+    "href": "/icons/set/data--os-macos",
+    "label": "Data"
+  },
+  {
+    "href": "/icons/set/database--os-macos",
+    "label": "Database"
+  },
+  {
+    "href": "/icons/set/delete--os-macos",
+    "label": "Delete"
+  },
+  {
+    "href": "/icons/set/desktop--os-macos",
+    "label": "Desktop"
+  },
+  {
+    "href": "/icons/set/document--os-macos",
+    "label": "Document"
+  },
+  {
+    "href": "/icons/set/e-commerce--os-macos",
+    "label": "E-commerce"
+  },
+  {
+    "href": "/icons/set/ecommerce--os-macos",
+    "label": "Ecommerce"
+  },
+  {
+    "href": "/icons/set/edit--os-macos",
+    "label": "Edit"
+  },
+  {
+    "href": "/icons/set/editing--os-macos",
+    "label": "Editing"
+  },
+  {
+    "href": "/icons/set/education--os-macos",
+    "label": "Education"
+  },
+  {
+    "href": "/icons/set/email--os-macos",
+    "label": "Email"
+  },
+  {
+    "href": "/icons/set/emoji--os-macos",
+    "label": "Emoji"
+  },
+  {
+    "href": "/icons/set/event--os-macos",
+    "label": "Event"
+  },
+  {
+    "href": "/icons/set/excel--os-macos",
+    "label": "Excel"
+  },
+  {
+    "href": "/icons/set/eye--os-macos",
+    "label": "Eye"
+  },
+  {
+    "href": "/icons/set/facebook--os-macos",
+    "label": "Facebook"
+  },
+  {
+    "href": "/icons/set/family--os-macos",
+    "label": "Family"
+  },
+  {
+    "href": "/icons/set/fax--os-macos",
+    "label": "Fax"
+  },
+  {
+    "href": "/icons/set/files--os-macos",
+    "label": "Files"
+  },
+  {
+    "href": "/icons/set/filter--os-macos",
+    "label": "Filter"
+  },
+  {
+    "href": "/icons/set/finance--os-macos",
+    "label": "Finance"
+  },
+  {
+    "href": "/icons/set/find--os-macos",
+    "label": "Find"
+  },
+  {
+    "href": "/icons/set/fire--os-macos",
+    "label": "Fire"
+  },
+  {
+    "href": "/icons/set/flags--os-macos",
+    "label": "Flags"
+  },
+  {
+    "href": "/icons/set/flower--os-macos",
+    "label": "Flower"
+  },
+  {
+    "href": "/icons/set/folders--os-macos",
+    "label": "Folders"
+  },
+  {
+    "href": "/icons/set/font--os-macos",
+    "label": "Font"
+  },
+  {
+    "href": "/icons/set/food--os-macos",
+    "label": "Food"
+  },
+  {
+    "href": "/icons/set/games--os-macos",
+    "label": "Games"
+  },
+  {
+    "href": "/icons/set/gaming--os-macos",
+    "label": "Gaming"
+  },
+  {
+    "href": "/icons/set/gear--os-macos",
+    "label": "Gear"
+  },
+  {
+    "href": "/icons/set/globe--os-macos",
+    "label": "Globe"
+  },
+  {
+    "href": "/icons/set/gmail--os-macos",
+    "label": "Gmail"
+  },
+  {
+    "href": "/icons/set/google--os-macos",
+    "label": "Google"
+  },
+  {
+    "href": "/icons/set/group--os-macos",
+    "label": "Group"
+  },
+  {
+    "href": "/icons/set/hamburger--os-macos",
+    "label": "Hamburger"
+  },
+  {
+    "href": "/icons/set/hand--os-macos",
+    "label": "Hand"
+  },
+  {
+    "href": "/icons/set/hands--os-macos",
+    "label": "Hands"
+  },
+  {
+    "href": "/icons/set/health--os-macos",
+    "label": "Health"
+  },
+  {
+    "href": "/icons/set/healthcare--os-macos",
+    "label": "Healthcare"
+  },
+  {
+    "href": "/icons/set/heart--os-macos",
+    "label": "Heart"
+  },
+  {
+    "href": "/icons/set/help--os-macos",
+    "label": "Help"
+  },
+  {
+    "href": "/icons/set/home--os-macos",
+    "label": "Home"
+  },
+  {
+    "href": "/icons/set/hotel--os-macos",
+    "label": "Hotel"
+  },
+  {
+    "href": "/icons/set/house--os-macos",
+    "label": "House"
+  },
+  {
+    "href": "/icons/set/household--os-macos",
+    "label": "Household"
+  },
+  {
+    "href": "/icons/set/human--os-macos",
+    "label": "Human"
+  },
+  {
+    "href": "/icons/set/industrial--os-macos",
+    "label": "Industrial"
+  },
+  {
+    "href": "/icons/set/info--os-macos",
+    "label": "Info"
+  },
+  {
+    "href": "/icons/set/instagram--os-macos",
+    "label": "Instagram"
+  },
+  {
+    "href": "/icons/set/internet--os-macos",
+    "label": "Internet"
+  },
+  {
+    "href": "/icons/set/ios--os-macos",
+    "label": "iOS"
+  },
+  {
+    "href": "/icons/set/iphone--os-macos",
+    "label": "iPhone"
+  },
+  {
+    "href": "/icons/set/key--os-macos",
+    "label": "Key"
+  },
+  {
+    "href": "/icons/set/laptop--os-macos",
+    "label": "Laptop"
+  },
+  {
+    "href": "/icons/set/light-bulb--os-macos",
+    "label": "Light Bulb"
+  },
+  {
+    "href": "/icons/set/like--os-macos",
+    "label": "Like"
+  },
+  {
+    "href": "/icons/set/line--os-macos",
+    "label": "Line"
+  },
+  {
+    "href": "/icons/set/link--os-macos",
+    "label": "Link"
+  },
+  {
+    "href": "/icons/set/linkedin--os-macos",
+    "label": "Linkedin"
+  },
+  {
+    "href": "/icons/set/location--os-macos",
+    "label": "Location"
+  },
+  {
+    "href": "/icons/set/lock--os-macos",
+    "label": "Lock"
+  },
+  {
+    "href": "/icons/set/login--os-macos",
+    "label": "Login"
+  },
+  {
+    "href": "/icons/set/logos--os-macos",
+    "label": "Logos"
+  },
+  {
+    "href": "/icons/set/love--os-macos",
+    "label": "Love"
+  },
+  {
+    "href": "/icons/set/mac--os-macos",
+    "label": "Mac"
+  },
+  {
+    "href": "/icons/set/magnifying-glass--os-macos",
+    "label": "Magnifying Glass"
+  },
+  {
+    "href": "/icons/set/man--os-macos",
+    "label": "Man"
+  },
+  {
+    "href": "/icons/set/map--os-macos",
+    "label": "Map"
+  },
+  {
+    "href": "/icons/set/marketing--os-macos",
+    "label": "Marketing"
+  },
+  {
+    "href": "/icons/set/medical--os-macos",
+    "label": "Medical"
+  },
+  {
+    "href": "/icons/set/menu--os-macos",
+    "label": "Menu"
+  },
+  {
+    "href": "/icons/set/message--os-macos",
+    "label": "Message"
+  },
+  {
+    "href": "/icons/set/messaging--os-macos",
+    "label": "Messaging"
+  },
+  {
+    "href": "/icons/set/microphone--os-macos",
+    "label": "Microphone"
+  },
+  {
+    "href": "/icons/set/mobile--os-macos",
+    "label": "Mobile"
+  },
+  {
+    "href": "/icons/set/money--os-macos",
+    "label": "Money"
+  },
+  {
+    "href": "/icons/set/mouse--os-macos",
+    "label": "Mouse"
+  },
+  {
+    "href": "/icons/set/movie--os-macos",
+    "label": "Movie"
+  },
+  {
+    "href": "/icons/set/music--os-macos",
+    "label": "Music"
+  },
+  {
+    "href": "/icons/set/navigate--os-macos",
+    "label": "Navigate"
+  },
+  {
+    "href": "/icons/set/networking--os-macos",
+    "label": "Networking"
+  },
+  {
+    "href": "/icons/set/new--os-macos",
+    "label": "New"
+  },
+  {
+    "href": "/icons/set/newspaper--os-macos",
+    "label": "Newspaper"
+  },
+  {
+    "href": "/icons/set/note--os-macos",
+    "label": "Note"
+  },
+  {
+    "href": "/icons/set/notification--os-macos",
+    "label": "Notification"
+  },
+  {
+    "href": "/icons/set/office--os-macos",
+    "label": "Office"
+  },
+  {
+    "href": "/icons/set/pdf--os-macos",
+    "label": "PDF"
+  },
+  {
+    "href": "/icons/set/pencil--os-macos",
+    "label": "Pencil"
+  },
+  {
+    "href": "/icons/set/people--os-macos",
+    "label": "People"
+  },
+  {
+    "href": "/icons/set/person--os-macos",
+    "label": "Person"
+  },
+  {
+    "href": "/icons/set/phone--os-macos",
+    "label": "Phone"
+  },
+  {
+    "href": "/icons/set/photo-and-video--os-macos",
+    "label": "Photo and Video"
+  },
+  {
+    "href": "/icons/set/photography--os-macos",
+    "label": "Photography"
+  },
+  {
+    "href": "/icons/set/photos--os-macos",
+    "label": "Photos"
+  },
+  {
+    "href": "/icons/set/photoshop--os-macos",
+    "label": "Photoshop"
+  },
+  {
+    "href": "/icons/set/pink--os-macos",
+    "label": "Pink"
+  },
+  {
+    "href": "/icons/set/pixel--os-macos",
+    "label": "Pixel"
+  },
+  {
+    "href": "/icons/set/plan--os-macos",
+    "label": "Plan"
+  },
+  {
+    "href": "/icons/set/play--os-macos",
+    "label": "Play"
+  },
+  {
+    "href": "/icons/set/plus--os-macos",
+    "label": "Plus"
+  },
+  {
+    "href": "/icons/set/popular--os-macos",
+    "label": "Popular Free"
+  },
+  {
+    "href": "/icons/set/powerpoint--os-macos",
+    "label": "Powerpoint"
+  },
+  {
+    "href": "/icons/set/present--os-macos",
+    "label": "Present"
+  },
+  {
+    "href": "/icons/set/print--os-macos",
+    "label": "Print"
+  },
+  {
+    "href": "/icons/set/printing--os-macos",
+    "label": "Printing"
+  },
+  {
+    "href": "/icons/set/product--os-macos",
+    "label": "Product"
+  },
+  {
+    "href": "/icons/set/profile--os-macos",
+    "label": "Profile"
+  },
+  {
+    "href": "/icons/set/project--os-macos",
+    "label": "Project"
+  },
+  {
+    "href": "/icons/set/question-mark--os-macos",
+    "label": "Question Mark"
+  },
+  {
+    "href": "/icons/set/red--os-macos",
+    "label": "Red"
+  },
+  {
+    "href": "/icons/set/refresh--os-macos",
+    "label": "Refresh"
+  },
+  {
+    "href": "/icons/set/religion--os-macos",
+    "label": "Religion"
+  },
+  {
+    "href": "/icons/set/report--os-macos",
+    "label": "Report"
+  },
+  {
+    "href": "/icons/set/sales--os-macos",
+    "label": "Sales"
+  },
+  {
+    "href": "/icons/set/samsung--os-macos",
+    "label": "Samsung"
+  },
+  {
+    "href": "/icons/set/save--os-macos",
+    "label": "Save"
+  },
+  {
+    "href": "/icons/set/school--os-macos",
+    "label": "School"
+  },
+  {
+    "href": "/icons/set/search--os-macos",
+    "label": "Search"
+  },
+  {
+    "href": "/icons/set/security--os-macos",
+    "label": "Security"
+  },
+  {
+    "href": "/icons/set/server--os-macos",
+    "label": "Server"
+  },
+  {
+    "href": "/icons/set/service--os-macos",
+    "label": "Service"
+  },
+  {
+    "href": "/icons/set/settings--os-macos",
+    "label": "Settings"
+  },
+  {
+    "href": "/icons/set/share--os-macos",
+    "label": "Share"
+  },
+  {
+    "href": "/icons/set/shipping--os-macos",
+    "label": "Shipping"
+  },
+  {
+    "href": "/icons/set/shop--os-macos",
+    "label": "Shop"
+  },
+  {
+    "href": "/icons/set/shopping--os-macos",
+    "label": "Shopping"
+  },
+  {
+    "href": "/icons/set/shopping-cart--os-macos",
+    "label": "Shopping Cart"
+  },
+  {
+    "href": "/icons/set/skype--os-macos",
+    "label": "Skype"
+  },
+  {
+    "href": "/icons/set/smartphone--os-macos",
+    "label": "Smartphone"
+  },
+  {
+    "href": "/icons/set/smile--os-macos",
+    "label": "Smile"
+  },
+  {
+    "href": "/icons/set/smiley-face--os-macos",
+    "label": "Smiley Face"
+  },
+  {
+    "href": "/icons/set/social-media--os-macos",
+    "label": "Social Media"
+  },
+  {
+    "href": "/icons/set/sound--os-macos",
+    "label": "Sound"
+  },
+  {
+    "href": "/icons/set/sport--os-macos",
+    "label": "Sport"
+  },
+  {
+    "href": "/icons/set/stars--os-macos",
+    "label": "Stars"
+  },
+  {
+    "href": "/icons/set/statistic--os-macos",
+    "label": "Statistic"
+  },
+  {
+    "href": "/icons/set/steam--os-macos",
+    "label": "Steam"
+  },
+  {
+    "href": "/icons/set/style--os-macos",
+    "label": "Style"
+  },
+  {
+    "href": "/icons/set/sun--os-macos",
+    "label": "Sun"
+  },
+  {
+    "href": "/icons/set/technology--os-macos",
+    "label": "Technology"
+  },
+  {
+    "href": "/icons/set/text--os-macos",
+    "label": "Text"
+  },
+  {
+    "href": "/icons/set/thumbs-up--os-macos",
+    "label": "Thumbs Up"
+  },
+  {
+    "href": "/icons/set/tick--os-macos",
+    "label": "Tick"
+  },
+  {
+    "href": "/icons/set/time--os-macos",
+    "label": "Time"
+  },
+  {
+    "href": "/icons/set/time-and-date--os-macos",
+    "label": "Time And Date"
+  },
+  {
+    "href": "/icons/set/tools--os-macos",
+    "label": "Tools"
+  },
+  {
+    "href": "/icons/set/travel--os-macos",
+    "label": "Travel"
+  },
+  {
+    "href": "/icons/set/trees--os-macos",
+    "label": "Trees"
+  },
+  {
+    "href": "/icons/set/truck--os-macos",
+    "label": "Truck"
+  },
+  {
+    "href": "/icons/set/tumblr--os-macos",
+    "label": "Tumblr"
+  },
+  {
+    "href": "/icons/set/tv--os-macos",
+    "label": "TV"
+  },
+  {
+    "href": "/icons/set/twitter--os-macos",
+    "label": "Twitter"
+  },
+  {
+    "href": "/icons/set/user--os-macos",
+    "label": "User"
+  },
+  {
+    "href": "/icons/set/video--os-macos",
+    "label": "Video"
+  },
+  {
+    "href": "/icons/set/warning--os-macos",
+    "label": "Warning"
+  },
+  {
+    "href": "/icons/set/weather--os-macos",
+    "label": "Weather"
+  },
+  {
+    "href": "/icons/set/website--os-macos",
+    "label": "Website"
+  },
+  {
+    "href": "/icons/set/whatsapp--os-macos",
+    "label": "Whatsapp"
+  },
+  {
+    "href": "/icons/set/white--os-macos",
+    "label": "White"
+  },
+  {
+    "href": "/icons/set/wifi--os-macos",
+    "label": "WiFi"
+  },
+  {
+    "href": "/icons/set/windows--os-macos",
+    "label": "Windows"
+  },
+  {
+    "href": "/icons/set/woman--os-macos",
+    "label": "Woman"
+  },
+  {
+    "href": "/icons/set/work--os-macos",
+    "label": "Work"
+  },
+  {
+    "href": "/icons/set/youtube--os-macos",
+    "label": "YouTube"
+  }
+]

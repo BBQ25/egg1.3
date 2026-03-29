@@ -1,0 +1,230 @@
+.app-brand-logo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.layout-menu .app-brand.demo {
+  gap: 0.5rem;
+  justify-content: center;
+  position: relative;
+  min-height: 4.5rem;
+  padding-inline: 0.9rem;
+}
+
+.layout-menu .app-brand-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0.65rem;
+}
+
+.layout-menu .app-brand-link .app-brand-logo.demo {
+  width: clamp(5.2rem, 14vw, 6.8rem);
+  min-width: 5.2rem;
+  aspect-ratio: 3 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layout-menu .app-brand-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.layout-menu .app-brand .layout-menu-toggle {
+  flex: 0 0 auto;
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  color: var(--bs-heading-color);
+  cursor: pointer;
+}
+
+.layout-menu .app-brand .layout-menu-toggle .icon-base {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.layout-menu .app-brand .layout-menu-toggle:hover,
+.layout-menu .app-brand .layout-menu-toggle:focus {
+  color: var(--bs-primary);
+}
+
+html.layout-menu-collapsed .layout-menu .app-brand-link .app-brand-logo.demo {
+  width: 2.8rem;
+  min-width: 2.8rem;
+  aspect-ratio: 3 / 2;
+}
+
+html.layout-menu-collapsed .layout-menu .app-brand-text {
+  display: none;
+}
+
+.authentication-cover .auth-cover-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.authentication-cover .auth-cover-brand .app-brand-logo.demo {
+  width: clamp(4.8rem, 13vw, 6.2rem);
+  aspect-ratio: 3 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-submenu-link {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.625rem;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+
+.settings-submenu-copy {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.settings-submenu-copy small {
+  display: block;
+  margin-top: 0.15rem;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.settings-submenu-badge {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.admin-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-row-actions form {
+  margin: 0;
+  display: inline-flex;
+}
+
+.admin-row-action-btn {
+  position: relative;
+  overflow: visible;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.6rem;
+  color: var(--bs-heading-color);
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.admin-row-action-btn i {
+  font-size: 1rem;
+  line-height: 1;
+  color: currentColor;
+}
+
+.admin-row-action-btn::after {
+  content: attr(data-action-label);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.45rem);
+  transform: translateX(-50%) translateY(0.2rem);
+  padding: 0.25rem 0.45rem;
+  border-radius: 0.4rem;
+  background: #22303e;
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1.15;
+  white-space: nowrap;
+  box-shadow: 0 0.25rem 0.75rem rgba(34, 48, 62, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s ease;
+}
+
+.admin-row-action-btn::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.15rem);
+  transform: translateX(-50%) translateY(0.2rem);
+  border-left: 0.3rem solid transparent;
+  border-right: 0.3rem solid transparent;
+  border-top: 0.35rem solid #22303e;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s ease;
+}
+
+.admin-row-action-btn:hover,
+.admin-row-action-btn:focus-visible,
+.admin-row-action-btn:active {
+  color: #fff;
+}
+
+.admin-row-action-btn:hover::after,
+.admin-row-action-btn:hover::before,
+.admin-row-action-btn:focus-visible::after,
+.admin-row-action-btn:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.admin-row-action-btn:disabled {
+  cursor: not-allowed;
+}
+
+@media (max-width: 575.98px) {
+  .authentication-cover .auth-cover-brand .app-brand-logo.demo {
+    width: clamp(4rem, 28vw, 5.2rem);
+    aspect-ratio: 3 / 2;
+  }
+}
+
+@media (max-width: 1400px) {
+  .settings-submenu-link {
+    gap: 0.5rem;
+  }
+
+  .settings-submenu-copy small {
+    font-size: 0.72rem;
+  }
+
+  .settings-submenu-badge {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 1200px) {
+  .settings-submenu-link {
+    flex-wrap: wrap;
+  }
+
+  .settings-submenu-badge {
+    margin-left: 1.75rem;
+  }
+}

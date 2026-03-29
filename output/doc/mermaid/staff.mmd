@@ -1,0 +1,12 @@
+flowchart TD
+    A["Start"] --> B["Staff opens web application"]
+    B --> C["Enable location and log in"]
+    C --> D{"Authenticated and within allowed premises?"}
+    D -->|"No"| E["Show restricted access or return to login"]
+    D -->|"Yes"| F["Open dashboard"]
+    F --> G["View assigned farm and device data"]
+    G --> H["Use inventory and batch monitoring"]
+    G --> I["Open machine blueprint for operation reference"]
+    H --> J["Report missing farm or device assignment to admin"]
+    I --> K["End"]
+    J --> K

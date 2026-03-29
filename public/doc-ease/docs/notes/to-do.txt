@@ -1,0 +1,73 @@
+DOC-EASE AUTO DEPLOY TO-DO
+==========================
+
+Before you start
+- [ ] Make sure important runtime files/folders are backed up.
+- [ ] Note: deploy uses "git reset --hard" and "git clean -fd", so local untracked files can be deleted (except .user.ini and .well-known).
+
+1) Add webhook files to your webroot
+- [ ] Put this file in public path: /www/wwwroot/doc-ease.ryhnsolutions.shop/deploy-hook.php
+- [ ] Put main handler in: /www/wwwroot/doc-ease.ryhnsolutions.shop/config/deploy-hook.php
+- [ ] In config/deploy-hook.php, change webhook secret placeholder to a real long random secret.
+
+2) Create deploy SSH key on VPS
+- [ ] Generate key at: /root/.ssh/doc_ease_deploy (if not existing).
+- [ ] Copy public key: /root/.ssh/doc_ease_deploy.pub
+- [ ] In GitHub repo BBQ25/doc-ease -> Settings -> Deploy keys -> Add key (read-only is OK).
+
+3) Prepare git repo in webroot (in-place)
+- [ ] Go to: /www/wwwroot/doc-ease.ryhnsolutions.shop
+- [ ] Run: git init (if .git does not exist).
+- [ ] Set remote origin to: git@github.com:BBQ25/doc-ease.git
+- [ ] Fetch origin/main.
+- [ ] Checkout local main.
+- [ ] Hard reset to origin/main.
+
+4) Create deploy script
+- [ ] Create: /usr/local/bin/deploy-doc-ease.sh
+- [ ] Script must:
+  - cd to /www/wwwroot/doc-ease.ryhnsolutions.shop
+  - use key /root/.ssh/doc_ease_deploy via GIT_SSH_COMMAND
+  - git fetch
+  - git reset --hard origin/main
+  - git clean untracked, but keep .user.ini and .well-known
+  - chown files to web user (www if exists, else www-data)
+  - append logs to /tmp/doc-ease-deploy.log
+- [ ] Make executable: chmod 755 /usr/local/bin/deploy-doc-ease.sh
+
+5) Allow web user to run deploy script with sudo (no password)
+- [ ] Detect web user: www (preferred) or www-data
+- [ ] Create file: /etc/sudoers.d/doc-ease-deploy
+- [ ] Add line:
+      <web_user> ALL=(root) NOPASSWD: /usr/local/bin/deploy-doc-ease.sh
+- [ ] Set permission: chmod 440 /etc/sudoers.d/doc-ease-deploy
+- [ ] Validate: visudo -cf /etc/sudoers.d/doc-ease-deploy
+
+6) Configure GitHub webhook
+- [ ] Repo: BBQ25/doc-ease -> Settings -> Webhooks -> Add webhook
+- [ ] Payload URL: https://doc-ease.ryhnsolutions.shop/deploy-hook.php
+- [ ] Content type: application/json
+- [ ] Secret: use exact same secret you put in config/deploy-hook.php
+- [ ] Event: Just the push event
+- [ ] Active: enabled
+
+7) Confirm handler behavior
+- [ ] POST only
+- [ ] Must reject missing/invalid X-Hub-Signature-256
+- [ ] ping event returns 200 with "pong"
+- [ ] push deploys only when ref is refs/heads/main
+- [ ] success returns 200, failure returns 500
+- [ ] webhook logs to /tmp/doc-ease-webhook.log
+
+8) Test
+- [ ] Quick curl test without signature (should fail with 401):
+      curl -i -X POST "https://doc-ease.ryhnsolutions.shop/deploy-hook.php" -H "Content-Type: application/json" -H "X-GitHub-Event: ping" --data '{}'
+- [ ] In GitHub webhook page, use "Redeliver" on a push event.
+- [ ] Watch logs:
+      tail -n 200 -f /tmp/doc-ease-webhook.log
+      tail -n 200 -f /tmp/doc-ease-deploy.log
+
+Done checklist
+- [ ] Push to main on GitHub
+- [ ] Confirm webhook delivery = 200
+- [ ] Confirm latest commit exists on server (git log -1)

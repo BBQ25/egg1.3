@@ -1,0 +1,6 @@
+# Runtime-only secrets and local config overrides.
+openai_api.txt
+gemini_api.txt
+setup-db.php
+setup-db.lock
+deploy-hook.local.php

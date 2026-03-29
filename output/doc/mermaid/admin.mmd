@@ -1,0 +1,15 @@
+flowchart TD
+    A["Start"] --> B["Admin opens web application"]
+    B --> C["Log in"]
+    C --> D{"Authenticated?"}
+    D -->|"No"| E["Return to login"]
+    D -->|"Yes"| F["Admin bypasses standard geofence restrictions"]
+    F --> G["Open dashboard"]
+    G --> H["Review users and approval status"]
+    H --> I["Manage farms, maps, and coordinates"]
+    I --> J["Register device and assign owner plus farm"]
+    J --> K["Monitor live dashboard and device activity"]
+    K --> L["Generate grade sheet, CES, or HRMIS outputs"]
+    K --> M["Update settings, geofence, and access controls"]
+    L --> N["End"]
+    M --> N

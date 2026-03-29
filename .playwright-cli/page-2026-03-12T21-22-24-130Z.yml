@@ -1,0 +1,441 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - link "Site logo" [ref=e6] [cursor=pointer]:
+          - /url: http://localhost/sumacot/egg1.3/dashboard
+          - img "Site logo" [ref=e8]
+        - link "Collapse sidebar" [ref=e9] [cursor=pointer]:
+          - /url: javascript:void(0);
+      - list [ref=e11]:
+        - listitem [ref=e12]: Administration
+        - listitem [ref=e13]:
+          - link "User List" [ref=e14] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/admin/users
+            - img [ref=e15]
+            - generic [ref=e16]: User List
+        - listitem [ref=e17]:
+          - link "Devices" [ref=e18] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/admin/devices
+            - img [ref=e19]
+            - generic [ref=e20]: Devices
+        - listitem [ref=e21]:
+          - link "Settings" [ref=e22] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - img [ref=e23]
+            - generic [ref=e24]: Settings
+        - listitem [ref=e25]:
+          - link "Farm & Map" [ref=e26] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/admin/maps/farms
+            - img [ref=e27]
+            - generic [ref=e28]: Farm & Map
+        - listitem [ref=e29]:
+          - link "Guide Center" [ref=e30] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/guides
+            - img [ref=e31]
+            - generic [ref=e32]: Guide Center
+        - listitem [ref=e33]:
+          - link "Machine Blueprint" [ref=e34] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/machine-blueprint
+            - img [ref=e35]
+            - generic [ref=e36]: Machine Blueprint
+        - listitem [ref=e37]: Forms & Tables
+        - listitem [ref=e38]:
+          - link "Form Elements" [ref=e39] [cursor=pointer]:
+            - /url: javascript:void(0);
+            - generic [ref=e41]: Form Elements
+        - listitem [ref=e42]: Misc
+        - listitem [ref=e43]:
+          - button "Logout" [ref=e45] [cursor=pointer]:
+            - generic [ref=e47]: Logout
+    - generic [ref=e48]:
+      - navigation [ref=e49]:
+        - generic [ref=e51]:
+          - generic [ref=e52]: Playwright Admin (Admin)
+          - button "Logout" [ref=e54] [cursor=pointer]
+      - generic [ref=e58]:
+        - generic [ref=e59]: Real-Time Poultry Monitoring
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - group "Dashboard range" [ref=e64]:
+              - link "1D" [ref=e65] [cursor=pointer]:
+                - /url: http://localhost/sumacot/egg1.3/dashboard?range=1d
+              - link "1W" [ref=e66] [cursor=pointer]:
+                - /url: http://localhost/sumacot/egg1.3/dashboard?range=1w
+              - link "1M" [ref=e67] [cursor=pointer]:
+                - /url: http://localhost/sumacot/egg1.3/dashboard?range=1m
+            - generic [ref=e68]:
+              - img [ref=e69]
+              - generic [ref=e70]: As of 3/13/2026, 5:22:21 AM
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - generic [ref=e73]: Farm
+              - combobox "Farm" [ref=e74]:
+                - option "All Farms" [selected]
+                - option "J-anne's Farm"
+                - option "Keith's Farm"
+            - generic [ref=e75]:
+              - generic [ref=e76]: Device
+              - combobox "Device" [ref=e77]:
+                - option "All Devices" [selected]
+                - option "Sample (01)"
+            - generic [ref=e78]:
+              - button "Apply" [ref=e79] [cursor=pointer]
+              - link "Reset" [ref=e80] [cursor=pointer]:
+                - /url: http://localhost/sumacot/egg1.3/dashboard?range=1d
+        - generic [ref=e81]:
+          - generic [ref=e84]:
+            - img [ref=e86]
+            - generic [ref=e87]:
+              - text: Total Eggs
+              - heading "0" [level=3] [ref=e88]
+              - text: Within selected time range
+          - generic [ref=e91]:
+            - img [ref=e93]
+            - generic [ref=e94]:
+              - text: Total Weight
+              - heading "0.00 g" [level=3] [ref=e95]
+              - text: Combined ingest and manual intake
+          - generic [ref=e98]:
+            - img [ref=e100]
+            - generic [ref=e101]:
+              - text: Quality Score
+              - heading "0.0%" [level=3] [ref=e102]
+              - text: Non-reject egg ratio
+          - generic [ref=e105]:
+            - img [ref=e107]
+            - generic [ref=e108]:
+              - text: Coverage
+              - heading "0 farms / 0 devices" [level=3] [ref=e109]
+              - text: Active in this range
+        - generic [ref=e110]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - img [ref=e116]
+                  - text: Device Overview
+                - heading "Device Profile" [level=6] [ref=e117]
+              - generic [ref=e118]: No active device selected
+            - generic [ref=e119]:
+              - heading "No active device selected" [level=6] [ref=e120]
+              - generic [ref=e121]: Serial not available
+              - list [ref=e122]:
+                - listitem [ref=e123]:
+                  - strong [ref=e124]: "Farm:"
+                  - text: "-"
+                - listitem [ref=e125]:
+                  - strong [ref=e126]: "Owner:"
+                  - text: "-"
+                - listitem [ref=e127]:
+                  - strong [ref=e128]: "Last Seen:"
+                  - text: No signal
+                - listitem [ref=e129]:
+                  - strong [ref=e130]: "Events/Minute:"
+                  - text: "0.00"
+                - listitem [ref=e131]:
+                  - strong [ref=e132]: "Status:"
+                  - generic [ref=e133]: No active device selected
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - generic [ref=e138]:
+                  - img [ref=e139]
+                  - text: Trend Monitor
+                - heading "Production Timeline" [level=6] [ref=e140]
+                - generic [ref=e141]: 0 now / 0 total
+              - generic [ref=e142]: Range 1D
+            - img [ref=e146]:
+              - generic [ref=e148]:
+                - generic [ref=e150] [cursor=pointer]:
+                  - generic [ref=e151]:
+                    - img
+                  - generic [ref=e152]: Eggs
+                - generic [ref=e154] [cursor=pointer]:
+                  - generic [ref=e155]:
+                    - img
+                  - generic [ref=e156]: Quality %
+              - generic [ref=e157]:
+                - generic [ref=e158]:
+                  - generic "2" [ref=e159]
+                  - generic "1.5" [ref=e160]
+                  - generic "1" [ref=e161]
+                  - generic "0.5" [ref=e162]
+                  - generic "0" [ref=e163]
+                - generic [ref=e165]: Eggs
+              - generic [ref=e174]:
+                - generic "10pm" [ref=e175]: 1...
+                - generic "11pm" [ref=e176]: 1...
+                - generic "12am" [ref=e177]: 1...
+                - generic "1am" [ref=e178]
+                - generic "2am" [ref=e179]
+                - generic "3am" [ref=e180]
+                - generic "4am" [ref=e181]
+                - generic "5am" [ref=e182]
+                - generic "6am" [ref=e183]
+                - generic "7am" [ref=e184]
+                - generic "8am" [ref=e185]
+                - generic "9am" [ref=e186]
+                - generic "10am" [ref=e187]: 1...
+                - generic "11am" [ref=e188]
+                - generic "12pm" [ref=e189]: 1...
+                - generic "1pm" [ref=e190]
+                - generic "2pm" [ref=e191]
+                - generic "3pm" [ref=e192]
+                - generic "4pm" [ref=e193]
+                - generic "5pm" [ref=e194]
+                - generic "6pm" [ref=e195]
+                - generic "7pm" [ref=e196]
+                - generic "8pm" [ref=e197]
+                - generic "9pm" [ref=e198]
+              - generic [ref=e199]:
+                - generic [ref=e200]:
+                  - generic "100" [ref=e201]
+                  - generic "75" [ref=e202]
+                  - generic "50" [ref=e203]
+                  - generic "25" [ref=e204]
+                  - generic "0" [ref=e205]
+                - generic [ref=e207]: Quality %
+        - generic [ref=e208]:
+          - generic [ref=e210]:
+            - generic [ref=e211]:
+              - generic [ref=e212]:
+                - img [ref=e213]
+                - text: Class Performance
+              - heading "Size Breakdown" [level=6] [ref=e214]
+            - table [ref=e216]:
+              - rowgroup [ref=e217]:
+                - row "Class Eggs Share Avg Weight" [ref=e218]:
+                  - columnheader "Class" [ref=e219]
+                  - columnheader "Eggs" [ref=e220]
+                  - columnheader "Share" [ref=e221]
+                  - columnheader "Avg Weight" [ref=e222]
+              - rowgroup [ref=e223]:
+                - row "Reject 0 0.0% 0.00 g" [ref=e224]:
+                  - cell "Reject" [ref=e225]:
+                    - generic [ref=e226]: Reject
+                  - cell "0" [ref=e227]
+                  - cell "0.0%" [ref=e228]
+                  - cell "0.00 g" [ref=e229]
+                - row "Peewee 0 0.0% 0.00 g" [ref=e230]:
+                  - cell "Peewee" [ref=e231]:
+                    - generic [ref=e232]: Peewee
+                  - cell "0" [ref=e233]
+                  - cell "0.0%" [ref=e234]
+                  - cell "0.00 g" [ref=e235]
+                - row "Pullet 0 0.0% 0.00 g" [ref=e236]:
+                  - cell "Pullet" [ref=e237]:
+                    - generic [ref=e238]: Pullet
+                  - cell "0" [ref=e239]
+                  - cell "0.0%" [ref=e240]
+                  - cell "0.00 g" [ref=e241]
+                - row "Small 0 0.0% 0.00 g" [ref=e242]:
+                  - cell "Small" [ref=e243]:
+                    - generic [ref=e244]: Small
+                  - cell "0" [ref=e245]
+                  - cell "0.0%" [ref=e246]
+                  - cell "0.00 g" [ref=e247]
+                - row "Medium 0 0.0% 0.00 g" [ref=e248]:
+                  - cell "Medium" [ref=e249]:
+                    - generic [ref=e250]: Medium
+                  - cell "0" [ref=e251]
+                  - cell "0.0%" [ref=e252]
+                  - cell "0.00 g" [ref=e253]
+                - row "Large 0 0.0% 0.00 g" [ref=e254]:
+                  - cell "Large" [ref=e255]:
+                    - generic [ref=e256]: Large
+                  - cell "0" [ref=e257]
+                  - cell "0.0%" [ref=e258]
+                  - cell "0.00 g" [ref=e259]
+                - row "Extra-Large 0 0.0% 0.00 g" [ref=e260]:
+                  - cell "Extra-Large" [ref=e261]:
+                    - generic [ref=e262]: Extra-Large
+                  - cell "0" [ref=e263]
+                  - cell "0.0%" [ref=e264]
+                  - cell "0.00 g" [ref=e265]
+                - row "Jumbo 0 0.0% 0.00 g" [ref=e266]:
+                  - cell "Jumbo" [ref=e267]:
+                    - generic [ref=e268]: Jumbo
+                  - cell "0" [ref=e269]
+                  - cell "0.0%" [ref=e270]
+                  - cell "0.00 g" [ref=e271]
+          - generic [ref=e273]:
+            - generic [ref=e274]:
+              - generic [ref=e275]:
+                - img [ref=e276]
+                - text: Data Sources
+              - heading "Activity Breakdown" [level=6] [ref=e277]
+            - table [ref=e279]:
+              - rowgroup [ref=e280]:
+                - row "Source Total Activity Score" [ref=e281]:
+                  - columnheader "Source" [ref=e282]
+                  - columnheader "Total" [ref=e283]
+                  - columnheader "Activity" [ref=e284]
+                  - columnheader "Score" [ref=e285]
+              - rowgroup [ref=e286]:
+                - row "Automated Ingest 0 0.0% 0.0%" [ref=e287]:
+                  - cell "Automated Ingest" [ref=e288]:
+                    - generic [ref=e289]: Automated Ingest
+                  - cell "0" [ref=e290]
+                  - cell "0.0%" [ref=e291]
+                  - cell "0.0%" [ref=e292]
+                - row "Manual Intake 0 0.0% 0.0%" [ref=e293]:
+                  - cell "Manual Intake" [ref=e294]:
+                    - generic [ref=e295]: Manual Intake
+                  - cell "0" [ref=e296]
+                  - cell "0.0%" [ref=e297]
+                  - cell "0.0%" [ref=e298]
+                - row "Farm Coverage 0 0.0% 0.0%" [ref=e299]:
+                  - cell "Farm Coverage" [ref=e300]:
+                    - generic [ref=e301]: Farm Coverage
+                  - cell "0" [ref=e302]
+                  - cell "0.0%" [ref=e303]
+                  - cell "0.0%" [ref=e304]
+                - row "Device Coverage 0 0.0% 0.0%" [ref=e305]:
+                  - cell "Device Coverage" [ref=e306]:
+                    - generic [ref=e307]: Device Coverage
+                  - cell "0" [ref=e308]
+                  - cell "0.0%" [ref=e309]
+                  - cell "0.0%" [ref=e310]
+          - generic [ref=e312]:
+            - generic [ref=e313]:
+              - generic [ref=e314]:
+                - img [ref=e315]
+                - text: Leaderboard
+              - heading "Top Active Farms / Devices" [level=6] [ref=e316]
+            - list [ref=e318]:
+              - listitem [ref=e319]:
+                - generic [ref=e322]:
+                  - strong [ref=e323]: Reject
+                  - generic [ref=e324]: Size class activity
+                - generic [ref=e325]: "0"
+              - listitem [ref=e326]:
+                - generic [ref=e329]:
+                  - strong [ref=e330]: Peewee
+                  - generic [ref=e331]: Size class activity
+                - generic [ref=e332]: "0"
+              - listitem [ref=e333]:
+                - generic [ref=e336]:
+                  - strong [ref=e337]: Pullet
+                  - generic [ref=e338]: Size class activity
+                - generic [ref=e339]: "0"
+              - listitem [ref=e340]:
+                - generic [ref=e343]:
+                  - strong [ref=e344]: Small
+                  - generic [ref=e345]: Size class activity
+                - generic [ref=e346]: "0"
+              - listitem [ref=e347]:
+                - generic [ref=e350]:
+                  - strong [ref=e351]: Medium
+                  - generic [ref=e352]: Size class activity
+                - generic [ref=e353]: "0"
+  - generic [ref=e354]:
+    - link [ref=e355] [cursor=pointer]:
+      - /url: javascript:void(0)
+    - generic [ref=e356]:
+      - heading "Template Customizer" [level=6] [ref=e357]
+      - paragraph [ref=e358]: Customize and preview in real time
+      - generic [ref=e359]:
+        - link "Reset Customizer" [ref=e360] [cursor=pointer]:
+          - /url: javascript:void(0)
+        - link [ref=e362] [cursor=pointer]:
+          - /url: javascript:void(0)
+    - generic [ref=e364]:
+      - generic [ref=e365]:
+        - heading "Theming" [level=5] [ref=e366]
+        - generic [ref=e367]:
+          - generic [ref=e368]: Primary Color
+          - button "toggle color picker dialog" [ref=e388] [cursor=pointer]
+        - generic [ref=e389]:
+          - generic [ref=e390]: Theme
+          - generic [ref=e391]:
+            - generic [ref=e397] [cursor=pointer]: Light
+            - generic [ref=e403] [cursor=pointer]: Dark
+            - generic [ref=e409] [cursor=pointer]: System
+        - generic [ref=e410]:
+          - generic [ref=e411]: Skins
+          - generic [ref=e412]:
+            - generic [ref=e413]:
+              - main [ref=e417] [cursor=pointer]:
+                - generic [ref=e419]:
+                  - heading "404" [level=1] [ref=e420]
+                  - generic [ref=e421]: Not Found
+              - generic [ref=e422] [cursor=pointer]: Default
+            - generic [ref=e423]:
+              - main [ref=e427] [cursor=pointer]:
+                - generic [ref=e429]:
+                  - heading "404" [level=1] [ref=e430]
+                  - generic [ref=e431]: Not Found
+              - generic [ref=e432] [cursor=pointer]: Bordered
+        - generic [ref=e433]:
+          - generic [ref=e434]: Semi Dark
+          - checkbox [ref=e435]
+        - separator [ref=e439]
+      - generic [ref=e440]:
+        - heading "Layout" [level=5] [ref=e441]
+        - generic [ref=e442]:
+          - generic [ref=e443]: Menu (Navigation)
+          - generic [ref=e444]:
+            - generic [ref=e445]:
+              - main [ref=e449] [cursor=pointer]:
+                - generic [ref=e451]:
+                  - heading "404" [level=1] [ref=e452]
+                  - generic [ref=e453]: Not Found
+              - generic [ref=e454] [cursor=pointer]: Expanded
+            - generic [ref=e455]:
+              - main [ref=e459] [cursor=pointer]:
+                - generic [ref=e461]:
+                  - heading "404" [level=1] [ref=e462]
+                  - generic [ref=e463]: Not Found
+              - generic [ref=e464] [cursor=pointer]: Collapsed
+        - generic [ref=e465]:
+          - generic [ref=e466]: Navbar Type
+          - generic [ref=e467]:
+            - generic [ref=e468]:
+              - main [ref=e472] [cursor=pointer]:
+                - generic [ref=e474]:
+                  - heading "404" [level=1] [ref=e475]
+                  - generic [ref=e476]: Not Found
+              - generic [ref=e477] [cursor=pointer]: Sticky
+            - generic [ref=e478]:
+              - main [ref=e482] [cursor=pointer]:
+                - generic [ref=e484]:
+                  - heading "404" [level=1] [ref=e485]
+                  - generic [ref=e486]: Not Found
+              - generic [ref=e487] [cursor=pointer]: Static
+            - generic [ref=e488]:
+              - main [ref=e492] [cursor=pointer]:
+                - generic [ref=e494]:
+                  - heading "404" [level=1] [ref=e495]
+                  - generic [ref=e496]: Not Found
+              - generic [ref=e497] [cursor=pointer]: Hidden
+        - generic [ref=e498]:
+          - generic [ref=e499]: Content
+          - generic [ref=e500]:
+            - generic [ref=e501]:
+              - main [ref=e505] [cursor=pointer]:
+                - generic [ref=e507]:
+                  - heading "404" [level=1] [ref=e508]
+                  - generic [ref=e509]: Not Found
+              - generic [ref=e510] [cursor=pointer]: Compact
+            - generic [ref=e511]:
+              - main [ref=e515] [cursor=pointer]:
+                - generic [ref=e517]:
+                  - heading "404" [level=1] [ref=e518]
+                  - generic [ref=e519]: Not Found
+              - generic [ref=e520] [cursor=pointer]: Wide
+        - generic [ref=e521]:
+          - generic [ref=e522]: Direction
+          - generic [ref=e523]:
+            - generic [ref=e524]:
+              - main [ref=e528] [cursor=pointer]:
+                - generic [ref=e530]:
+                  - heading "404" [level=1] [ref=e531]
+                  - generic [ref=e532]: Not Found
+              - generic [ref=e533] [cursor=pointer]: Left to Right (En)
+            - generic [ref=e534]:
+              - main [ref=e539] [cursor=pointer]:
+                - generic [ref=e541]:
+                  - heading "404" [level=1] [ref=e542]
+                  - generic [ref=e543]: Not Found
+              - generic [ref=e536] [cursor=pointer]: Right to Left (Ar)

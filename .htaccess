@@ -1,0 +1,33 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Block direct browser access to PHP files (except index.php).
+    RewriteCond %{THE_REQUEST} \s/+[^\s?]+\.php(?:[\s?]|$) [NC]
+    RewriteCond %{THE_REQUEST} !\s/+(.*/)?index\.php(?:[\s?]|$) [NC]
+    RewriteRule ^ - [R=404,L]
+
+    # Handle Front Controller...
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Block access to dotfiles
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to composer files
+<FilesMatch "^composer\.(json|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to package files
+<FilesMatch "^package\.(json|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

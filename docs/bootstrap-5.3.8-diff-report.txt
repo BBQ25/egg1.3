@@ -1,0 +1,12 @@
+﻿Bootstrap 5.3.8 upgrade diff report
+Date: 2026-02-20
+Backup: C:/laragon/www/sumacot/backups/egg1.3-sneat-20260220-184709/assets
+Current: public/vendor/sneat/assets
+
+Changed files: 1
+Added files: 0
+Removed files: 0
+
+--- Changed ---
+vendor\js\bootstrap.js
+

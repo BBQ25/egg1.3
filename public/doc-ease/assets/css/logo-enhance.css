@@ -1,0 +1,83 @@
+:root {
+  --ct-logo-lg-height: 40px;
+  --ct-logo-sm-height: 34px;
+}
+
+.leftside-menu .logo {
+  padding-inline: 10px;
+}
+
+.leftside-menu .logo .brand-logo-lg,
+.leftside-menu .logo .logo-lg img {
+  height: 60px !important;
+  width: auto;
+  max-width: 100%;
+}
+
+.leftside-menu .logo .brand-logo-sm,
+.leftside-menu .logo .logo-sm img {
+  height: 40px !important;
+  width: auto;
+  max-width: 100%;
+}
+
+.logo-topbar .brand-logo-top-lg,
+.logo-topbar .logo-lg img {
+  height: 40px !important;
+  width: auto;
+  max-width: 100%;
+}
+
+.logo-topbar .brand-logo-top-sm,
+.logo-topbar .logo-sm img {
+  height: 32px !important;
+  width: auto;
+  max-width: 100%;
+}
+
+html[data-sidenav-size=condensed]:not([data-layout=topnav]) .wrapper .leftside-menu .logo,
+html[data-sidenav-size=sm-hover]:not([data-layout=topnav]) .wrapper .leftside-menu:not(:hover) .logo {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-sidenav-size=condensed]:not([data-layout=topnav]) .wrapper .leftside-menu .logo .brand-logo-sm,
+html[data-sidenav-size=condensed]:not([data-layout=topnav]) .wrapper .leftside-menu .logo .logo-sm img,
+html[data-sidenav-size=sm-hover]:not([data-layout=topnav]) .wrapper .leftside-menu:not(:hover) .logo .brand-logo-sm,
+html[data-sidenav-size=sm-hover]:not([data-layout=topnav]) .wrapper .leftside-menu:not(:hover) .logo .logo-sm img {
+  height: 44px !important;
+  width: 44px;
+  object-fit: contain;
+}
+
+.auth-brand img[src*="logo"] {
+  height: 48px !important;
+  width: auto;
+  max-width: min(100%, 280px);
+}
+
+.authentication-bg .card-header.bg-primary > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.authentication-bg .card-header.bg-primary img[src*="logo"] {
+  height: 54px !important;
+  width: auto;
+  max-width: min(100%, 300px);
+}
+
+@media (max-width: 575.98px) {
+  .leftside-menu .logo .brand-logo-lg,
+  .leftside-menu .logo .logo-lg img {
+    height: 52px !important;
+  }
+
+  .auth-brand img[src*="logo"],
+  .authentication-bg .card-header.bg-primary img[src*="logo"] {
+    height: 44px !important;
+  }
+}

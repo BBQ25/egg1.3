@@ -1,0 +1,26 @@
+<?php
+/**
+ * One-time DB setup helper config.
+ *
+ * Usage (recommended):
+ * 1) Copy this file to config/setup-db.php
+ * 2) Set environment variable DOC_EASE_ENABLE_SETUP_DB=1.
+ * 3) Set enabled=true and a long random token.
+ * 4) Visit: /setup-db.php?token=YOUR_TOKEN
+ * 5) After success: set DOC_EASE_ENABLE_SETUP_DB=0 and delete config/setup-db.php
+ *    (and/or keep the lock file).
+ */
+return [
+    // Must be true to enable setup-db.php.
+    'enabled' => false,
+
+    // Long random string. Required when enabled.
+    'token' => 'CHANGE_ME',
+
+    // Optional IP allow list. Empty array means allow any IP that has the token.
+    // Example: ['203.0.113.10']
+    'allowed_ips' => [],
+
+    // Lock file to prevent re-running the setup after a successful run.
+    'lock_file' => __DIR__ . '/setup-db.lock',
+];

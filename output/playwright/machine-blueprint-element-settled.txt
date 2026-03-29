@@ -1,0 +1,11 @@
+### Result
+- [Screenshot of element](.playwright-cli\element-2026-03-12T21-27-24-074Z.png)
+### Ran Playwright code
+```js
+// Screenshot element and save it as .playwright-cli\element-2026-03-12T21-27-24-074Z.png
+await page.locator('.machine-blueprint-frame').screenshot({
+path: '.playwright-cli\\element-2026-03-12T21-27-24-074Z.png',
+  scale: 'css',
+  type: 'png'
+});
+```

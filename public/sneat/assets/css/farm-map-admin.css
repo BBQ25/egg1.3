@@ -1,0 +1,170 @@
+.farm-map-overview-card,
+.farm-map-panel-card {
+  border: 1px solid rgba(67, 89, 113, 0.1);
+  box-shadow: 0 0.45rem 1.15rem rgba(67, 89, 113, 0.08);
+}
+
+.farm-map-overview-card .card-body {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+.farm-map-stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border: 1px solid rgba(67, 89, 113, 0.08);
+  border-radius: 1rem;
+  padding: 0.85rem 0.95rem;
+  background: rgba(245, 247, 250, 0.82);
+  height: 100%;
+}
+
+.farm-map-stat-icon {
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.farm-map-stat-card.is-farms .farm-map-stat-icon,
+.farm-map-stat-card.is-farms .farm-map-stat-value {
+  color: #2f80ed;
+  background: rgba(47, 128, 237, 0.12);
+}
+
+.farm-map-stat-card.is-geofence .farm-map-stat-icon,
+.farm-map-stat-card.is-geofence .farm-map-stat-value {
+  color: #7a5ef8;
+  background: rgba(122, 94, 248, 0.12);
+}
+
+.farm-map-stat-card.is-geofence.is-off .farm-map-stat-icon,
+.farm-map-stat-card.is-geofence.is-off .farm-map-stat-value {
+  color: #ff9f43;
+  background: rgba(255, 159, 67, 0.14);
+}
+
+.farm-map-stat-card.is-mapped .farm-map-stat-icon,
+.farm-map-stat-card.is-mapped .farm-map-stat-value {
+  color: #0aa2c0;
+  background: rgba(10, 162, 192, 0.12);
+}
+
+.farm-map-stat-card.is-owners .farm-map-stat-icon,
+.farm-map-stat-card.is-owners .farm-map-stat-value {
+  color: #3bb273;
+  background: rgba(59, 178, 115, 0.12);
+}
+
+.farm-map-stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8592a3;
+  margin-bottom: 0.18rem;
+}
+
+.farm-map-stat-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2rem;
+  min-height: 2rem;
+  border-radius: 0.8rem;
+  padding: 0 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.farm-map-section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8592a3;
+  margin-bottom: 0.2rem;
+}
+
+.farm-map-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #233446;
+  font-weight: 600;
+}
+
+.farm-map-status-chip::before {
+  content: '';
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: var(--farm-map-chip-color, #8592a3);
+  box-shadow: 0 0 0 0.16rem rgba(67, 89, 113, 0.08);
+  flex-shrink: 0;
+}
+
+.farm-map-location-code {
+  display: inline-block;
+  padding: 0.18rem 0.4rem;
+  border-radius: 0.45rem;
+  background: rgba(10, 162, 192, 0.08);
+  color: #0b7285;
+  font-size: 0.73rem;
+}
+
+.farm-map-legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.farm-map-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #566a7f;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.farm-map-legend-item::before {
+  content: '';
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  background: var(--farm-map-legend-color, #8592a3);
+  flex-shrink: 0;
+}
+
+#farm-map-canvas {
+  min-height: 520px;
+  width: 100%;
+}
+
+.farm-location-picker-card {
+  border: 1px solid rgba(67, 89, 113, 0.12);
+  border-radius: 1rem;
+  background: rgba(245, 247, 250, 0.55);
+  padding: 1rem;
+}
+
+.farm-location-picker-map {
+  min-height: 280px;
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(67, 89, 113, 0.16);
+  overflow: hidden;
+}
+
+.farm-location-picker-map:focus-visible {
+  outline: 2px solid rgba(105, 108, 255, 0.45);
+  outline-offset: 2px;
+}

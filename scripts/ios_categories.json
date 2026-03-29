@@ -1,0 +1,854 @@
+[
+  {
+    "href": "/icons/set/3d--os-ios",
+    "label": "3D"
+  },
+  {
+    "href": "/icons/set/add--os-ios",
+    "label": "Add"
+  },
+  {
+    "href": "/icons/set/address--os-ios",
+    "label": "Address"
+  },
+  {
+    "href": "/icons/set/admin--os-ios",
+    "label": "Admin"
+  },
+  {
+    "href": "/icons/set/airplane--os-ios",
+    "label": "Airplane"
+  },
+  {
+    "href": "/icons/set/alphabet--os-ios",
+    "label": "Alphabet"
+  },
+  {
+    "href": "/icons/set/animals--os-ios",
+    "label": "Animals"
+  },
+  {
+    "href": "/icons/set/app--os-ios",
+    "label": "App"
+  },
+  {
+    "href": "/icons/set/app-store--os-ios",
+    "label": "App Store"
+  },
+  {
+    "href": "/icons/set/apple--os-ios",
+    "label": "Apple"
+  },
+  {
+    "href": "/icons/set/apple-touch--os-ios",
+    "label": "Apple Touch"
+  },
+  {
+    "href": "/icons/set/application--os-ios",
+    "label": "Application"
+  },
+  {
+    "href": "/icons/set/arrows--os-ios",
+    "label": "Arrows"
+  },
+  {
+    "href": "/icons/set/avatar--os-ios",
+    "label": "Avatar"
+  },
+  {
+    "href": "/icons/set/back--os-ios",
+    "label": "Back"
+  },
+  {
+    "href": "/icons/set/bank--os-ios",
+    "label": "Bank"
+  },
+  {
+    "href": "/icons/set/battery--os-ios",
+    "label": "Battery"
+  },
+  {
+    "href": "/icons/set/bike--os-ios",
+    "label": "Bike"
+  },
+  {
+    "href": "/icons/set/birthday--os-ios",
+    "label": "Birthday"
+  },
+  {
+    "href": "/icons/set/black--os-ios",
+    "label": "Black"
+  },
+  {
+    "href": "/icons/set/blogger--os-ios",
+    "label": "Blogger"
+  },
+  {
+    "href": "/icons/set/book--os-ios",
+    "label": "Book"
+  },
+  {
+    "href": "/icons/set/brain--os-ios",
+    "label": "Brain"
+  },
+  {
+    "href": "/icons/set/building--os-ios",
+    "label": "Building"
+  },
+  {
+    "href": "/icons/set/bus--os-ios",
+    "label": "Bus"
+  },
+  {
+    "href": "/icons/set/business--os-ios",
+    "label": "Business"
+  },
+  {
+    "href": "/icons/set/calculation--os-ios",
+    "label": "Calculation"
+  },
+  {
+    "href": "/icons/set/calendar--os-ios",
+    "label": "Calendar"
+  },
+  {
+    "href": "/icons/set/call--os-ios",
+    "label": "Call"
+  },
+  {
+    "href": "/icons/set/camera--os-ios",
+    "label": "Camera"
+  },
+  {
+    "href": "/icons/set/car--os-ios",
+    "label": "Car"
+  },
+  {
+    "href": "/icons/set/cellphone--os-ios",
+    "label": "Cellphone"
+  },
+  {
+    "href": "/icons/set/characters--os-ios",
+    "label": "Characters"
+  },
+  {
+    "href": "/icons/set/chat--os-ios",
+    "label": "Chat"
+  },
+  {
+    "href": "/icons/set/check--os-ios",
+    "label": "Check"
+  },
+  {
+    "href": "/icons/set/christmas--os-ios",
+    "label": "Christmas"
+  },
+  {
+    "href": "/icons/set/circle--os-ios",
+    "label": "Circle"
+  },
+  {
+    "href": "/icons/set/clean--os-ios",
+    "label": "Clean"
+  },
+  {
+    "href": "/icons/set/clock--os-ios",
+    "label": "Clock"
+  },
+  {
+    "href": "/icons/set/closed--os-ios",
+    "label": "Closed"
+  },
+  {
+    "href": "/icons/set/cloud--os-ios",
+    "label": "Cloud"
+  },
+  {
+    "href": "/icons/set/coffee--os-ios",
+    "label": "Coffee"
+  },
+  {
+    "href": "/icons/set/computer--os-ios",
+    "label": "Computer"
+  },
+  {
+    "href": "/icons/set/contacts--os-ios",
+    "label": "Contacts"
+  },
+  {
+    "href": "/icons/set/cool--os-ios",
+    "label": "Cool"
+  },
+  {
+    "href": "/icons/set/create--os-ios",
+    "label": "Create"
+  },
+  {
+    "href": "/icons/set/credit-card--os-ios",
+    "label": "Credit Card"
+  },
+  {
+    "href": "/icons/set/dashboard--os-ios",
+    "label": "Dashboard"
+  },
+  {
+    "href": "/icons/set/data--os-ios",
+    "label": "Data"
+  },
+  {
+    "href": "/icons/set/database--os-ios",
+    "label": "Database"
+  },
+  {
+    "href": "/icons/set/delete--os-ios",
+    "label": "Delete"
+  },
+  {
+    "href": "/icons/set/desktop--os-ios",
+    "label": "Desktop"
+  },
+  {
+    "href": "/icons/set/document--os-ios",
+    "label": "Document"
+  },
+  {
+    "href": "/icons/set/e-commerce--os-ios",
+    "label": "E-commerce"
+  },
+  {
+    "href": "/icons/set/ecommerce--os-ios",
+    "label": "Ecommerce"
+  },
+  {
+    "href": "/icons/set/edit--os-ios",
+    "label": "Edit"
+  },
+  {
+    "href": "/icons/set/editing--os-ios",
+    "label": "Editing"
+  },
+  {
+    "href": "/icons/set/education--os-ios",
+    "label": "Education"
+  },
+  {
+    "href": "/icons/set/email--os-ios",
+    "label": "Email"
+  },
+  {
+    "href": "/icons/set/emoji--os-ios",
+    "label": "Emoji"
+  },
+  {
+    "href": "/icons/set/event--os-ios",
+    "label": "Event"
+  },
+  {
+    "href": "/icons/set/excel--os-ios",
+    "label": "Excel"
+  },
+  {
+    "href": "/icons/set/eye--os-ios",
+    "label": "Eye"
+  },
+  {
+    "href": "/icons/set/facebook--os-ios",
+    "label": "Facebook"
+  },
+  {
+    "href": "/icons/set/family--os-ios",
+    "label": "Family"
+  },
+  {
+    "href": "/icons/set/fax--os-ios",
+    "label": "Fax"
+  },
+  {
+    "href": "/icons/set/files--os-ios",
+    "label": "Files"
+  },
+  {
+    "href": "/icons/set/filter--os-ios",
+    "label": "Filter"
+  },
+  {
+    "href": "/icons/set/finance--os-ios",
+    "label": "Finance"
+  },
+  {
+    "href": "/icons/set/find--os-ios",
+    "label": "Find"
+  },
+  {
+    "href": "/icons/set/fire--os-ios",
+    "label": "Fire"
+  },
+  {
+    "href": "/icons/set/flags--os-ios",
+    "label": "Flags"
+  },
+  {
+    "href": "/icons/set/flower--os-ios",
+    "label": "Flower"
+  },
+  {
+    "href": "/icons/set/folders--os-ios",
+    "label": "Folders"
+  },
+  {
+    "href": "/icons/set/font--os-ios",
+    "label": "Font"
+  },
+  {
+    "href": "/icons/set/food--os-ios",
+    "label": "Food"
+  },
+  {
+    "href": "/icons/set/games--os-ios",
+    "label": "Games"
+  },
+  {
+    "href": "/icons/set/gaming--os-ios",
+    "label": "Gaming"
+  },
+  {
+    "href": "/icons/set/gear--os-ios",
+    "label": "Gear"
+  },
+  {
+    "href": "/icons/set/globe--os-ios",
+    "label": "Globe"
+  },
+  {
+    "href": "/icons/set/gmail--os-ios",
+    "label": "Gmail"
+  },
+  {
+    "href": "/icons/set/google--os-ios",
+    "label": "Google"
+  },
+  {
+    "href": "/icons/set/group--os-ios",
+    "label": "Group"
+  },
+  {
+    "href": "/icons/set/hamburger--os-ios",
+    "label": "Hamburger"
+  },
+  {
+    "href": "/icons/set/hand--os-ios",
+    "label": "Hand"
+  },
+  {
+    "href": "/icons/set/hands--os-ios",
+    "label": "Hands"
+  },
+  {
+    "href": "/icons/set/health--os-ios",
+    "label": "Health"
+  },
+  {
+    "href": "/icons/set/healthcare--os-ios",
+    "label": "Healthcare"
+  },
+  {
+    "href": "/icons/set/heart--os-ios",
+    "label": "Heart"
+  },
+  {
+    "href": "/icons/set/help--os-ios",
+    "label": "Help"
+  },
+  {
+    "href": "/icons/set/home--os-ios",
+    "label": "Home"
+  },
+  {
+    "href": "/icons/set/hotel--os-ios",
+    "label": "Hotel"
+  },
+  {
+    "href": "/icons/set/house--os-ios",
+    "label": "House"
+  },
+  {
+    "href": "/icons/set/household--os-ios",
+    "label": "Household"
+  },
+  {
+    "href": "/icons/set/human--os-ios",
+    "label": "Human"
+  },
+  {
+    "href": "/icons/set/industrial--os-ios",
+    "label": "Industrial"
+  },
+  {
+    "href": "/icons/set/info--os-ios",
+    "label": "Info"
+  },
+  {
+    "href": "/icons/set/instagram--os-ios",
+    "label": "Instagram"
+  },
+  {
+    "href": "/icons/set/internet--os-ios",
+    "label": "Internet"
+  },
+  {
+    "href": "/icons/set/ios--os-ios",
+    "label": "iOS"
+  },
+  {
+    "href": "/icons/set/iphone--os-ios",
+    "label": "iPhone"
+  },
+  {
+    "href": "/icons/set/key--os-ios",
+    "label": "Key"
+  },
+  {
+    "href": "/icons/set/laptop--os-ios",
+    "label": "Laptop"
+  },
+  {
+    "href": "/icons/set/light-bulb--os-ios",
+    "label": "Light Bulb"
+  },
+  {
+    "href": "/icons/set/like--os-ios",
+    "label": "Like"
+  },
+  {
+    "href": "/icons/set/line--os-ios",
+    "label": "Line"
+  },
+  {
+    "href": "/icons/set/link--os-ios",
+    "label": "Link"
+  },
+  {
+    "href": "/icons/set/linkedin--os-ios",
+    "label": "Linkedin"
+  },
+  {
+    "href": "/icons/set/location--os-ios",
+    "label": "Location"
+  },
+  {
+    "href": "/icons/set/lock--os-ios",
+    "label": "Lock"
+  },
+  {
+    "href": "/icons/set/login--os-ios",
+    "label": "Login"
+  },
+  {
+    "href": "/icons/set/logos--os-ios",
+    "label": "Logos"
+  },
+  {
+    "href": "/icons/set/love--os-ios",
+    "label": "Love"
+  },
+  {
+    "href": "/icons/set/mac--os-ios",
+    "label": "Mac"
+  },
+  {
+    "href": "/icons/set/magnifying-glass--os-ios",
+    "label": "Magnifying Glass"
+  },
+  {
+    "href": "/icons/set/man--os-ios",
+    "label": "Man"
+  },
+  {
+    "href": "/icons/set/map--os-ios",
+    "label": "Map"
+  },
+  {
+    "href": "/icons/set/marketing--os-ios",
+    "label": "Marketing"
+  },
+  {
+    "href": "/icons/set/medical--os-ios",
+    "label": "Medical"
+  },
+  {
+    "href": "/icons/set/menu--os-ios",
+    "label": "Menu"
+  },
+  {
+    "href": "/icons/set/message--os-ios",
+    "label": "Message"
+  },
+  {
+    "href": "/icons/set/messaging--os-ios",
+    "label": "Messaging"
+  },
+  {
+    "href": "/icons/set/microphone--os-ios",
+    "label": "Microphone"
+  },
+  {
+    "href": "/icons/set/mobile--os-ios",
+    "label": "Mobile"
+  },
+  {
+    "href": "/icons/set/money--os-ios",
+    "label": "Money"
+  },
+  {
+    "href": "/icons/set/mouse--os-ios",
+    "label": "Mouse"
+  },
+  {
+    "href": "/icons/set/movie--os-ios",
+    "label": "Movie"
+  },
+  {
+    "href": "/icons/set/music--os-ios",
+    "label": "Music"
+  },
+  {
+    "href": "/icons/set/navigate--os-ios",
+    "label": "Navigate"
+  },
+  {
+    "href": "/icons/set/networking--os-ios",
+    "label": "Networking"
+  },
+  {
+    "href": "/icons/set/new--os-ios",
+    "label": "New"
+  },
+  {
+    "href": "/icons/set/newspaper--os-ios",
+    "label": "Newspaper"
+  },
+  {
+    "href": "/icons/set/note--os-ios",
+    "label": "Note"
+  },
+  {
+    "href": "/icons/set/notification--os-ios",
+    "label": "Notification"
+  },
+  {
+    "href": "/icons/set/office--os-ios",
+    "label": "Office"
+  },
+  {
+    "href": "/icons/set/pdf--os-ios",
+    "label": "PDF"
+  },
+  {
+    "href": "/icons/set/pencil--os-ios",
+    "label": "Pencil"
+  },
+  {
+    "href": "/icons/set/people--os-ios",
+    "label": "People"
+  },
+  {
+    "href": "/icons/set/person--os-ios",
+    "label": "Person"
+  },
+  {
+    "href": "/icons/set/phone--os-ios",
+    "label": "Phone"
+  },
+  {
+    "href": "/icons/set/photo-and-video--os-ios",
+    "label": "Photo and Video"
+  },
+  {
+    "href": "/icons/set/photography--os-ios",
+    "label": "Photography"
+  },
+  {
+    "href": "/icons/set/photos--os-ios",
+    "label": "Photos"
+  },
+  {
+    "href": "/icons/set/photoshop--os-ios",
+    "label": "Photoshop"
+  },
+  {
+    "href": "/icons/set/pink--os-ios",
+    "label": "Pink"
+  },
+  {
+    "href": "/icons/set/pixel--os-ios",
+    "label": "Pixel"
+  },
+  {
+    "href": "/icons/set/plan--os-ios",
+    "label": "Plan"
+  },
+  {
+    "href": "/icons/set/play--os-ios",
+    "label": "Play"
+  },
+  {
+    "href": "/icons/set/plus--os-ios",
+    "label": "Plus"
+  },
+  {
+    "href": "/icons/set/popular--os-ios",
+    "label": "Popular Free"
+  },
+  {
+    "href": "/icons/set/powerpoint--os-ios",
+    "label": "Powerpoint"
+  },
+  {
+    "href": "/icons/set/present--os-ios",
+    "label": "Present"
+  },
+  {
+    "href": "/icons/set/print--os-ios",
+    "label": "Print"
+  },
+  {
+    "href": "/icons/set/printing--os-ios",
+    "label": "Printing"
+  },
+  {
+    "href": "/icons/set/product--os-ios",
+    "label": "Product"
+  },
+  {
+    "href": "/icons/set/profile--os-ios",
+    "label": "Profile"
+  },
+  {
+    "href": "/icons/set/project--os-ios",
+    "label": "Project"
+  },
+  {
+    "href": "/icons/set/question-mark--os-ios",
+    "label": "Question Mark"
+  },
+  {
+    "href": "/icons/set/red--os-ios",
+    "label": "Red"
+  },
+  {
+    "href": "/icons/set/refresh--os-ios",
+    "label": "Refresh"
+  },
+  {
+    "href": "/icons/set/religion--os-ios",
+    "label": "Religion"
+  },
+  {
+    "href": "/icons/set/report--os-ios",
+    "label": "Report"
+  },
+  {
+    "href": "/icons/set/sales--os-ios",
+    "label": "Sales"
+  },
+  {
+    "href": "/icons/set/samsung--os-ios",
+    "label": "Samsung"
+  },
+  {
+    "href": "/icons/set/save--os-ios",
+    "label": "Save"
+  },
+  {
+    "href": "/icons/set/school--os-ios",
+    "label": "School"
+  },
+  {
+    "href": "/icons/set/search--os-ios",
+    "label": "Search"
+  },
+  {
+    "href": "/icons/set/security--os-ios",
+    "label": "Security"
+  },
+  {
+    "href": "/icons/set/server--os-ios",
+    "label": "Server"
+  },
+  {
+    "href": "/icons/set/service--os-ios",
+    "label": "Service"
+  },
+  {
+    "href": "/icons/set/settings--os-ios",
+    "label": "Settings"
+  },
+  {
+    "href": "/icons/set/share--os-ios",
+    "label": "Share"
+  },
+  {
+    "href": "/icons/set/shipping--os-ios",
+    "label": "Shipping"
+  },
+  {
+    "href": "/icons/set/shop--os-ios",
+    "label": "Shop"
+  },
+  {
+    "href": "/icons/set/shopping--os-ios",
+    "label": "Shopping"
+  },
+  {
+    "href": "/icons/set/shopping-cart--os-ios",
+    "label": "Shopping Cart"
+  },
+  {
+    "href": "/icons/set/skype--os-ios",
+    "label": "Skype"
+  },
+  {
+    "href": "/icons/set/smartphone--os-ios",
+    "label": "Smartphone"
+  },
+  {
+    "href": "/icons/set/smile--os-ios",
+    "label": "Smile"
+  },
+  {
+    "href": "/icons/set/smiley-face--os-ios",
+    "label": "Smiley Face"
+  },
+  {
+    "href": "/icons/set/social-media--os-ios",
+    "label": "Social Media"
+  },
+  {
+    "href": "/icons/set/sound--os-ios",
+    "label": "Sound"
+  },
+  {
+    "href": "/icons/set/sport--os-ios",
+    "label": "Sport"
+  },
+  {
+    "href": "/icons/set/stars--os-ios",
+    "label": "Stars"
+  },
+  {
+    "href": "/icons/set/statistic--os-ios",
+    "label": "Statistic"
+  },
+  {
+    "href": "/icons/set/steam--os-ios",
+    "label": "Steam"
+  },
+  {
+    "href": "/icons/set/style--os-ios",
+    "label": "Style"
+  },
+  {
+    "href": "/icons/set/sun--os-ios",
+    "label": "Sun"
+  },
+  {
+    "href": "/icons/set/technology--os-ios",
+    "label": "Technology"
+  },
+  {
+    "href": "/icons/set/text--os-ios",
+    "label": "Text"
+  },
+  {
+    "href": "/icons/set/thumbs-up--os-ios",
+    "label": "Thumbs Up"
+  },
+  {
+    "href": "/icons/set/tick--os-ios",
+    "label": "Tick"
+  },
+  {
+    "href": "/icons/set/time--os-ios",
+    "label": "Time"
+  },
+  {
+    "href": "/icons/set/time-and-date--os-ios",
+    "label": "Time And Date"
+  },
+  {
+    "href": "/icons/set/tools--os-ios",
+    "label": "Tools"
+  },
+  {
+    "href": "/icons/set/travel--os-ios",
+    "label": "Travel"
+  },
+  {
+    "href": "/icons/set/trees--os-ios",
+    "label": "Trees"
+  },
+  {
+    "href": "/icons/set/truck--os-ios",
+    "label": "Truck"
+  },
+  {
+    "href": "/icons/set/tumblr--os-ios",
+    "label": "Tumblr"
+  },
+  {
+    "href": "/icons/set/tv--os-ios",
+    "label": "TV"
+  },
+  {
+    "href": "/icons/set/twitter--os-ios",
+    "label": "Twitter"
+  },
+  {
+    "href": "/icons/set/user--os-ios",
+    "label": "User"
+  },
+  {
+    "href": "/icons/set/video--os-ios",
+    "label": "Video"
+  },
+  {
+    "href": "/icons/set/warning--os-ios",
+    "label": "Warning"
+  },
+  {
+    "href": "/icons/set/weather--os-ios",
+    "label": "Weather"
+  },
+  {
+    "href": "/icons/set/website--os-ios",
+    "label": "Website"
+  },
+  {
+    "href": "/icons/set/whatsapp--os-ios",
+    "label": "Whatsapp"
+  },
+  {
+    "href": "/icons/set/white--os-ios",
+    "label": "White"
+  },
+  {
+    "href": "/icons/set/wifi--os-ios",
+    "label": "WiFi"
+  },
+  {
+    "href": "/icons/set/windows--os-ios",
+    "label": "Windows"
+  },
+  {
+    "href": "/icons/set/woman--os-ios",
+    "label": "Woman"
+  },
+  {
+    "href": "/icons/set/work--os-ios",
+    "label": "Work"
+  },
+  {
+    "href": "/icons/set/youtube--os-ios",
+    "label": "YouTube"
+  }
+]

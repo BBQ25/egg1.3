@@ -1,0 +1,144 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - link "Site logo" [ref=e3] [cursor=pointer]:
+      - /url: http://localhost/sumacot/egg1.3/dashboard
+      - img "Site logo" [ref=e5]
+    - generic [ref=e6]:
+      - img "Login image" [ref=e9]
+      - generic [ref=e11]:
+        - heading "Welcome back!" [level=4] [ref=e12]
+        - paragraph [ref=e13]: Please sign in to your account and start the adventure.
+        - generic [ref=e14]:
+          - generic [ref=e15]:
+            - generic [ref=e16]: Username
+            - textbox "Username" [active] [ref=e17]:
+              - /placeholder: Enter your username
+          - generic [ref=e18]:
+            - generic [ref=e19]: Password
+            - textbox "Password" [ref=e21]:
+              - /placeholder: ........
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - checkbox "Remember Me" [ref=e27] [cursor=pointer]
+              - generic [ref=e28] [cursor=pointer]: Remember Me
+            - link "Forgot Password?" [ref=e29] [cursor=pointer]:
+              - /url: javascript:void(0);
+              - paragraph [ref=e30]: Forgot Password?
+          - button "Sign in" [ref=e31] [cursor=pointer]
+        - paragraph [ref=e32]:
+          - text: Need an account?
+          - link "Register" [ref=e33] [cursor=pointer]:
+            - /url: http://localhost/sumacot/egg1.3/register
+        - generic [ref=e35]: or
+        - generic [ref=e36]:
+          - link [ref=e37] [cursor=pointer]:
+            - /url: javascript:void(0);
+          - link [ref=e39] [cursor=pointer]:
+            - /url: javascript:void(0);
+          - link [ref=e41] [cursor=pointer]:
+            - /url: javascript:void(0);
+          - link [ref=e43] [cursor=pointer]:
+            - /url: javascript:void(0);
+  - generic [ref=e45]:
+    - generic [ref=e46]:
+      - heading "Template Customizer" [level=6] [ref=e47]
+      - paragraph [ref=e48]: Customize and preview in real time
+      - generic [ref=e49]:
+        - link "Reset Customizer" [ref=e50] [cursor=pointer]:
+          - /url: javascript:void(0)
+        - link [ref=e52] [cursor=pointer]:
+          - /url: javascript:void(0)
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - heading "Theming" [level=5] [ref=e56]
+        - generic [ref=e57]:
+          - generic [ref=e58]: Primary Color
+          - button "toggle color picker dialog" [ref=e78] [cursor=pointer]
+        - generic [ref=e79]:
+          - generic [ref=e80]: Theme
+          - generic [ref=e81]:
+            - generic [ref=e87] [cursor=pointer]: Light
+            - generic [ref=e93] [cursor=pointer]: Dark
+            - generic [ref=e99] [cursor=pointer]: System
+        - generic [ref=e100]:
+          - generic [ref=e101]: Skins
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - main [ref=e107] [cursor=pointer]:
+                - generic [ref=e109]:
+                  - heading "404" [level=1] [ref=e110]
+                  - generic [ref=e111]: Not Found
+              - generic [ref=e112] [cursor=pointer]: Default
+            - generic [ref=e113]:
+              - main [ref=e117] [cursor=pointer]:
+                - generic [ref=e119]:
+                  - heading "404" [level=1] [ref=e120]
+                  - generic [ref=e121]: Not Found
+              - generic [ref=e122] [cursor=pointer]: Bordered
+        - generic [ref=e123]:
+          - generic [ref=e124]: Semi Dark
+          - checkbox [ref=e125]
+        - separator [ref=e129]
+      - generic [ref=e130]:
+        - heading "Layout" [level=5] [ref=e131]
+        - generic [ref=e132]:
+          - generic [ref=e133]: Menu (Navigation)
+          - generic [ref=e134]:
+            - generic [ref=e135]:
+              - main [ref=e139] [cursor=pointer]:
+                - generic [ref=e141]:
+                  - heading "404" [level=1] [ref=e142]
+                  - generic [ref=e143]: Not Found
+              - generic [ref=e144] [cursor=pointer]: Expanded
+            - generic [ref=e145]:
+              - main [ref=e149] [cursor=pointer]:
+                - generic [ref=e151]:
+                  - heading "404" [level=1] [ref=e152]
+                  - generic [ref=e153]: Not Found
+              - generic [ref=e154] [cursor=pointer]: Collapsed
+        - generic [ref=e155]:
+          - generic [ref=e156]: Navbar Type
+          - generic [ref=e157]:
+            - generic [ref=e158]:
+              - main [ref=e162] [cursor=pointer]:
+                - generic [ref=e164]:
+                  - heading "404" [level=1] [ref=e165]
+                  - generic [ref=e166]: Not Found
+              - generic [ref=e167] [cursor=pointer]: Sticky
+            - generic [ref=e168]:
+              - main [ref=e172] [cursor=pointer]:
+                - generic [ref=e174]:
+                  - heading "404" [level=1] [ref=e175]
+                  - generic [ref=e176]: Not Found
+              - generic [ref=e177] [cursor=pointer]: Static
+            - generic [ref=e178]:
+              - main [ref=e182] [cursor=pointer]:
+                - generic [ref=e184]:
+                  - heading "404" [level=1] [ref=e185]
+                  - generic [ref=e186]: Not Found
+              - generic [ref=e187] [cursor=pointer]: Hidden
+        - generic [ref=e188]:
+          - generic [ref=e189]: Content
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - main [ref=e195] [cursor=pointer]:
+                - generic [ref=e197]:
+                  - heading "404" [level=1] [ref=e198]
+                  - generic [ref=e199]: Not Found
+              - generic [ref=e200] [cursor=pointer]: Compact
+            - generic [ref=e201]:
+              - main [ref=e205] [cursor=pointer]:
+                - generic [ref=e207]:
+                  - heading "404" [level=1] [ref=e208]
+                  - generic [ref=e209]: Not Found
+              - generic [ref=e210] [cursor=pointer]: Wide
+        - generic [ref=e211]:
+          - generic [ref=e212]: Direction
+          - generic [ref=e213]:
+            - generic [ref=e214]:
+              - main [ref=e218] [cursor=pointer]:
+                - generic [ref=e220]:
+                  - heading "404" [level=1] [ref=e221]
+                  - generic [ref=e222]: Not Found
+              - generic [ref=e223] [cursor=pointer]: Left to Right (En)
+            - generic [ref=e226] [cursor=pointer]: Right to Left (Ar)

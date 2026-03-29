@@ -1,0 +1,29 @@
+{
+  "name": "Real-Time Egg Monitoring System",
+  "short_name": "Egg1.3",
+  "id": "./",
+  "start_url": "./dashboard",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f4c3a",
+  "description": "Real-time monitoring for automated poultry egg weighing and sorting.",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

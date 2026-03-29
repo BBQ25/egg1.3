@@ -1,0 +1,53 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    <IfModule mod_headers.c>
+        AddType application/manifest+json .webmanifest
+
+        <Files "sw.js">
+            Header set Cache-Control "no-cache, no-store, must-revalidate"
+            Header set Pragma "no-cache"
+            Header set Expires "0"
+        </Files>
+
+        <Files "manifest.webmanifest">
+            Header set Cache-Control "no-cache, must-revalidate"
+        </Files>
+
+        <Files "offline.html">
+            Header set Cache-Control "no-cache, must-revalidate"
+        </Files>
+    </IfModule>
+
+    RewriteEngine On
+
+    # Prevent direct access to raw Sneat template files.
+    # They must be served through authenticated Laravel routes.
+    RewriteRule ^sneat/html/ - [R=404,L,NC]
+
+    # Block direct browser access to PHP files (except index.php).
+    # Clean URLs must be used, e.g. /app-email instead of /app-email.php.
+    RewriteCond %{THE_REQUEST} \s/+[^\s?]+\.php(?:[\s?]|$) [NC]
+    RewriteCond %{THE_REQUEST} !\s/+(.*/)?index\.php(?:[\s?]|$) [NC]
+    RewriteRule ^ - [R=404,L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

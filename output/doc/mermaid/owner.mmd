@@ -1,0 +1,16 @@
+flowchart TD
+    A["Start"] --> B["Owner opens web application"]
+    B --> C["Log in"]
+    C --> D{"Authenticated and inside allowed access boundary?"}
+    D -->|"No"| E["Show restricted access or return to login"]
+    D -->|"Yes"| F["Open dashboard"]
+    F --> G["View scoped monitoring metrics"]
+    G --> H["Check active farms, devices, and throughput"]
+    H --> I["Review My Farms"]
+    I --> J["Submit farm claim or update request when needed"]
+    H --> K["Use inventory and batch monitoring"]
+    H --> L["Open machine blueprint"]
+    J --> M["Wait for admin review or approval if required"]
+    K --> N["End"]
+    L --> N
+    M --> N

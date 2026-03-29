@@ -1,0 +1,176 @@
+{
+  "pack": "egg-monitoring-curated-icons",
+  "version": 1,
+  "folders": {
+    "ui-flat": {
+      "purpose": "Compact UI icons for navigation, buttons, tables, and badges.",
+      "files": [
+        {
+          "file": "ui-flat/eggs.png",
+          "label": "Egg Production",
+          "recommended_for": [
+            "dashboard summary",
+            "production totals",
+            "egg-related metrics"
+          ],
+          "source": "resources/icons/iOS/Farming/PNGs/icons8-eggs-731.png"
+        },
+        {
+          "file": "ui-flat/farm.png",
+          "label": "Farm",
+          "recommended_for": [
+            "farm records",
+            "topology",
+            "farm management"
+          ],
+          "source": "resources/icons/iOS/Farming/PNGs/icons8-farm-5293.png"
+        },
+        {
+          "file": "ui-flat/location.png",
+          "label": "Location",
+          "recommended_for": [
+            "maps",
+            "geofence",
+            "premises location"
+          ],
+          "source": "resources/icons/iOS/Maps/PNGs/icons8-location-3723.png"
+        },
+        {
+          "file": "ui-flat/devices.png",
+          "label": "Devices",
+          "recommended_for": [
+            "device registry",
+            "ESP32 list",
+            "hardware overview"
+          ],
+          "source": "resources/icons/iOS/Mobile/PNGs/icons8-multiple-devices-2169.png"
+        },
+        {
+          "file": "ui-flat/signal.png",
+          "label": "Signal",
+          "recommended_for": [
+            "connectivity badges",
+            "device last seen",
+            "ingest health"
+          ],
+          "source": "resources/icons/iOS/Mobile/PNGs/icons8-signal-32249.png"
+        },
+        {
+          "file": "ui-flat/report-pdf.png",
+          "label": "PDF Report",
+          "recommended_for": [
+            "grade sheet",
+            "report export",
+            "download actions"
+          ],
+          "source": "resources/icons/iOS/User Interface/PNGs/icons8-pdf-window-123445.png"
+        },
+        {
+          "file": "ui-flat/settings.png",
+          "label": "Settings",
+          "recommended_for": [
+            "admin settings",
+            "preferences",
+            "configuration"
+          ],
+          "source": "resources/icons/iOS/User Interface/PNGs/icons8-gear-53375.png"
+        }
+      ]
+    },
+    "illustration-3d": {
+      "purpose": "Decorative and highlight illustrations for cards, empty states, and onboarding.",
+      "files": [
+        {
+          "file": "illustration-3d/dashboard.png",
+          "label": "Dashboard",
+          "recommended_for": [
+            "hero card",
+            "landing section",
+            "overview callout"
+          ],
+          "source": "resources/icons/3D/dashboard--style-3d-fluency/icons8-dashboard-100.png"
+        },
+        {
+          "file": "illustration-3d/line-chart.png",
+          "label": "Line Chart",
+          "recommended_for": [
+            "trend card",
+            "analytics section",
+            "timeline empty state"
+          ],
+          "source": "resources/icons/3D/dashboard--style-3d-fluency/icons8-line-chart-100.png"
+        },
+        {
+          "file": "illustration-3d/pie-chart.png",
+          "label": "Pie Chart",
+          "recommended_for": [
+            "breakdown card",
+            "class distribution",
+            "summary tile"
+          ],
+          "source": "resources/icons/3D/dashboard--style-3d-fluency/icons8-pie-chart-100.png"
+        },
+        {
+          "file": "illustration-3d/statistics-report.png",
+          "label": "Statistics Report",
+          "recommended_for": [
+            "grade sheet",
+            "reports module",
+            "analytics cover"
+          ],
+          "source": "resources/icons/3D/document--style-3d-fluency/icons8-statistics-report-100.png"
+        },
+        {
+          "file": "illustration-3d/sensor.png",
+          "label": "Sensor",
+          "recommended_for": [
+            "device details",
+            "ESP32 ingest",
+            "hardware sections"
+          ],
+          "source": "resources/icons/3D/product--style-3d-fluency/icons8-sensor-100.png"
+        },
+        {
+          "file": "illustration-3d/users.png",
+          "label": "Users",
+          "recommended_for": [
+            "user management",
+            "owner and staff sections",
+            "account overview"
+          ],
+          "source": "resources/icons/3D/profile--style-3d-fluency/icons8-users-100.png"
+        },
+        {
+          "file": "illustration-3d/lock.png",
+          "label": "Security Lock",
+          "recommended_for": [
+            "security settings",
+            "access control",
+            "restricted views"
+          ],
+          "source": "resources/icons/3D/security--style-3d-fluency/icons8-lock-100.png"
+        },
+        {
+          "file": "illustration-3d/wifi-online.png",
+          "label": "Wi-Fi Online",
+          "recommended_for": [
+            "device online state",
+            "network status",
+            "connectivity card"
+          ],
+          "source": "resources/icons/3D/wifi--style-3d-fluency/icons8-wifi-100.png"
+        },
+        {
+          "file": "illustration-3d/wifi-offline.png",
+          "label": "Wi-Fi Offline",
+          "recommended_for": [
+            "device offline state",
+            "error callout",
+            "no signal panel"
+          ],
+          "source": "resources/icons/3D/wifi--style-3d-fluency/icons8-wi-fi-off-100.png"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Document Template v4.2 Landscape</title>
+  <style>
+    :root {
+      --page-width: 1188px;
+      --page-bg: #d3d3d3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 12px;
+      background: #bfc3c9;
+      font-family: Arial, sans-serif;
+    }
+
+    .page-wrap {
+      width: min(100%, var(--page-width));
+      margin: 0 auto;
+      border: 1px solid #9ea4ad;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+      background: var(--page-bg);
+    }
+
+    .page-image {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+      }
+
+      .page-wrap {
+        width: 100%;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-wrap" aria-label="Document Template v4.2 Landscape">
+    <img
+      class="page-image"
+      src="Document_Template v4.2 Landscape.page1.png"
+      alt="Document Template v4.2 Landscape page"
+    />
+  </main>
+</body>
+</html>

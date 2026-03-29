@@ -1,0 +1,25 @@
+.tutorial-callout {
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  padding: 0.9rem 1rem;
+}
+
+.tutorial-shot {
+  margin: 0;
+}
+
+.tutorial-shot img {
+  width: 100%;
+  height: auto;
+  background: #fff;
+}
+
+.tutorial-shot figcaption {
+  margin-top: 0.4rem;
+}
+
+.tutorial-step + .tutorial-step {
+  margin-top: 1rem;
+}
+

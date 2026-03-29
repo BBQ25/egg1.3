@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>56mm Receipt Print</title>
+
+  <style>
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.logo{
+  width: 32mm;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 4px auto;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+  @media print {
+    .logo {
+      /* Optional: thermal printers look better with higher contrast */
+      filter: grayscale(100%) contrast(1.6);
+      width: 32mm;
+      max-width: 100%;
+      margin: 0 auto 1mm auto;
+    }
+  }
+
+    body {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      margin: 16px;
+    }
+    .toolbar { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+
+    /* Receipt block */
+    .receipt {
+      width: 55.2mm;
+      max-width: 55.2mm;
+      margin: 0 auto;
+      border: 1px dashed #000000;
+      padding: 1.2mm;
+      line-height: 1.25;
+      font-size: 12px;
+      overflow: hidden;
+    }
+    .row {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:2mm;
+    }
+    .row > :first-child {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .row > :last-child {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    .center { text-align:center; }
+    hr { border:0; border-top:1px dashed #000000; margin: 5px 0; }
+
+    /* Cut marker */
+    .cut {
+      margin-top: 6px;
+      border-top: 2px dashed #000;
+      padding-top: 3px;
+      text-align: center;
+      font-weight: 700;
+    }
+    #printEnd {
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    /* Print rules */
+    @media print {
+      .toolbar { display:none !important; }
+      .screen-only { display:none !important; }
+      html, body {
+        width: 56mm;
+        margin: 0;
+        padding: 0;
+      }
+      .receipt {
+        width: 55.2mm;
+        max-width: 55.2mm;
+        margin: 0 auto;
+        border: none;
+        padding: 0.5mm 0.6mm;
+      }
+    }
+  </style>
+
+  <!-- This style tag will be overwritten by JS before printing -->
+  <style id="dynamicPageStyle">
+    @media print {
+      @page { size: 56mm 120mm; margin: 0; } /* fallback */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="toolbar">
+    <button type="button" onclick="printToCut()">Print</button>
+    <span>Tip: In print dialog use Scale=100 and Margins=None (if available).</span>
+  </div>
+
+  <div class="receipt" id="receipt">
+    <div class="center">
+    <img src="logo.png" class="logo" alt="Logo"> 
+      <div><strong>Ryhn Solutions</strong></div>
+      <div>Automated Poultry Egg Weighing and Sorting</div>
+    </div>
+
+
+
+
+    <hr>
+
+    <div class="row"><span>Date</span><span id="dt"></span></div>
+    <div class="row"><span>Receipt #</span><span>000123</span></div>
+
+    <hr>
+
+    <div class="row"><span>Item A</span><span>50.00</span></div>
+    <div class="row"><span>Item B</span><span>35.00</span></div>
+    <div class="row"><span>Item C</span><span>15.00</span></div>
+
+    <hr>
+
+    <div class="row"><strong>Total</strong><strong>100.00</strong></div>
+    <div id="printEnd" aria-hidden="true"></div>
+
+    <!-- Everything up to the end of this element is what we will print -->
+    <div class="screen-only"><div class="cut">CUT HERE</div>
+
+    <!-- Anything below will NOT be included in the height calculation.
+         If you don’t want it printed at all, delete it or hide it in @media print. -->
+    <div style="margin-top:2px; opacity:.8;">
+      (Not intended to print beyond cut)
+    </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("dt").textContent = new Date().toLocaleString();
+
+    function pxToMm(px) {
+      // Most browsers assume 96 CSS px per inch
+      return px * 25.4 / 96;
+    }
+
+    function setPageHeightToCut() {
+      const receipt = document.getElementById("receipt");
+      const printEnd = document.getElementById("printEnd");
+      const r = receipt.getBoundingClientRect();
+      const e = printEnd.getBoundingClientRect();
+
+      // Height from top of receipt to just after the last printable row
+      const heightPx = (e.bottom - r.top);
+
+      // Small safety buffer to prevent clipping at the bottom edge
+      const extraMm = 1.1;
+
+      // Clamp to avoid crazy values
+      const heightMm = Math.max(20, Math.min(400, pxToMm(heightPx) + extraMm));
+
+      document.getElementById("dynamicPageStyle").textContent =
+        `@media print { @page { size: 56mm ${heightMm.toFixed(1)}mm; margin: 0; } }`;
+    }
+
+    function printToCut() {
+      setPageHeightToCut();
+      // Give the browser a moment to apply the updated @page style
+      setTimeout(() => window.print(), 50);
+    }
+
+    // Also adjust if user uses Ctrl+P
+    window.addEventListener("beforeprint", setPageHeightToCut);
+  </script>
+</body>
+</html>

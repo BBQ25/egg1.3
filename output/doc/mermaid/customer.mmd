@@ -1,0 +1,10 @@
+flowchart TD
+    A["Start"] --> B["Customer opens web application"]
+    B --> C["Enable location and log in"]
+    C --> D{"Authenticated and allowed by geofence rules?"}
+    D -->|"No"| E["Show restricted access or return to login"]
+    D -->|"Yes"| F["Open dashboard"]
+    F --> G["View restricted monitoring context"]
+    G --> H["Use price monitoring"]
+    H --> I["Request admin support for access or mapping issues"]
+    I --> J["End"]

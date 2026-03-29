@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pdf2xml SYSTEM "pdf2xml.dtd">
+
+<pdf2xml producer="poppler" version="25.07.0">
+<page number="1" position="absolute" top="0" left="0" height="918" width="1188">
+	<fontspec id="0" size="18" family="BCDEEE+Calibri" color="#000000"/>
+	<fontspec id="1" size="10" family="BCDFEE+Poppins" color="#000000"/>
+	<fontspec id="2" size="10" family="BCDGEE+Poppins" color="#000000"/>
+	<fontspec id="3" size="9" family="BCDFEE+Poppins" color="#000539"/>
+	<fontspec id="4" size="9" family="BCDGEE+Poppins" color="#000539"/>
+	<fontspec id="5" size="9" family="BCDGEE+Poppins" color="#000000"/>
+<image top="795" left="806" width="98" height="98" src="tools\_tmp_pdf_xml-1_1.png"/>
+<image top="809" left="923" width="157" height="81" src="tools\_tmp_pdf_xml-1_2.png"/>
+<image top="150" left="231" width="726" height="17" src="tools\_tmp_pdf_xml-1_3.png"/>
+<image top="48" left="469" width="187" height="47" src="tools\_tmp_pdf_xml-1_4.png"/>
+<image top="95" left="460" width="341" height="48" src="tools\_tmp_pdf_xml-1_5.png"/>
+<image top="38" left="364" width="99" height="105" src="tools\_tmp_pdf_xml-1_6.png"/>
+<image top="38" left="733" width="90" height="93" src="tools\_tmp_pdf_xml-1_7.jpg"/>
+<text top="905" left="108" width="4" height="18" font="0">          </text>
+<text top="156" left="256" width="675" height="15" font="1">Excellence | Service | Leadership and Good Governance | Innovation | Social Responsibility | Integrity | Professionalism | Spirituality</text>
+<text top="156" left="931" width="3" height="15" font="2"> </text>
+<text top="133" left="471" width="235" height="13" font="3">Bontoc Campus, San Ramon, Bontoc, Southern Leyte</text>
+<text top="133" left="706" width="2" height="13" font="4"> </text>
+<text top="909" left="471" width="189" height="13" font="3">Email: cd_bt@southernleytestateu.edu.ph</text>
+<text top="909" left="660" width="2" height="13" font="4"> </text>
+<text top="133" left="471" width="188" height="13" font="3">Website: www.southernleytestateu.edu.ph</text>
+<text top="133" left="659" width="2" height="13" font="5"> </text>
+<text top="905" left="108" width="4" height="18" font="0">    </text>
+</page>
+</pdf2xml>

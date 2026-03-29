@@ -1,0 +1,53 @@
+flowchart TD
+    A["Start"] --> B["Actor accesses the system"]
+    B --> C{"Actor type"}
+
+    C -->|"Web user"| D["Open web application"]
+    C -->|"ESP32 device"| Z1["Measure egg weight and classify size"]
+
+    D --> E["Register or log in"]
+    E --> F{"Authenticated?"}
+    F -->|"No"| G["Return to login or registration"]
+    F -->|"Yes"| H{"Geofence or premises check required?"}
+    H -->|"Failed"| I["Show restricted access page"]
+    H -->|"Passed or admin bypass"| J{"Account role"}
+
+    J -->|"Admin"| K1["Open admin dashboard"]
+    J -->|"Poultry Owner"| L1["Open owner dashboard"]
+    J -->|"Poultry Staff"| M1["Open staff dashboard"]
+    J -->|"Customer"| N1["Open customer dashboard"]
+
+    K1 --> K2["Review and approve user accounts"]
+    K2 --> K3["Manage farms, maps, and geofence settings"]
+    K3 --> K4["Register device and assign owner plus farm"]
+    K4 --> K5["Monitor live dashboard and batch data"]
+    K5 --> K6["Generate reports and integration outputs"]
+
+    L1 --> L2["View scoped monitoring dashboard"]
+    L2 --> L3["Check farm or device coverage and throughput"]
+    L3 --> L4["Review My Farms"]
+    L4 --> L5["Submit farm claim or update request"]
+    L3 --> L6["Use inventory and batch monitoring"]
+    L3 --> L7["Open machine blueprint"]
+    L5 --> L8["Await admin review when required"]
+
+    M1 --> M2["Log in within allowed premises"]
+    M2 --> M3["View assigned farm and device data"]
+    M3 --> M4["Use inventory and batch monitoring"]
+    M3 --> M5["Open machine blueprint for operation reference"]
+    M4 --> M6["Report missing assignments or issues to admin"]
+
+    N1 --> N2["View restricted dashboard context"]
+    N2 --> N3["Use price monitoring"]
+    N3 --> N4["Request admin support for access concerns"]
+
+    Z1 --> Z2["Send ingest request with device serial and key"]
+    Z2 --> Z3{"Credentials valid?"}
+    Z3 -->|"No"| Z4["Reject request"]
+    Z3 -->|"Yes"| Z5["Store ingest event and update device last seen"]
+    Z5 --> Z6["Dashboard and monitoring data refresh"]
+
+    K5 --> Z6
+    L2 --> Z6
+    M3 --> Z6
+    N2 --> Z6

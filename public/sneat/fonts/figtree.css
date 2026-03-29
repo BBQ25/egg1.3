@@ -1,0 +1,85 @@
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('./google/_Xm9-HUzqDCFdgfMm4GnA4aZFrUvtOK3A-gdyEU.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./google/_Xm9-HUzqDCFdgfMm4GnA4aZFrUvtOK3A7YdyEU.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./google/_Xm9-HUzqDCFdgfMm4GnA4aZFrUvtOK3A4QdyEU.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./google/_Xm9-HUzqDCFdgfMm4GnA4aZFrUvtOK3A2gayEU.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./google/_Xm9-HUzqDCFdgfMm4GnA4aZFrUvtOK3A1EayEU.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('./google/_Xmz-HUzqDCFdgfMsYiV_F7wfS-Bs_chQF5e.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./google/_Xmz-HUzqDCFdgfMsYiV_F7wfS-Bs_d_QF5e.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./google/_Xmz-HUzqDCFdgfMsYiV_F7wfS-Bs_dNQF5e.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./google/_Xmz-HUzqDCFdgfMsYiV_F7wfS-Bs_ehR15e.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./google/_Xmz-HUzqDCFdgfMsYiV_F7wfS-Bs_eYR15e.ttf') format('truetype');
+}
+
+:root,
+[data-bs-theme='light'],
+[data-bs-theme='dark'] {
+  --bs-font-sans-serif: 'Figtree', -apple-system, blinkmacsystemfont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}

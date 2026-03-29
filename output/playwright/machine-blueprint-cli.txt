@@ -1,0 +1,17 @@
+### Result
+- [Screenshot of viewport](.playwright-cli\page-2026-03-12T21-22-35-088Z.png)
+### Ran Playwright code
+```js
+// Screenshot viewport and save it as .playwright-cli\page-2026-03-12T21-22-35-088Z.png
+await page.screenshot({
+path: '.playwright-cli\\page-2026-03-12T21-22-35-088Z.png',
+  scale: 'css',
+  type: 'png'
+});
+```
+### Page
+- Page URL: http://localhost/sumacot/egg1.3/machine-blueprint
+- Page Title: Machine Blueprint
+- Console: 14 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-03-12T21-22-32-778Z.log#L1-L14

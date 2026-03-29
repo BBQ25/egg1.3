@@ -1,0 +1,8 @@
+# Block public web access to database backups.
+# Apache 2.4+
+Require all denied
+
+# Apache 2.2 fallback
+Order allow,deny
+Deny from all
+

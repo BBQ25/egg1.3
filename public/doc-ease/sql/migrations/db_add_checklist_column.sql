@@ -1,0 +1,2 @@
+ALTER TABLE uploaded_files
+ADD COLUMN checklist VARCHAR(255) DEFAULT NULL;

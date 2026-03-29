@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f1f5f9" />
+  <rect x="60" y="60" width="1160" height="600" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="4" stroke-dasharray="8 12" />
+
+  <text x="640" y="310" text-anchor="middle" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="40" fill="#0f172a">
+    Screenshot Placeholder
+  </text>
+  <text x="640" y="375" text-anchor="middle" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="24" fill="#334155">
+    Add image under assets/images/tutorials/...
+  </text>
+  <text x="640" y="420" text-anchor="middle" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="20" fill="#64748b">
+    Then refresh this page.
+  </text>
+</svg>

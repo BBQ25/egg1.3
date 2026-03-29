@@ -1,0 +1,51 @@
+.info-page {
+    /* Global typography tuner for all Info pages.
+       One notch larger: 1.05
+       One notch smaller: 0.95 */
+    --info-type-scale: 1;
+    --info-body-size: calc(0.95rem * var(--info-type-scale));
+    --info-chip-size: calc(0.85rem * var(--info-type-scale));
+    --info-badge-size: calc(0.75rem * var(--info-type-scale));
+    --info-detail-size: calc(0.95rem * var(--info-type-scale));
+    --info-title-size: calc(1rem * var(--info-type-scale));
+}
+
+.info-page .site-page-body {
+    font-size: var(--info-body-size);
+    line-height: 1.65;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.info-page .about-meta-chip,
+.info-page .news-meta-chip,
+.info-page .support-chip,
+.info-page .contact-chip {
+    font-size: var(--info-chip-size);
+    font-weight: 600;
+}
+
+.info-page .about-story-label,
+.info-page .news-item-badge,
+.info-page .support-heading-badge,
+.info-page .contact-method-badge {
+    font-size: var(--info-badge-size);
+    font-weight: 700;
+}
+
+.info-page .about-story-text,
+.info-page .news-item-detail,
+.info-page .support-list li,
+.info-page .contact-method-value,
+.info-page .contact-note {
+    font-size: var(--info-detail-size);
+    line-height: 1.6;
+}
+
+.info-page .news-section-title {
+    font-size: var(--info-detail-size);
+}
+
+.info-page .news-item-title {
+    font-size: var(--info-title-size);
+}

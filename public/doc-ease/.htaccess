@@ -1,0 +1,62 @@
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# Block sensitive internal directories from public web access.
+RewriteRule ^(?:config|docs|root|sql|tmp|tools|workflows)(?:/|$) - [R=404,L,NC]
+
+# Block dangerous maintenance/bootstrap endpoints.
+RewriteRule ^(?:setup-db|import_users)(?:\.php)?$ - [R=404,L,NC]
+RewriteRule ^pages/import_users\.php$ - [R=404,L,NC]
+
+# Clean URLs:
+# 1) Redirect visible *.php URLs to extensionless form (GET/HEAD only).
+# 2) Internally resolve extensionless paths back to *.php.
+# Keep POST endpoints (e.g. /includes/*.php) untouched.
+RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$ [NC]
+RewriteCond %{THE_REQUEST} \s+(/[^?\s]+?)\.php(?:[\s?]|$) [NC]
+RewriteCond %{REQUEST_URI} !/includes/ [NC]
+RewriteCond %{REQUEST_URI} !/pages/ [NC]
+RewriteRule ^ %1 [R=302,L,NE]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !^/pages/ [NC]
+RewriteRule ^([A-Za-z0-9/_-]+)$ $1.php [QSA,L]
+
+# Hide module paths under /pages/ from visitors.
+RewriteCond %{THE_REQUEST} \s/+pages/auth/(auth-(?:login|logout|register|student-enroll)\.php) [NC]
+RewriteRule ^pages/auth/(auth-(?:login|logout|register|student-enroll)\.php)$ /$1 [R=302,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/api/((?:get_monthly_uploads|get_student_name)\.php) [NC]
+RewriteRule ^pages/api/((?:get_monthly_uploads|get_student_name)\.php)$ /$1 [R=302,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/student/(todays_act\.php) [NC]
+RewriteRule ^pages/student/(todays_act\.php)$ /$1 [R=302,L]
+
+# Hide /pages/ from visitors: redirect direct access to /pages/<file> to /<file>
+RewriteCond %{THE_REQUEST} \s/+pages/([^\s?/]+) [NC]
+RewriteRule ^pages/([^\s?/]+)$ /$1 [R=302,L]
+
+# Route moved auth pages while preserving original root URLs.
+RewriteCond %{REQUEST_URI} !^/pages/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(auth-(?:login|logout|register|student-enroll)\.php)$ pages/auth/$1 [QSA,L]
+
+# Route moved API endpoints while preserving original root URLs.
+RewriteCond %{REQUEST_URI} !^/pages/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^((?:get_monthly_uploads|get_student_name)\.php)$ pages/api/$1 [QSA,L]
+
+# Route moved student pages while preserving original root URLs.
+RewriteCond %{REQUEST_URI} !^/pages/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(todays_act\.php)$ pages/student/$1 [QSA,L]
+
+# If a root-level PHP file is requested and it does NOT exist in root,
+# internally serve it from /pages/
+RewriteCond %{REQUEST_URI} \.php$ [NC]
+RewriteCond %{REQUEST_URI} !^/pages/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+\.php)$ pages/$1 [QSA,L]
