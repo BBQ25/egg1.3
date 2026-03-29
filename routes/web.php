@@ -20,6 +20,7 @@ use App\Http\Controllers\Monitoring\NotificationsController;
 use App\Http\Controllers\Monitoring\ProductionReportController;
 use App\Http\Controllers\Monitoring\ValidationAccuracyController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\Ops\GithubDeployWebhookController;
 use App\Http\Controllers\PriceMonitoringController;
 use App\Http\Controllers\Owner\FarmController as OwnerFarmController;
 use App\Http\Controllers\DocEase\Academic\AssignmentController as DocEaseAcademicAssignmentController;
@@ -45,6 +46,12 @@ $registerRoutes = static function (string $prefix = '', bool $withNames = false)
 
         return '/' . $prefix . $path;
     };
+
+    $githubDeployWebhookRoute = Route::post($uri('/ops/deploy/github'), GithubDeployWebhookController::class)
+        ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
+    if ($withNames) {
+        $githubDeployWebhookRoute->name('ops.deploy.github');
+    }
 
     $loginRoute = Route::middleware('guest')->get($uri('/login'), [LoginController::class, 'create']);
     if ($withNames) {

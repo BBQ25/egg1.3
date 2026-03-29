@@ -11,7 +11,8 @@ Intended workflow:
 1. Edit locally in VS Code.
 2. Test locally.
 3. Commit and push to `origin/main`.
-4. Wait for the aaPanel cron job to run the sync script.
+4. GitHub sends a signed webhook to `/ops/deploy/github`.
+5. The server starts the sync script immediately.
 5. Refresh `https://eggs.ryhnsolutions.shop`.
 
 The script is designed to touch only the `eggs.ryhnsolutions.shop` site:
@@ -23,8 +24,16 @@ The script is designed to touch only the `eggs.ryhnsolutions.shop` site:
 - runs `php artisan migrate --force`
 - clears Laravel caches after deployment
 
+Webhook setup:
+
+- payload URL: `https://eggs.ryhnsolutions.shop/ops/deploy/github`
+- content type: `application/json`
+- event: `Just the push event`
+- branch filter is enforced server-side as `main`
+- secret: must match `EGGS_DEPLOY_WEBHOOK_SECRET` in the live `.env`
+
 Notes:
 
-- This is a polling deploy, not an instant webhook deploy.
+- The webhook route only accepts signed requests and only triggers deploys for `BBQ25/egg1.3` pushes to `main`.
 - Future manual hotfixes made only on the server can be overwritten by the next GitHub sync.
 - The safe source of truth is the local repo plus GitHub.
