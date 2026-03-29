@@ -94,7 +94,6 @@
           <div class="auth-cover-form-shell mx-auto mt-sm-12 mt-8">
             <h4 class="mb-1">Welcome back!</h4>
             <p class="mb-6">Please sign in to your account and start the adventure.</p>
-            <p class="text-body-secondary small mb-6" data-live-sync-marker>Live sync marker: 2026-03-29</p>
 
             @if ($errors->any())
               <div class="alert alert-danger mb-6" role="alert">
