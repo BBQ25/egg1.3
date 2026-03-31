@@ -117,6 +117,49 @@ System evaluation was conducted using actual eggs from the Southern Leyte State 
   - `composer audit --format=json`
   - `npm audit --json`
 
+## Slash Command Aliases
+- `/understand`
+  - Study, learn, and understand the codebase before proposing or changing anything.
+  - Start by inspecting relevant routes, controllers, services, models, Blade views, docs, config, and tests.
+  - Summaries should explain current behavior, key dependencies, and likely impact areas.
+- `/find b.e`
+  - Find bugs and errors in the codebase.
+  - Default to review mode: prioritize concrete findings, risks, regressions, broken flows, and missing validation or tests.
+  - Report findings first with file references whenever possible.
+- `/fix b.e`
+  - Fix bugs and errors in the codebase.
+  - First identify the bug scope, then implement the fix, then run relevant verification or tests.
+  - Prefer fixing root causes over cosmetic workarounds.
+- `/serve update`
+  - Means run `powershell -ExecutionPolicy Bypass -File scripts/serve-update.ps1`.
+  - If extra text is supplied after the command, use it as the commit message.
+- `/try all`
+  - Use Playwright to visit every meaningful application page that is reachable in the current environment.
+  - Capture page-load failures, console errors, broken navigation, obvious layout regressions, and auth/route blockers.
+  - Summarize which pages passed, which pages failed, and the reason for each failure.
+- `/try page:{name of page}`
+  - Use Playwright to visit the specific named page only.
+  - Resolve the page by route, menu label, title, or known feature name from the codebase.
+  - Report page behavior, console errors, screenshot or visual problems, and route/auth issues if encountered.
+
+## Serve Update Release Command
+- `/serve update` is the official Codex workflow alias, not a Laravel route and not a firmware command.
+- `/serve update` means run `powershell -ExecutionPolicy Bypass -File scripts/serve-update.ps1`.
+- `/serve update <message>` means run the same script and use the supplied text as the commit message.
+- The release workflow must:
+  - run only from branch `main`
+  - verify `origin` points to `BBQ25/egg1.3`
+  - fail if merge, rebase, cherry-pick, or revert state is active
+  - run `git diff --check`
+  - run `php artisan test`
+  - stage repo changes with `git add -A`
+  - exclude local release-noise paths and `.ops/serve-update.local.json`
+  - commit with default message `chore: serve update` when no custom message is supplied
+  - push to `origin/main`
+- The live deployment target is aaPanel and production updates should happen through the existing GitHub webhook at `/ops/deploy/github`.
+- Safe operational references live in `docs/ops/serve-update.md`.
+- Sensitive operational values belong in `.ops/serve-update.local.json`, which must never be committed.
+
 ## Refactor Roadmap Reference
 - See: `docs/ui-refactor-schedule-2026-02-25.md`
 - Current priority: reduce oversized Blade views and migrate inline JS to modular assets.

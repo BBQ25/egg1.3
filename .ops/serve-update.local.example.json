@@ -1,0 +1,27 @@
+{
+  "github": {
+    "repository": "BBQ25/egg1.3",
+    "username": "",
+    "contact_email": "",
+    "personal_access_token_note": "Store GitHub auth details locally only. Do not commit tokens.",
+    "webhook_secret_note": "Must match EGGS_DEPLOY_WEBHOOK_SECRET on the live server."
+  },
+  "hostinger": {
+    "account_email": "",
+    "panel_url": "",
+    "primary_domain": "eggs.ryhnsolutions.shop",
+    "dns_notes": "",
+    "ssl_notes": ""
+  },
+  "aapanel": {
+    "panel_url": "",
+    "username": "",
+    "password": "",
+    "ssh_host": "",
+    "ssh_port": 22,
+    "ssh_username": "",
+    "site_root": "/www/wwwroot/eggs.ryhnsolutions.shop",
+    "deploy_log": "/www/wwwlogs/eggs-auto-sync.log",
+    "notes": ""
+  }
+}

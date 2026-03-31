@@ -64,7 +64,7 @@
   f = feed one cycle now
   a = toggle automatic feeding
   p = pause feeding
-  i = print device info JSON
+  c = run 100 g calibration
   1 = slow speed
   2 = normal speed
   3 = fast speed
@@ -78,19 +78,11 @@ const char* WIFI_SSID     = "BBQ";
 const char* WIFI_PASSWORD = "Password";
 
 const char* API_BASE_URL = "https://eggs.ryhnsolutions.shop";
-const char* API_HOST = "eggs.ryhnsolutions.shop";
-const uint16_t API_PORT = 443;
-const char* API_RUNTIME_CONFIG_PATH = "/api/devices/runtime-config";
-const char* API_INGEST_PATH = "/api/devices/ingest";
 const char* DEVICE_SERIAL = "ESP32-INGEST-001";
-const char* DEVICE_KEY = "eggpulse_wr8yn78jh3yv";
-const char* MODULE_BOARD_NAME = "ESP32 Egg Sorter Controller";
-const char* FIRMWARE_VERSION = "aesm-live-v1";
-const char* DEVICE_INFO_MARKER = "DEVICE_INFO_JSON:";
+const char* DEVICE_KEY = "replace-with-device-key";
 const char* NTP_SERVER_PRIMARY = "pool.ntp.org";
 const char* NTP_SERVER_SECONDARY = "time.nist.gov";
 const unsigned long runtimeConfigRefreshMs = 60000UL;
-const unsigned long apiDnsRefreshMs = 300000UL;
 const uint16_t httpTimeoutMs = 5000;
 const uint8_t maxIngestAttempts = 3;
 
@@ -159,6 +151,18 @@ float calibration_factor = 630.0;
 
 
 // ======================================================================
+// CALIBRATION SETTINGS
+// ======================================================================
+const float knownCalibrationWeight = 100.0;
+const unsigned long calibrationPlaceTimeMs = 10000;
+const unsigned long calibrationSampleTimeMs = 3000;
+const float calibrationRemoveThreshold = 3.0;
+
+bool calibrationRequested = false;
+bool calibrationMode = false;
+
+
+// ======================================================================
 // SERVO OBJECTS
 // ======================================================================
 Servo gate1Servo;
@@ -213,7 +217,8 @@ int currentTiltAngle = tiltFlatAngle;
 // ======================================================================
 // MACHINE TIMING
 // ======================================================================
-uint8_t targetEggsPerMinute             = 12;
+const uint8_t targetEggsPerMinute       = 12;
+const unsigned long targetEggIntervalMs = 60000UL / targetEggsPerMinute;
 
 // tuned for 12 eggs/min target depending on chute + scale settle
 unsigned long feedIntervalMs          = 4800;
@@ -232,10 +237,6 @@ unsigned long postSortedDelayMs       = 90;
 unsigned long waitRemoveTimeoutMs     = 3000;
 unsigned long idleLoopDelayMs         = 10;
 unsigned long webPollFriendlyDelayMs  = 5;
-unsigned long pusherHoldMs            = 60;
-unsigned long pusherReturnPauseMs     = 50;
-unsigned long tiltHoldMs              = 120;
-unsigned long tiltReturnPauseMs       = 50;
 
 uint8_t liveReadSamples               = 1;
 uint8_t measurementReadSamples        = 1;
@@ -306,10 +307,6 @@ unsigned long cloudSendFailureCount = 0;
 unsigned long cloudDroppedCount     = 0;
 unsigned long cloudValidationErrors = 0;
 unsigned long eggUidSequence        = 0;
-IPAddress apiHostAddress;
-bool apiHostAddressValid = false;
-unsigned long lastApiDnsLookupMs = 0;
-String lastCloudTransportDetail = "Idle";
 
 
 // ======================================================================
@@ -446,6 +443,7 @@ bool waitForEggArrivalOnScale(unsigned long timeoutMs);
 bool waitForEggRemoval();
 void processEggCycle();
 void tareScaleNow();
+void runCalibration100g();
 
 void addEggRecord(float weight, const String &classLabel, const String &sortResult, const String &notes);
 void updateCounters(String eggType);
@@ -459,17 +457,12 @@ String buildIso8601Utc(time_t timestampSeconds);
 String generateEggUid(time_t timestampSeconds);
 String deviceSerialTail();
 String deviceMetadataJson(const PendingCloudEvent &event);
-String buildDeviceInfoJson();
 bool extractJsonStringValue(const String &json, const String &key, String &value, bool *wasNull = nullptr);
 bool extractJsonNumberValue(const String &json, const String &key, float &value);
 bool applyWeightRangeFromConfig(const String &json, CloudWeightRange &range);
-bool resolveApiHostAddress(IPAddress &address, bool forceRefresh = false);
-int parseHttpStatusCode(const String &statusLine);
-int performCloudJsonRequest(const char *method, const char *path, const String *payload, String &responseBody);
 void copyTextToBuffer(char *destination, size_t destinationSize, const String &value);
 void printSerialBanner();
 void printSystemStatus();
-void printDeviceInfoJson();
 void handleSerialCommands();
 float constrainPercent(float value, float maxValue);
 void applySpeedProfileSlow();
@@ -509,6 +502,12 @@ void setup() {
 void loop() {
   serviceBackground();
   handleSerialCommands();
+
+  if (calibrationRequested && !machineBusy) {
+    calibrationRequested = false;
+    runCalibration100g();
+    return;
+  }
 
   if (machinePaused) {
     machineBusy = false;
@@ -689,8 +688,25 @@ bool fetchRuntimeConfig(bool forceFetch) {
     return true;
   }
 
-  String body = "";
-  const int httpCode = performCloudJsonRequest("GET", API_RUNTIME_CONFIG_PATH, nullptr, body);
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient http;
+  String endpoint = String(API_BASE_URL) + "/api/devices/runtime-config";
+  if (!http.begin(client, endpoint)) {
+    webCloudStatus = "Config";
+    webCloudMessage = "Config connection failed";
+    return false;
+  }
+
+  http.setTimeout(httpTimeoutMs);
+  http.addHeader("Accept", "application/json");
+  http.addHeader("X-Device-Serial", DEVICE_SERIAL);
+  http.addHeader("X-Device-Key", DEVICE_KEY);
+
+  const int httpCode = http.GET();
+  const String body = http.getString();
+  http.end();
 
   lastRuntimeConfigFetchMs = millis();
 
@@ -703,9 +719,7 @@ bool fetchRuntimeConfig(bool forceFetch) {
 
   if (httpCode != 200) {
     webCloudStatus = "Config";
-    webCloudMessage = httpCode > 0
-      ? "Config HTTP " + String(httpCode)
-      : "Config " + lastCloudTransportDetail;
+    webCloudMessage = "Config HTTP " + String(httpCode);
     return false;
   }
 
@@ -734,10 +748,6 @@ bool fetchRuntimeConfig(bool forceFetch) {
 }
 
 void queueCloudEvent(float weight, const WeightStats &stats, const String &localClass, const String &cloudClass, const String &sortResult) {
-  if (pendingCloudEvent.pending) {
-    flushPendingCloudEvent(true);
-  }
-
   if (pendingCloudEvent.pending) {
     cloudDroppedCount++;
   }
@@ -785,10 +795,28 @@ bool flushPendingCloudEvent(bool forceAttempt) {
     pendingCloudEvent.recordedAt = buildIso8601Utc(time(nullptr));
   }
 
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient http;
+  String endpoint = String(API_BASE_URL) + "/api/devices/ingest";
+  if (!http.begin(client, endpoint)) {
+    webCloudStatus = "Upload";
+    webCloudMessage = "Upload connection failed";
+    return false;
+  }
+
+  http.setTimeout(httpTimeoutMs);
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("Accept", "application/json");
+  http.addHeader("X-Device-Serial", DEVICE_SERIAL);
+  http.addHeader("X-Device-Key", DEVICE_KEY);
+
   pendingCloudEvent.attempts++;
   String payload = buildCloudPayload(pendingCloudEvent);
-  String responseBody = "";
-  int httpCode = performCloudJsonRequest("POST", API_INGEST_PATH, &payload, responseBody);
+  int httpCode = http.POST(payload);
+  String responseBody = http.getString();
+  http.end();
 
   if (httpCode == 201) {
     pendingCloudEvent.pending = false;
@@ -834,9 +862,7 @@ bool flushPendingCloudEvent(bool forceAttempt) {
 
   pendingCloudEvent.nextAttemptAtMs = millis() + (unsigned long) pendingCloudEvent.attempts * 1500UL;
   webCloudStatus = "Retry";
-  webCloudMessage = httpCode <= 0
-    ? "Retrying " + lastCloudTransportDetail
-    : "Retrying after HTTP " + String(httpCode);
+  webCloudMessage = httpCode <= 0 ? "Retrying after timeout" : "Retrying after HTTP " + String(httpCode);
   return false;
 }
 
@@ -868,7 +894,7 @@ String deviceMetadataJson(const PendingCloudEvent &event) {
   json += "\"bssid\":\"" + escapeJson(WiFi.BSSIDstr()) + "\",";
   json += "\"wifi_ssid\":\"" + escapeJson(WiFi.SSID()) + "\",";
   json += "\"rssi_dbm\":" + String(WiFi.RSSI()) + ",";
-  json += "\"firmware_version\":\"" + escapeJson(String(FIRMWARE_VERSION)) + "\",";
+  json += "\"firmware_version\":\"aesm-live-v1\",";
   json += "\"measurement_avg_g\":" + String(event.average_g, 2) + ",";
   json += "\"measurement_median_g\":" + String(event.median_g, 2) + ",";
   json += "\"measurement_trimmed_avg_g\":" + String(event.trimmedAverage_g, 2) + ",";
@@ -876,58 +902,6 @@ String deviceMetadataJson(const PendingCloudEvent &event) {
   json += "\"measurement_sample_count\":" + String(event.sampleCount) + ",";
   json += "\"sort_result\":\"" + escapeJson(event.sortResult) + "\",";
   json += "\"local_class\":\"" + escapeJson(event.localClass) + "\"";
-  json += "}";
-  return json;
-}
-
-String buildDeviceInfoJson() {
-  const String chipModel = String(ESP.getChipModel());
-  const String macAddress = WiFi.macAddress();
-  const uint32_t flashBytes = ESP.getFlashChipSize();
-  const uint32_t psramBytes = ESP.getPsramSize();
-
-  String macAlias = macAddress;
-  macAlias.replace(":", "");
-  macAlias = "MAC-" + macAlias;
-
-  const String mainTechnicalSpecs =
-    String(MODULE_BOARD_NAME) +
-    " | Chip " + chipModel +
-    " rev " + String(ESP.getChipRevision()) +
-    " | " + String(ESP.getCpuFreqMHz()) + " MHz" +
-    " | Firmware " + String(FIRMWARE_VERSION) +
-    " | Wi-Fi + Bluetooth";
-
-  const String processingMemory =
-    "Flash " + String((float) flashBytes / 1048576.0f, 1) + " MB" +
-    " | PSRAM " + (psramBytes > 0 ? String((float) psramBytes / 1048576.0f, 1) + " MB" : String("None")) +
-    " | Heap " + String(ESP.getHeapSize() / 1024U) + " KB" +
-    " | Free Heap " + String(ESP.getFreeHeap() / 1024U) + " KB";
-
-  const String gpioInterfaces =
-    "Gate1 GPIO " + String(GATE1_PIN) +
-    ", Gate2 GPIO " + String(GATE2_PIN) +
-    ", Pusher GPIO " + String(PUSHER_PIN) +
-    ", Pan GPIO " + String(PAN_PIN) +
-    ", Tilt GPIO " + String(TILT_PIN) +
-    " | HX711 | LCD I2C | Wi-Fi | Bluetooth | UART";
-
-  String json = "{";
-  json += "\"module_board_name\":\"" + escapeJson(String(MODULE_BOARD_NAME)) + "\",";
-  json += "\"primary_serial_no\":\"" + escapeJson(String(DEVICE_SERIAL)) + "\",";
-  json += "\"aliases_text\":\"" + escapeJson(macAlias) + "\",";
-  json += "\"firmware_version\":\"" + escapeJson(String(FIRMWARE_VERSION)) + "\",";
-  json += "\"api_base_url\":\"" + escapeJson(String(API_BASE_URL)) + "\",";
-  json += "\"wifi_ssid\":\"" + escapeJson(String(WIFI_SSID)) + "\",";
-  json += "\"mac_address\":\"" + escapeJson(macAddress) + "\",";
-  json += "\"chip_model\":\"" + escapeJson(chipModel) + "\",";
-  json += "\"chip_revision\":" + String(ESP.getChipRevision()) + ",";
-  json += "\"cpu_mhz\":" + String(ESP.getCpuFreqMHz()) + ",";
-  json += "\"flash_bytes\":" + String(flashBytes) + ",";
-  json += "\"psram_bytes\":" + String(psramBytes) + ",";
-  json += "\"main_technical_specs\":\"" + escapeJson(mainTechnicalSpecs) + "\",";
-  json += "\"processing_memory\":\"" + escapeJson(processingMemory) + "\",";
-  json += "\"gpio_interfaces\":\"" + escapeJson(gpioInterfaces) + "\"";
   json += "}";
   return json;
 }
@@ -977,119 +951,6 @@ String generateEggUid(time_t timestampSeconds) {
   snprintf(epochBuffer, sizeof(epochBuffer), "%llu", epochMs);
 
   return "egg-" + deviceSerialTail() + "-" + String(epochBuffer) + "-" + String(sequenceBuffer);
-}
-
-bool resolveApiHostAddress(IPAddress &address, bool forceRefresh) {
-  if (!forceRefresh && apiHostAddressValid && millis() - lastApiDnsLookupMs < apiDnsRefreshMs) {
-    address = apiHostAddress;
-    return true;
-  }
-
-  IPAddress resolved;
-  if (WiFi.hostByName(API_HOST, resolved) != 1) {
-    apiHostAddressValid = false;
-    lastCloudTransportDetail = "DNS failed for " + String(API_HOST);
-    return false;
-  }
-
-  apiHostAddress = resolved;
-  apiHostAddressValid = true;
-  lastApiDnsLookupMs = millis();
-  address = apiHostAddress;
-  lastCloudTransportDetail = "Resolved " + address.toString();
-  return true;
-}
-
-int parseHttpStatusCode(const String &statusLine) {
-  int firstSpace = statusLine.indexOf(' ');
-  if (firstSpace < 0) {
-    return 0;
-  }
-
-  int secondSpace = statusLine.indexOf(' ', firstSpace + 1);
-  String codeText = secondSpace > firstSpace
-    ? statusLine.substring(firstSpace + 1, secondSpace)
-    : statusLine.substring(firstSpace + 1);
-  codeText.trim();
-  return codeText.toInt();
-}
-
-int performCloudJsonRequest(const char *method, const char *path, const String *payload, String &responseBody) {
-  responseBody = "";
-
-  IPAddress resolvedAddress;
-  if (!resolveApiHostAddress(resolvedAddress)) {
-    return -1001;
-  }
-
-  WiFiClientSecure client;
-  client.setInsecure();
-  client.setTimeout(httpTimeoutMs);
-
-  if (!client.connect(resolvedAddress, API_PORT)) {
-    apiHostAddressValid = false;
-    lastCloudTransportDetail = "TLS connect failed to " + resolvedAddress.toString();
-    return -1002;
-  }
-
-  client.print(String(method) + " " + String(path) + " HTTP/1.0\r\n");
-  client.print("Host: ");
-  client.print(API_HOST);
-  client.print("\r\nUser-Agent: AESM/");
-  client.print(FIRMWARE_VERSION);
-  client.print("\r\nAccept: application/json\r\n");
-  client.print("X-Device-Serial: ");
-  client.print(DEVICE_SERIAL);
-  client.print("\r\nX-Device-Key: ");
-  client.print(DEVICE_KEY);
-  client.print("\r\nConnection: close\r\n");
-
-  if (payload != nullptr) {
-    client.print("Content-Type: application/json\r\nContent-Length: ");
-    client.print(payload->length());
-    client.print("\r\n");
-  }
-
-  client.print("\r\n");
-
-  if (payload != nullptr && payload->length() > 0) {
-    client.print(*payload);
-  }
-
-  unsigned long waitStart = millis();
-  while (!client.available() && client.connected() && millis() - waitStart < httpTimeoutMs) {
-    delay(10);
-  }
-
-  if (!client.available()) {
-    lastCloudTransportDetail = "HTTP timeout to " + resolvedAddress.toString();
-    client.stop();
-    return -1003;
-  }
-
-  String statusLine = client.readStringUntil('\n');
-  statusLine.trim();
-  const int httpCode = parseHttpStatusCode(statusLine);
-
-  if (httpCode <= 0) {
-    lastCloudTransportDetail = "Bad status line: " + statusLine;
-    client.stop();
-    return -1004;
-  }
-
-  while (client.connected()) {
-    String headerLine = client.readStringUntil('\n');
-    headerLine.trim();
-    if (headerLine.length() == 0) {
-      break;
-    }
-  }
-
-  responseBody = client.readString();
-  client.stop();
-
-  lastCloudTransportDetail = String(method) + " " + String(path) + " -> HTTP " + String(httpCode) + " via " + resolvedAddress.toString();
-  return httpCode;
 }
 
 bool extractJsonStringValue(const String &json, const String &key, String &value, bool *wasNull) {
@@ -1221,6 +1082,11 @@ void setupWebRoutes() {
     server.send(200, "application/json", "{\"ok\":true,\"message\":\"Scale tared\"}");
   });
 
+  server.on("/calibrate", HTTP_GET, []() {
+    calibrationRequested = true;
+    server.send(200, "application/json", "{\"ok\":true,\"message\":\"100g calibration requested\"}");
+  });
+
   server.on("/feed", HTTP_GET, []() {
     cycleRequested = true;
     server.send(200, "application/json", "{\"ok\":true,\"message\":\"Feed cycle requested\"}");
@@ -1296,7 +1162,6 @@ String buildJSONData() {
   json += "\"wifiText\":\"" + wifiQualityText(WiFi.RSSI()) + "\",";
   json += "\"cloudStatus\":\"" + escapeJson(webCloudStatus) + "\",";
   json += "\"cloudMessage\":\"" + escapeJson(webCloudMessage) + "\",";
-  json += "\"cloudTransportDetail\":\"" + escapeJson(lastCloudTransportDetail) + "\",";
   json += "\"cloudBatchCode\":\"" + escapeJson(webCloudBatchCode) + "\",";
   json += "\"cloudLastSync\":\"" + escapeJson(webCloudLastSync) + "\",";
   json += "\"cloudSuccess\":" + String(cloudSendSuccessCount) + ",";
@@ -1688,6 +1553,7 @@ String buildDashboardHTML() {
           <button class="btn btn-purple" onclick="toggleFeed()">Toggle Auto</button>
           <button class="btn btn-orange" onclick="togglePause()">Pause/Resume</button>
           <button class="btn btn-blue" onclick="tareScale()">Tare Scale</button>
+          <button class="btn btn-green" onclick="runCalibration()">100g Cal</button>
           <button class="btn btn-red" onclick="resetCounters()">Reset Counters</button>
         </div>
 
@@ -1829,6 +1695,7 @@ String buildDashboardHTML() {
 
     async function resetCounters(){ await fetch('/reset'); fetchData(true); }
     async function tareScale(){ await fetch('/tare'); fetchData(true); }
+    async function runCalibration(){ await fetch('/calibrate'); fetchData(true); }
     async function feedNow(){ await fetch('/feed'); fetchData(true); }
     async function toggleFeed(){ await fetch('/toggleFeed'); fetchData(true); }
     async function togglePause(){ await fetch('/pause'); fetchData(true); }
@@ -2420,9 +2287,9 @@ void processEggCycle() {
 // ======================================================================
 void pushEgg() {
   moveServoSmooth(pusherServo, pusherRestAngle, pusherPushAngle, 8, 1);
-  delay(pusherHoldMs);
+  delay(60);
   moveServoSmooth(pusherServo, pusherPushAngle, pusherRestAngle, 8, 1);
-  delay(pusherReturnPauseMs);
+  delay(50);
 }
 
 
@@ -2489,10 +2356,10 @@ void tiltDrop(String eggType) {
 
   moveServoSmooth(tiltServo, tiltFlatAngle, tiltTarget, tiltStep, tiltDelayValue);
   currentTiltAngle = tiltTarget;
-  delay(tiltHoldMs);
+  delay(120);
   moveServoSmooth(tiltServo, tiltTarget, tiltFlatAngle, tiltStep, tiltDelayValue);
   currentTiltAngle = tiltFlatAngle;
-  delay(tiltReturnPauseMs);
+  delay(50);
 }
 
 
@@ -2536,6 +2403,104 @@ void tareScaleNow() {
   webMessage = "Scale tared";
   showSystemNameOnLCD();
   Serial.println("Scale tared");
+}
+
+
+// ======================================================================
+// CALIBRATION
+// ======================================================================
+void runCalibration100g() {
+  calibrationMode = true;
+  machineBusy = true;
+  machinePaused = true;
+
+  setMachineState(STATE_PAUSED, "Calibrating", "Preparing calibration");
+  webCycleInfo = "Calibration";
+
+  showStatusOnLCD("Calibrate", "Empty scale");
+  webMessage = "Remove all weight";
+  delay(1500);
+
+  scale.tare();
+  delay(1000);
+
+  showStatusOnLCD("Place 100g wt", "10 sec window");
+  webMessage = "Place 100 g reference weight";
+
+  unsigned long placeStart = millis();
+  while (millis() - placeStart < calibrationPlaceTimeMs) {
+    serviceBackground();
+    float w = readWeight(3);
+    webWeight = w;
+    webEggType = "CAL";
+    showWeightOnLCD(w, "CAL");
+    delay(100);
+  }
+
+  showStatusOnLCD("Reading 100g", "Hold steady");
+  webMessage = "Sampling calibration weight";
+  WeightStats stats = collectWeightStats(calibrationSampleTimeMs, 20, 3);
+  float measured = finalizeWeight(stats);
+
+  if (measured < 5.0) {
+    showStatusOnLCD("Cal Failed", "No weight");
+    webMessage = "Calibration failed: no weight detected";
+    delay(2000);
+    machinePaused = false;
+    machineBusy = false;
+    calibrationMode = false;
+    webEggType = "Waiting";
+    webCycleInfo = "Idle";
+    setMachineState(STATE_IDLE, "Waiting", "Calibration failed");
+    showSystemNameOnLCD();
+    return;
+  }
+
+  float oldFactor = calibration_factor;
+  calibration_factor = oldFactor * (measured / knownCalibrationWeight);
+  scale.set_scale(calibration_factor);
+  delay(500);
+
+  Serial.println("===== CALIBRATION RESULT =====");
+  Serial.print("Old factor   : "); Serial.println(oldFactor, 4);
+  Serial.print("Measured     : "); Serial.println(measured, 4);
+  Serial.print("Known weight : "); Serial.println(knownCalibrationWeight, 4);
+  Serial.print("New factor   : "); Serial.println(calibration_factor, 4);
+
+  showStatusOnLCD("Remove weight", "Waiting zero");
+  webMessage = "Remove calibration weight";
+
+  unsigned long removeStart = millis();
+  while (millis() - removeStart < 15000) {
+    serviceBackground();
+    float w = readWeight(3);
+    webWeight = w;
+    webEggType = "REMOVE";
+    showWeightOnLCD(w, "REMOVE");
+
+    if (w <= calibrationRemoveThreshold) {
+      break;
+    }
+    delay(100);
+  }
+
+  scale.tare();
+  delay(800);
+
+  webWeight = 0;
+  webEggType = "Waiting";
+  webCycleInfo = "Idle";
+  webMessage = "Calibration complete";
+
+  showStatusOnLCD("Cal Complete", "Factor saved");
+  delay(2000);
+
+  machinePaused = false;
+  machineBusy = false;
+  calibrationMode = false;
+
+  setMachineState(STATE_IDLE, "Waiting", "Calibration complete");
+  showSystemNameOnLCD();
 }
 
 
@@ -2608,7 +2573,6 @@ void updateCounters(String eggType) {
 // SPEED PROFILES
 // ======================================================================
 void applySpeedProfileSlow() {
-  targetEggsPerMinute     = 10;
   feedIntervalMs          = 6000;
   gate1OpenTimeMs         = 260;
   gate1PauseAfterCloseMs  = 150;
@@ -2622,10 +2586,6 @@ void applySpeedProfileSlow() {
   postSortedDelayMs       = 140;
   waitRemoveTimeoutMs     = 4500;
   idleLoopDelayMs         = 20;
-  pusherHoldMs            = 85;
-  pusherReturnPauseMs     = 70;
-  tiltHoldMs              = 150;
-  tiltReturnPauseMs       = 70;
   liveReadSamples         = 1;
   measurementReadSamples  = 1;
   webSpeedMode = "SLOW";
@@ -2633,7 +2593,6 @@ void applySpeedProfileSlow() {
 }
 
 void applySpeedProfileNormal() {
-  targetEggsPerMinute     = 12;
   feedIntervalMs          = 5200;
   gate1OpenTimeMs         = 190;
   gate1PauseAfterCloseMs  = 90;
@@ -2647,10 +2606,6 @@ void applySpeedProfileNormal() {
   postSortedDelayMs       = 110;
   waitRemoveTimeoutMs     = 3800;
   idleLoopDelayMs         = 14;
-  pusherHoldMs            = 65;
-  pusherReturnPauseMs     = 50;
-  tiltHoldMs              = 120;
-  tiltReturnPauseMs       = 45;
   liveReadSamples         = 1;
   measurementReadSamples  = 1;
   webSpeedMode = "NORMAL";
@@ -2658,24 +2613,19 @@ void applySpeedProfileNormal() {
 }
 
 void applySpeedProfileFast() {
-  targetEggsPerMinute     = 18;
-  feedIntervalMs          = 3300;
-  gate1OpenTimeMs         = 105;
-  gate1PauseAfterCloseMs  = 22;
-  gate2OpenTimeMs         = 80;
-  gate2PauseAfterCloseMs  = 32;
-  settleDelayBeforeReadMs = 140;
-  measurementWindowMs     = 420;
+  feedIntervalMs          = 4800;
+  gate1OpenTimeMs         = 145;
+  gate1PauseAfterCloseMs  = 45;
+  gate2OpenTimeMs         = 110;
+  gate2PauseAfterCloseMs  = 65;
+  settleDelayBeforeReadMs = 220;
+  measurementWindowMs     = 650;
   measurementSampleDelayMs = 0;
-  eggArrivalTimeoutMs     = 1000;
-  scalePollDelayMs        = 8;
-  postSortedDelayMs       = 35;
-  waitRemoveTimeoutMs     = 1500;
-  idleLoopDelayMs         = 6;
-  pusherHoldMs            = 35;
-  pusherReturnPauseMs     = 25;
-  tiltHoldMs              = 70;
-  tiltReturnPauseMs       = 20;
+  eggArrivalTimeoutMs     = 1400;
+  scalePollDelayMs        = 12;
+  postSortedDelayMs       = 90;
+  waitRemoveTimeoutMs     = 3000;
+  idleLoopDelayMs         = 10;
   liveReadSamples         = 1;
   measurementReadSamples  = 1;
   webSpeedMode = "FAST";
@@ -2766,8 +2716,9 @@ void handleSerialCommands() {
     machinePaused = !machinePaused;
     Serial.print("Paused: ");
     Serial.println(machinePaused ? "YES" : "NO");
-  } else if (cmd == 'i' || cmd == 'I') {
-    printDeviceInfoJson();
+  } else if (cmd == 'c' || cmd == 'C') {
+    calibrationRequested = true;
+    Serial.println("100 g calibration requested");
   } else if (cmd == '1') {
     applySpeedProfileSlow();
   } else if (cmd == '2') {
@@ -2797,21 +2748,12 @@ void printSystemStatus() {
   Serial.print("IP            : "); Serial.println(WiFi.localIP());
   Serial.print("Cloud Status  : "); Serial.println(webCloudStatus);
   Serial.print("Cloud Message : "); Serial.println(webCloudMessage);
-  Serial.print("Cloud Detail  : "); Serial.println(lastCloudTransportDetail);
   Serial.print("Cloud Batch   : "); Serial.println(webCloudBatchCode);
   Serial.print("Cloud Sync    : "); Serial.println(webCloudLastSync);
   Serial.print("Cloud Success : "); Serial.println(cloudSendSuccessCount);
   Serial.print("Cloud Failure : "); Serial.println(cloudSendFailureCount);
   Serial.print("Cloud Pending : "); Serial.println(pendingCloudEvent.pending ? "YES" : "NO");
-  Serial.print("Device ID     : "); Serial.println(DEVICE_SERIAL);
-  Serial.print("Firmware      : "); Serial.println(FIRMWARE_VERSION);
-  Serial.print("MAC           : "); Serial.println(WiFi.macAddress());
   Serial.println("---------------------------------------------");
-}
-
-void printDeviceInfoJson() {
-  Serial.print(DEVICE_INFO_MARKER);
-  Serial.println(buildDeviceInfoJson());
 }
 
 void printSerialBanner() {
@@ -2832,8 +2774,7 @@ void printSerialBanner() {
   Serial.print  ("# Calibration : "); Serial.println(calibration_factor);
   Serial.print  ("# API Base    : "); Serial.println(API_BASE_URL);
   Serial.print  ("# Device ID   : "); Serial.println(DEVICE_SERIAL);
-  Serial.print  ("# Firmware    : "); Serial.println(FIRMWARE_VERSION);
-  Serial.println("# Commands    : s=status r=reset t=tare f=feed a=auto p=pause i=info");
+  Serial.println("# Commands    : s=status r=reset t=tare f=feed a=auto p=pause c=calibrate");
   Serial.println("# Speed Keys  : 1=slow 2=normal 3=fast");
   Serial.println("############################################################");
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\DeviceIngestEvent;
-use App\Models\ProductionBatch;
+use App\Services\AutomaticBatchLifecycleService;
 use App\Support\EggUid;
 use App\Support\EggSizeClass;
 use App\Support\EggWeightRanges;
@@ -20,6 +20,11 @@ use Illuminate\Validation\Rule;
 
 class DeviceIngestController extends Controller
 {
+    public function __construct(
+        private readonly AutomaticBatchLifecycleService $automaticBatchLifecycleService
+    ) {
+    }
+
     public function store(Request $request): JsonResponse
     {
         $device = $this->resolveAuthenticatedDevice($request);
@@ -70,7 +75,7 @@ class DeviceIngestController extends Controller
         }
 
         $event = DB::transaction(function () use ($device, $validated, $recordedAt, $batchCode, $eggUid, $request, $rawPayload) {
-            $productionBatch = $this->resolveProductionBatch($device, $batchCode, $recordedAt);
+            $productionBatch = $this->automaticBatchLifecycleService->resolveForIngest($device, $batchCode, $recordedAt);
 
             $event = DeviceIngestEvent::query()->create([
                 'device_id' => (int) $device->id,
@@ -78,7 +83,7 @@ class DeviceIngestController extends Controller
                 'owner_user_id' => (int) $device->owner_user_id,
                 'production_batch_id' => $productionBatch?->id,
                 'egg_uid' => $eggUid,
-                'batch_code' => $batchCode,
+                'batch_code' => $productionBatch?->batch_code ?? $batchCode,
                 'weight_grams' => $validated['weight_grams'],
                 'size_class' => $validated['size_class'],
                 'recorded_at' => $recordedAt,
@@ -112,13 +117,7 @@ class DeviceIngestController extends Controller
             return $this->unauthorizedResponse();
         }
 
-        $openBatch = ProductionBatch::query()
-            ->where('device_id', (int) $device->id)
-            ->where('farm_id', (int) $device->farm_id)
-            ->where('status', 'open')
-            ->orderByDesc('started_at')
-            ->orderByDesc('id')
-            ->first();
+        $openBatch = $this->automaticBatchLifecycleService->currentOpenBatch($device);
 
         $weightRanges = [];
         foreach (EggWeightRanges::current() as $slug => $entry) {
@@ -172,47 +171,5 @@ class DeviceIngestController extends Controller
         }
 
         return $device;
-    }
-
-    private function resolveProductionBatch(Device $device, ?string $batchCode, Carbon $recordedAt): ?ProductionBatch
-    {
-        if ($batchCode === null) {
-            return null;
-        }
-
-        /** @var ProductionBatch $batch */
-        $batch = ProductionBatch::query()->firstOrCreate(
-            [
-                'device_id' => (int) $device->id,
-                'farm_id' => (int) $device->farm_id,
-                'owner_user_id' => (int) $device->owner_user_id,
-                'batch_code' => $batchCode,
-            ],
-            [
-                'status' => 'open',
-                'started_at' => $recordedAt,
-                'ended_at' => $recordedAt,
-            ]
-        );
-
-        $updates = [];
-
-        if ($batch->started_at === null || $recordedAt->lt($batch->started_at)) {
-            $updates['started_at'] = $recordedAt;
-        }
-
-        if ($batch->ended_at === null || $recordedAt->gt($batch->ended_at)) {
-            $updates['ended_at'] = $recordedAt;
-        }
-
-        if ((string) $batch->status === '') {
-            $updates['status'] = 'open';
-        }
-
-        if ($updates !== []) {
-            $batch->fill($updates)->save();
-        }
-
-        return $batch;
     }
 }

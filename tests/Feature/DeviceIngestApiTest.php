@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Enums\UserRole;
 use App\Models\AppSetting;
 use App\Models\Device;
+use App\Models\DeviceIngestEvent;
 use App\Models\ProductionBatch;
 use App\Models\DeviceSerialAlias;
 use App\Models\Farm;
 use App\Models\User;
+use App\Services\AutomaticBatchLifecycleService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -212,6 +214,141 @@ class DeviceIngestApiTest extends TestCase
         ]);
     }
 
+    public function test_ingest_without_batch_code_auto_creates_and_links_production_batch(): void
+    {
+        [$device, $plainKey] = $this->createDevice('ESP32-INGEST-AUTO-OPEN', 'auto-open-key');
+
+        $recordedAt = now()->subMinutes(4);
+
+        $response = $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 58.20,
+            'size_class' => 'Medium',
+            'recorded_at' => $recordedAt->toIso8601String(),
+            'egg_uid' => 'EGG-AUTO-001',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ]);
+
+        $response->assertStatus(201);
+
+        $batch = ProductionBatch::query()
+            ->where('device_id', $device->id)
+            ->orderByDesc('id')
+            ->first();
+
+        $this->assertNotNull($batch);
+        $this->assertSame('open', $batch->status);
+        $this->assertStringStartsWith('AUTO-D' . $device->id . '-', (string) $batch->batch_code);
+        $this->assertSame($recordedAt->toDateTimeString(), $batch->started_at?->toDateTimeString());
+        $this->assertSame($recordedAt->toDateTimeString(), $batch->ended_at?->toDateTimeString());
+
+        $this->assertDatabaseHas('device_ingest_events', [
+            'device_id' => $device->id,
+            'production_batch_id' => $batch->id,
+            'batch_code' => $batch->batch_code,
+            'egg_uid' => 'egg-auto-001',
+        ]);
+    }
+
+    public function test_ingest_without_batch_code_reuses_current_open_batch_while_active(): void
+    {
+        [$device, $plainKey] = $this->createDevice('ESP32-INGEST-AUTO-REUSE', 'auto-reuse-key');
+
+        $firstRecordedAt = now()->subMinutes(6);
+        $secondRecordedAt = now()->subMinutes(2);
+
+        $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 56.10,
+            'size_class' => 'Medium',
+            'recorded_at' => $firstRecordedAt->toIso8601String(),
+            'egg_uid' => 'EGG-REUSE-001',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ])->assertStatus(201);
+
+        $firstBatch = ProductionBatch::query()
+            ->where('device_id', $device->id)
+            ->orderByDesc('id')
+            ->first();
+
+        $this->assertNotNull($firstBatch);
+
+        $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 60.80,
+            'size_class' => 'Large',
+            'recorded_at' => $secondRecordedAt->toIso8601String(),
+            'egg_uid' => 'EGG-REUSE-002',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ])->assertStatus(201);
+
+        $this->assertSame(1, ProductionBatch::query()->where('device_id', $device->id)->count());
+
+        $batch = $firstBatch->fresh();
+
+        $this->assertNotNull($batch);
+        $this->assertSame('open', $batch->status);
+        $this->assertSame($firstRecordedAt->toDateTimeString(), $batch->started_at?->toDateTimeString());
+        $this->assertSame($secondRecordedAt->toDateTimeString(), $batch->ended_at?->toDateTimeString());
+
+        $this->assertDatabaseHas('device_ingest_events', [
+            'device_id' => $device->id,
+            'egg_uid' => 'egg-reuse-002',
+            'production_batch_id' => $batch->id,
+            'batch_code' => $batch->batch_code,
+        ]);
+    }
+
+    public function test_ingest_after_idle_timeout_starts_a_new_automatic_batch(): void
+    {
+        [$device, $plainKey] = $this->createDevice('ESP32-INGEST-AUTO-ROTATE', 'auto-rotate-key');
+
+        $firstRecordedAt = now()->subMinutes(AutomaticBatchLifecycleService::INACTIVITY_MINUTES + 6);
+        $secondRecordedAt = now();
+
+        $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 57.00,
+            'size_class' => 'Medium',
+            'recorded_at' => $firstRecordedAt->toIso8601String(),
+            'egg_uid' => 'EGG-ROTATE-001',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ])->assertStatus(201);
+
+        $firstBatch = ProductionBatch::query()
+            ->where('device_id', $device->id)
+            ->orderByDesc('id')
+            ->first();
+
+        $this->assertNotNull($firstBatch);
+
+        $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 62.40,
+            'size_class' => 'Large',
+            'recorded_at' => $secondRecordedAt->toIso8601String(),
+            'egg_uid' => 'EGG-ROTATE-002',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ])->assertStatus(201);
+
+        $batches = ProductionBatch::query()
+            ->where('device_id', $device->id)
+            ->orderBy('id')
+            ->get();
+
+        $this->assertCount(2, $batches);
+        $this->assertSame('closed', (string) $batches[0]->status);
+        $this->assertSame($firstRecordedAt->toDateTimeString(), $batches[0]->ended_at?->toDateTimeString());
+        $this->assertSame('open', (string) $batches[1]->status);
+        $this->assertSame($secondRecordedAt->toDateTimeString(), $batches[1]->started_at?->toDateTimeString());
+        $this->assertNotSame($batches[0]->batch_code, $batches[1]->batch_code);
+    }
+
     public function test_egg_uid_without_suffix_after_prefix_is_rejected(): void
     {
         [$device, $plainKey] = $this->createDevice('ESP32-INGEST-EGG-UID', 'egg-uid-key');
@@ -272,6 +409,50 @@ class DeviceIngestApiTest extends TestCase
         $response->assertJsonPath('data.weight_ranges.extra_large.label', 'Extra-Large');
         $response->assertJsonPath('data.weight_ranges.extra_large.max', 68.99);
         $response->assertJsonPath('data.weight_ranges.jumbo.max', 1000);
+    }
+
+    public function test_runtime_config_auto_closes_stale_open_batch_and_returns_null(): void
+    {
+        [$device, $plainKey] = $this->createDevice('ESP32-RUNTIME-CONFIG-AUTO-CLOSE', 'runtime-config-auto-close-key');
+
+        $recordedAt = now()->subMinutes(AutomaticBatchLifecycleService::INACTIVITY_MINUTES + 4);
+
+        $batch = ProductionBatch::query()->create([
+            'device_id' => $device->id,
+            'farm_id' => $device->farm_id,
+            'owner_user_id' => $device->owner_user_id,
+            'batch_code' => 'AUTO-D' . $device->id . '-OLD',
+            'status' => 'open',
+            'started_at' => $recordedAt,
+            'ended_at' => $recordedAt,
+        ]);
+
+        DeviceIngestEvent::query()->create([
+            'device_id' => $device->id,
+            'farm_id' => $device->farm_id,
+            'owner_user_id' => $device->owner_user_id,
+            'production_batch_id' => $batch->id,
+            'egg_uid' => 'egg-runtime-close-001',
+            'batch_code' => $batch->batch_code,
+            'weight_grams' => 61.20,
+            'size_class' => 'Large',
+            'recorded_at' => $recordedAt,
+            'source_ip' => '127.0.0.1',
+            'raw_payload_json' => '{}',
+        ]);
+
+        $response = $this->getJson(route('api.devices.runtime-config'), [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonPath('data.open_batch_code', null);
+
+        $batch->refresh();
+
+        $this->assertSame('closed', $batch->status);
+        $this->assertSame($recordedAt->toDateTimeString(), $batch->ended_at?->toDateTimeString());
     }
 
     public function test_runtime_config_returns_null_batch_when_no_open_batch_exists(): void

@@ -24,3 +24,20 @@ Homestead.yaml
 Thumbs.db
 /tmp/
 /tmp_*.html
+
+# Local release workflow secrets
+/.ops/serve-update.local.json
+
+# Local browser automation noise
+/.playwright-cli/*.log
+/.playwright-cli/element-*.png
+/.playwright-cli/page-*.png
+/.playwright-cli/page-*.yml
+
+# Firmware build artifacts
+/firmware/AESM/build/
+
+# Local preview artifacts
+/output/firmware-dashboard-preview/
+/output/playwright/*.png
+/output/playwright/*.txt
