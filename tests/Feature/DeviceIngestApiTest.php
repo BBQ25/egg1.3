@@ -11,6 +11,7 @@ use App\Models\DeviceSerialAlias;
 use App\Models\Farm;
 use App\Models\User;
 use App\Services\AutomaticBatchLifecycleService;
+use App\Support\BatchCodeFormatter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -239,7 +240,10 @@ class DeviceIngestApiTest extends TestCase
 
         $this->assertNotNull($batch);
         $this->assertSame('open', $batch->status);
-        $this->assertStringStartsWith('AUTO-D' . $device->id . '-', (string) $batch->batch_code);
+        $this->assertSame(
+            BatchCodeFormatter::build($device->farm->farm_name, $recordedAt),
+            (string) $batch->batch_code
+        );
         $this->assertSame($recordedAt->toDateTimeString(), $batch->started_at?->toDateTimeString());
         $this->assertSame($recordedAt->toDateTimeString(), $batch->ended_at?->toDateTimeString());
 

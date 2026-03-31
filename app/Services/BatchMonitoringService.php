@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Models\Device;
 use App\Models\ProductionBatch;
+use App\Support\BatchCodeFormatter;
 use App\Support\EggSizeClass;
 use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -550,14 +552,12 @@ class BatchMonitoringService
         ]);
     }
 
-    public function openBatch(Device $device, string $batchCode): ProductionBatch
+    public function openBatch(Device $device, ?string $batchCode = null): ProductionBatch
     {
-        $batchCode = trim($batchCode);
+        $batchCode = trim((string) $batchCode);
 
         if ($batchCode === '') {
-            throw ValidationException::withMessages([
-                'batch_code' => 'Batch code is required.',
-            ]);
+            $batchCode = $this->generateUniqueBatchCode($device);
         }
 
         $existingBatch = ProductionBatch::query()
@@ -598,6 +598,30 @@ class BatchMonitoringService
     private function hasProductionBatchesTable(): bool
     {
         return Schema::hasTable('production_batches');
+    }
+
+    private function generateUniqueBatchCode(Device $device, ?CarbonInterface $observedAt = null): string
+    {
+        $device->loadMissing('farm');
+        $observedAt = $observedAt
+            ? CarbonImmutable::instance($observedAt)
+            : CarbonImmutable::now();
+
+        $candidate = BatchCodeFormatter::build($device->farm?->farm_name, $observedAt);
+        $suffix = 1;
+
+        while (
+            ProductionBatch::query()
+                ->where('device_id', $device->id)
+                ->where('farm_id', $device->farm_id)
+                ->where('batch_code', $candidate)
+                ->exists()
+        ) {
+            $suffix++;
+            $candidate = BatchCodeFormatter::build($device->farm?->farm_name, $observedAt, $suffix);
+        }
+
+        return $candidate;
     }
 
     private function sizeClassOrderSql(string $column): string

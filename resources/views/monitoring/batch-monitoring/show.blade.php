@@ -24,11 +24,7 @@
     $formatInt = static fn ($value): string => number_format((int) ($value ?? 0));
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
     $formatDateTime = static function ($value): string {
-        if (!$value) {
-            return 'N/A';
-        }
-
-        return \Illuminate\Support\Carbon::parse($value)->format('M j, Y g:i A');
+        return \App\Support\BatchCodeFormatter::formatPhilippineDateTime($value);
     };
     $durationLabel = static function ($start, $end): string {
         if (!$start) {
@@ -39,7 +35,8 @@
             return 'In progress';
         }
 
-        $minutes = \Illuminate\Support\Carbon::parse($start)->diffInMinutes(\Illuminate\Support\Carbon::parse($end));
+        $minutes = \App\Support\BatchCodeFormatter::toPhilippineTime($start)
+            ->diffInMinutes(\App\Support\BatchCodeFormatter::toPhilippineTime($end));
 
         if ($minutes < 1) {
             return 'Under 1 minute';
@@ -149,6 +146,7 @@
             <div class="text-body-secondary">
               {{ $summary->farm_name ?? 'Farm' }} · {{ $summary->device_name ?? 'Device' }} · Serial {{ $summary->device_serial ?? 'N/A' }}
             </div>
+            <div class="text-body-secondary small mt-1">Times shown in Philippine Standard Time.</div>
             <div class="mt-2">
               <span class="badge {{ $statusTheme }}">{{ ucfirst((string) ($summary->status ?? 'unknown')) }}</span>
             </div>

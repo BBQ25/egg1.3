@@ -9,6 +9,7 @@ use App\Models\ProductionBatch;
 use App\Models\User;
 use App\Services\BatchMonitoringService;
 use App\Services\DashboardContextService;
+use App\Support\BatchCodeFormatter;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -137,8 +138,8 @@ class BatchMonitoringController extends Controller
                     (int) $row->reject_count,
                     number_format((float) $row->avg_weight_grams, 2, '.', ''),
                     number_format((float) $row->total_weight_grams, 2, '.', ''),
-                    $row->started_at,
-                    $row->ended_at,
+                    BatchCodeFormatter::formatPhilippineDateTime($row->started_at, 'Y-m-d H:i:s'),
+                    $row->ended_at ? BatchCodeFormatter::formatPhilippineDateTime($row->ended_at, 'Y-m-d H:i:s') : null,
                 ]);
             }
 
@@ -207,7 +208,7 @@ class BatchMonitoringController extends Controller
                     $row->egg_uid,
                     $row->size_class,
                     number_format((float) $row->weight_grams, 2, '.', ''),
-                    $row->recorded_at,
+                    BatchCodeFormatter::formatPhilippineDateTime($row->recorded_at, 'Y-m-d H:i:s'),
                     $row->source_ip,
                 ]);
             }
@@ -277,7 +278,7 @@ class BatchMonitoringController extends Controller
         $validated = $request->validate([
             'farm_id' => ['required', 'integer'],
             'device_id' => ['required', 'integer'],
-            'batch_code' => ['required', 'string', 'max:80'],
+            'batch_code' => ['nullable', 'string', 'max:80'],
         ]);
 
         $scopeFarmIds = $context['scope']['farm_ids'] ?? [];
@@ -291,7 +292,7 @@ class BatchMonitoringController extends Controller
             ->where('farm_id', (int) $validated['farm_id'])
             ->firstOrFail();
 
-        $batch = $this->batchMonitoringService->openBatch($device, (string) $validated['batch_code']);
+        $batch = $this->batchMonitoringService->openBatch($device, $validated['batch_code'] ?? null);
 
         return redirect()
             ->route('monitoring.batches.show', array_filter([

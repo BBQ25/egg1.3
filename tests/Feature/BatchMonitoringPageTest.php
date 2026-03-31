@@ -6,6 +6,7 @@ use App\Models\Device;
 use App\Models\Farm;
 use App\Models\ProductionBatch;
 use App\Models\User;
+use App\Support\BatchCodeFormatter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -194,13 +195,23 @@ class BatchMonitoringPageTest extends TestCase
         ]), [
             'farm_id' => $farm->id,
             'device_id' => $device->id,
-            'batch_code' => 'BATCH-OPEN-001',
         ]);
+
+        $batch = ProductionBatch::query()
+            ->where('farm_id', $farm->id)
+            ->where('device_id', $device->id)
+            ->first();
+
+        $this->assertNotNull($batch);
+        $this->assertMatchesRegularExpression(
+            '/^' . preg_quote(BatchCodeFormatter::farmPrefix($farm->farm_name), '/') . '-\d{8}-\d{6}$/',
+            (string) $batch->batch_code
+        );
 
         $response->assertRedirect(route('monitoring.batches.show', [
             'farm' => $farm->id,
             'device' => $device->id,
-            'batchCode' => 'BATCH-OPEN-001',
+            'batchCode' => $batch->batch_code,
             'range' => '1d',
             'context_farm_id' => $farm->id,
             'context_device_id' => $device->id,
@@ -209,19 +220,19 @@ class BatchMonitoringPageTest extends TestCase
         $this->assertDatabaseHas('production_batches', [
             'farm_id' => $farm->id,
             'device_id' => $device->id,
-            'batch_code' => 'BATCH-OPEN-001',
+            'batch_code' => $batch->batch_code,
             'status' => 'open',
         ]);
 
         $showResponse = $this->actingAs($owner)->get(route('monitoring.batches.show', [
             'farm' => $farm->id,
             'device' => $device->id,
-            'batchCode' => 'BATCH-OPEN-001',
+            'batchCode' => $batch->batch_code,
             'range' => '1d',
         ]));
 
         $showResponse->assertOk()
-            ->assertSee('Batch BATCH-OPEN-001 opened.', false)
+            ->assertSee("Batch {$batch->batch_code} opened.", false)
             ->assertSee('Open')
             ->assertSee('No records are available for this batch.');
     }

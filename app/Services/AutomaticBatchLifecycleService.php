@@ -4,14 +4,13 @@ namespace App\Services;
 
 use App\Models\Device;
 use App\Models\ProductionBatch;
+use App\Support\BatchCodeFormatter;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 
 class AutomaticBatchLifecycleService
 {
     public const INACTIVITY_MINUTES = 15;
-
-    private const AUTO_BATCH_PREFIX = 'AUTO';
 
     public function currentOpenBatch(Device $device, ?CarbonInterface $observedAt = null): ?ProductionBatch
     {
@@ -188,19 +187,14 @@ class AutomaticBatchLifecycleService
 
     private function generateAutomaticBatchCode(Device $device, CarbonImmutable $recordedAt): string
     {
-        $base = sprintf(
-            '%s-D%s-%s',
-            self::AUTO_BATCH_PREFIX,
-            (int) $device->id,
-            $recordedAt->utc()->format('YmdHis')
-        );
+        $device->loadMissing('farm');
 
-        $candidate = $base;
+        $candidate = BatchCodeFormatter::build($device->farm?->farm_name, $recordedAt);
         $suffix = 1;
 
         while ($this->batchCodeExists($device, $candidate)) {
             $suffix++;
-            $candidate = $base . '-' . $suffix;
+            $candidate = BatchCodeFormatter::build($device->farm?->farm_name, $recordedAt, $suffix);
         }
 
         return $candidate;
@@ -217,7 +211,7 @@ class AutomaticBatchLifecycleService
 
     private function isAutomaticBatchCode(string $batchCode): bool
     {
-        return str_starts_with($batchCode, self::AUTO_BATCH_PREFIX . '-');
+        return BatchCodeFormatter::matchesGeneratedPattern($batchCode);
     }
 
     private function normalizeBatchCode(?string $batchCode): ?string

@@ -19,15 +19,12 @@
     $oldFarmId = (int) old('farm_id', $selectedFarmId ?? 0);
     $oldDeviceId = (int) old('device_id', $selectedDeviceId ?? 0);
     $oldBatchCode = (string) old('batch_code', '');
+    $timezoneLabel = 'Philippine Standard Time';
 
     $formatInt = static fn ($value): string => number_format((int) ($value ?? 0));
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
     $formatDateTime = static function ($value): string {
-        if (!$value) {
-            return 'N/A';
-        }
-
-        return \Illuminate\Support\Carbon::parse($value)->format('M j, Y g:i A');
+        return \App\Support\BatchCodeFormatter::formatPhilippineDateTime($value);
     };
     $durationLabel = static function ($start, $end): string {
         if (!$start) {
@@ -38,7 +35,8 @@
             return 'In progress';
         }
 
-        $minutes = \Illuminate\Support\Carbon::parse($start)->diffInMinutes(\Illuminate\Support\Carbon::parse($end));
+        $minutes = \App\Support\BatchCodeFormatter::toPhilippineTime($start)
+            ->diffInMinutes(\App\Support\BatchCodeFormatter::toPhilippineTime($end));
 
         if ($minutes < 1) {
             return 'Under 1 minute';
@@ -198,6 +196,7 @@
         <div class="batch-monitor-pill-row mt-3">
           <span class="batch-monitor-pill">Window: {{ $formatDateTime($window['start'] ?? null) }} to {{ $formatDateTime($window['end'] ?? null) }}</span>
           <span class="batch-monitor-pill">Latest record: {{ $formatDateTime($stats->latest_recorded_at ?? null) }}</span>
+          <span class="batch-monitor-pill">Timezone: {{ $timezoneLabel }}</span>
         </div>
       </div>
     </section>
@@ -398,7 +397,7 @@
               <select id="open_batch_farm" name="farm_id" class="form-select @error('farm_id') is-invalid @enderror" required>
                 <option value="">Select Farm</option>
                 @foreach (($context['switcher']['farms'] ?? []) as $farmOption)
-                  <option value="{{ $farmOption['id'] }}" @selected($oldFarmId === (int) $farmOption['id'])>{{ $farmOption['name'] }}</option>
+                  <option value="{{ $farmOption['id'] }}" data-batch-prefix="{{ \App\Support\BatchCodeFormatter::farmPrefix($farmOption['name']) }}" @selected($oldFarmId === (int) $farmOption['id'])>{{ $farmOption['name'] }}</option>
                 @endforeach
               </select>
               @error('farm_id')
@@ -423,14 +422,14 @@
 
             <div>
               <label for="open_batch_code" class="form-label mb-1">Batch Code</label>
-              <input type="text" id="open_batch_code" name="batch_code" class="form-control @error('batch_code') is-invalid @enderror" value="{{ $oldBatchCode }}" maxlength="80" placeholder="BATCH-2026-001" required />
+              <input type="text" id="open_batch_code" name="batch_code" class="form-control @error('batch_code') is-invalid @enderror" value="{{ $oldBatchCode }}" maxlength="80" placeholder="Select a farm to generate a batch code" readonly />
               @error('batch_code')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
 
             <div class="small text-body-secondary">
-              One open batch is allowed per device. Close the current batch first before opening another one on the same device.
+              Batch codes are auto-generated from the farm name and current {{ $timezoneLabel }} time. One open batch is allowed per device.
             </div>
 
             <div>
@@ -442,4 +441,48 @@
     </section>
 
   </div>
+
+  <script>
+    (() => {
+      const farmSelect = document.getElementById('open_batch_farm');
+      const batchCodeInput = document.getElementById('open_batch_code');
+
+      if (!farmSelect || !batchCodeInput) {
+        return;
+      }
+
+      const formatTimestamp = () => {
+        const parts = new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Asia/Manila',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        }).formatToParts(new Date());
+
+        const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+
+        return `${values.year}${values.month}${values.day}-${values.hour}${values.minute}${values.second}`;
+      };
+
+      const updateBatchCode = () => {
+        const selectedOption = farmSelect.options[farmSelect.selectedIndex];
+        const prefix = selectedOption?.dataset?.batchPrefix || '';
+
+        if (!prefix) {
+          batchCodeInput.value = '';
+          return;
+        }
+
+        batchCodeInput.value = `${prefix}-${formatTimestamp()}`;
+      };
+
+      updateBatchCode();
+      farmSelect.addEventListener('change', updateBatchCode);
+      window.setInterval(updateBatchCode, 1000);
+    })();
+  </script>
 @endsection
