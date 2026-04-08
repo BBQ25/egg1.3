@@ -241,6 +241,14 @@
         <div class="validation-metric-label">Captured Samples</div>
         <div class="validation-metric-value">{{ $formatInt($summary->total_measurements ?? 0) }}</div>
       </article>
+      <article class="validation-metric">
+        <div class="validation-metric-label">Avg MAE</div>
+        <div class="validation-metric-value">{{ $formatWeight($summary->avg_mae_grams ?? 0) }}</div>
+      </article>
+      <article class="validation-metric">
+        <div class="validation-metric-label">Avg RMSE</div>
+        <div class="validation-metric-value">{{ $formatWeight($summary->avg_rmse_grams ?? 0) }}</div>
+      </article>
     </section>
 
     <section class="validation-card">
@@ -376,6 +384,7 @@
                     <th>Status</th>
                     <th>Samples</th>
                     <th>MAE</th>
+                    <th>RMSE</th>
                     <th>Accuracy</th>
                     <th class="text-end">Action</th>
                   </tr>
@@ -396,6 +405,7 @@
                         @endif
                       </td>
                       <td>{{ $formatWeight($run->mae_grams) }}</td>
+                      <td>{{ $formatWeight($run->rmse_grams) }}</td>
                       <td>{{ $formatPercent($run->accuracy_percent) }}</td>
                       <td class="text-end">
                         <a href="{{ route('monitoring.validation.index', array_filter([
@@ -446,6 +456,14 @@
             <article class="validation-metric">
               <div class="validation-metric-label">MAE</div>
               <div class="validation-metric-value">{{ $formatWeight($selectedRun->mae_grams) }}</div>
+            </article>
+            <article class="validation-metric">
+              <div class="validation-metric-label">MSE</div>
+              <div class="validation-metric-value">{{ $formatWeight($selectedRun->mse_grams) }}</div>
+            </article>
+            <article class="validation-metric">
+              <div class="validation-metric-label">RMSE</div>
+              <div class="validation-metric-value">{{ $formatWeight($selectedRun->rmse_grams) }}</div>
             </article>
             <article class="validation-metric">
               <div class="validation-metric-label">Mean Error</div>

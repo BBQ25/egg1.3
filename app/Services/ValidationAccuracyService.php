@@ -63,6 +63,7 @@ class ValidationAccuracyService
             ->selectRaw('COALESCE(SUM(CASE WHEN status = ? THEN 1 ELSE 0 END), 0) AS completed_runs', ['completed'])
             ->selectRaw('COALESCE(SUM(total_measurements), 0) AS total_measurements')
             ->selectRaw('COALESCE(AVG(mae_grams), 0) AS avg_mae_grams')
+            ->selectRaw('COALESCE(AVG(mse_grams), 0) AS avg_mse_grams')
             ->first();
 
         $runs = (clone $runQuery)
@@ -72,6 +73,10 @@ class ValidationAccuracyService
             ->get();
 
         $this->decorateRuns($runs);
+        $summary = $summary ?? $this->emptySummary();
+        $summary->avg_rmse_grams = $runs->isNotEmpty()
+            ? round($runs->avg(static fn (stdClass $run): float => (float) ($run->rmse_grams ?? 0.0)), 2)
+            : 0.0;
 
         $selectedRun = null;
         if ($filters['run_id'] !== null) {
@@ -95,7 +100,7 @@ class ValidationAccuracyService
         return [
             'available' => true,
             'missing_tables' => [],
-            'summary' => $summary ?? $this->emptySummary(),
+            'summary' => $summary,
             'runs' => $runs,
             'selected_run' => $selectedRun,
             'measurements' => $measurements,
@@ -301,6 +306,7 @@ class ValidationAccuracyService
             ->selectRaw('evaluation_run_id')
             ->selectRaw('COUNT(*) AS total_measurements')
             ->selectRaw('COALESCE(AVG(absolute_error_grams), 0) AS mae_grams')
+            ->selectRaw('COALESCE(AVG(weight_error_grams * weight_error_grams), 0) AS mse_grams')
             ->selectRaw('COALESCE(AVG(weight_error_grams), 0) AS mean_error_grams')
             ->selectRaw('COALESCE(SUM(CASE WHEN class_match = 1 THEN 1 ELSE 0 END), 0) AS class_matches')
             ->selectRaw('MAX(measured_at) AS latest_measured_at')
@@ -360,6 +366,7 @@ class ValidationAccuracyService
             'performers.full_name as performed_by_name',
             DB::raw('COALESCE(measurement_stats.total_measurements, 0) as total_measurements'),
             DB::raw('COALESCE(measurement_stats.mae_grams, 0) as mae_grams'),
+            DB::raw('COALESCE(measurement_stats.mse_grams, 0) as mse_grams'),
             DB::raw('COALESCE(measurement_stats.mean_error_grams, 0) as mean_error_grams'),
             DB::raw('COALESCE(measurement_stats.class_matches, 0) as class_matches'),
             DB::raw('measurement_stats.latest_measured_at as latest_measured_at'),
@@ -374,6 +381,7 @@ class ValidationAccuracyService
         $runs->each(function (stdClass $run): void {
             $totalMeasurements = (int) ($run->total_measurements ?? 0);
             $classMatches = (int) ($run->class_matches ?? 0);
+            $run->rmse_grams = round(sqrt(max(0.0, (float) ($run->mse_grams ?? 0.0))), 2);
             $run->mismatched_classes = max(0, $totalMeasurements - $classMatches);
             $run->accuracy_percent = $totalMeasurements > 0
                 ? round(($classMatches / $totalMeasurements) * 100, 2)
@@ -528,6 +536,8 @@ class ValidationAccuracyService
             'completed_runs' => 0,
             'total_measurements' => 0,
             'avg_mae_grams' => 0,
+            'avg_mse_grams' => 0,
+            'avg_rmse_grams' => 0,
         ];
     }
 

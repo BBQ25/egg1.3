@@ -182,6 +182,43 @@ class DeviceIngestApiTest extends TestCase
         $this->assertNotNull($device->last_seen_ip);
     }
 
+    public function test_duplicate_egg_uid_returns_existing_event_without_creating_duplicate_record(): void
+    {
+        [$device, $plainKey] = $this->createDevice('ESP32-INGEST-DEDUPE', 'dedupe-key');
+
+        $firstResponse = $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 60.50,
+            'size_class' => 'Large',
+            'recorded_at' => now()->subMinutes(2)->toIso8601String(),
+            'egg_uid' => 'EGG-DEDUPE-001',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ]);
+
+        $firstResponse->assertStatus(201);
+
+        $eventId = (int) $firstResponse->json('data.event_id');
+
+        $duplicateResponse = $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 60.50,
+            'size_class' => 'Large',
+            'recorded_at' => now()->toIso8601String(),
+            'egg_uid' => 'egg-dedupe-001',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ]);
+
+        $duplicateResponse->assertOk();
+        $duplicateResponse->assertJsonPath('ok', true);
+        $duplicateResponse->assertJsonPath('message', 'Ingest already accepted.');
+        $duplicateResponse->assertJsonPath('data.event_id', $eventId);
+        $duplicateResponse->assertJsonPath('data.deduplicated', true);
+
+        $this->assertSame(1, DeviceIngestEvent::query()->where('device_id', $device->id)->count());
+    }
+
     public function test_ingest_with_batch_code_creates_and_links_production_batch(): void
     {
         [$device, $plainKey] = $this->createDevice('ESP32-INGEST-BATCH-LINK', 'batch-link-key');
@@ -413,6 +450,27 @@ class DeviceIngestApiTest extends TestCase
         $response->assertJsonPath('data.weight_ranges.extra_large.label', 'Extra-Large');
         $response->assertJsonPath('data.weight_ranges.extra_large.max', 68.99);
         $response->assertJsonPath('data.weight_ranges.jumbo.max', 1000);
+    }
+
+    public function test_runtime_config_updates_device_last_seen_metadata(): void
+    {
+        [$device, $plainKey] = $this->createDevice('ESP32-RUNTIME-CONFIG-SEEN', 'runtime-config-seen-key');
+
+        $device->update([
+            'last_seen_at' => null,
+            'last_seen_ip' => null,
+        ]);
+
+        $response = $this->getJson(route('api.devices.runtime-config'), [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ]);
+
+        $response->assertOk();
+
+        $device->refresh();
+        $this->assertNotNull($device->last_seen_at);
+        $this->assertNotNull($device->last_seen_ip);
     }
 
     public function test_runtime_config_auto_closes_stale_open_batch_and_returns_null(): void

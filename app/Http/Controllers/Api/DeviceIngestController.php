@@ -69,6 +69,28 @@ class DeviceIngestController extends Controller
 
         $eggUid = EggUid::normalize(isset($validated['egg_uid']) ? (string) $validated['egg_uid'] : null);
 
+        if ($eggUid !== null) {
+            $existingEvent = DeviceIngestEvent::query()
+                ->where('device_id', (int) $device->id)
+                ->where('egg_uid', $eggUid)
+                ->first();
+
+            if ($existingEvent !== null) {
+                $this->touchDeviceHeartbeat($device, $request);
+
+                return response()->json([
+                    'ok' => true,
+                    'message' => 'Ingest already accepted.',
+                    'data' => [
+                        'event_id' => (int) $existingEvent->id,
+                        'device_id' => (int) $device->id,
+                        'recorded_at' => $existingEvent->recorded_at?->toIso8601String(),
+                        'deduplicated' => true,
+                    ],
+                ]);
+            }
+        }
+
         $rawPayload = $request->json()->all();
         if (!is_array($rawPayload) || $rawPayload === []) {
             $rawPayload = $request->all();
@@ -91,10 +113,7 @@ class DeviceIngestController extends Controller
                 'raw_payload_json' => json_encode($rawPayload),
             ]);
 
-            $device->update([
-                'last_seen_at' => Carbon::now(),
-                'last_seen_ip' => $request->ip(),
-            ]);
+            $this->touchDeviceHeartbeat($device, $request);
 
             return $event;
         });
@@ -116,6 +135,8 @@ class DeviceIngestController extends Controller
         if ($device === null) {
             return $this->unauthorizedResponse();
         }
+
+        $this->touchDeviceHeartbeat($device, $request);
 
         $openBatch = $this->automaticBatchLifecycleService->currentOpenBatch($device);
 
@@ -146,6 +167,14 @@ class DeviceIngestController extends Controller
             'ok' => false,
             'message' => 'Unauthorized device credentials.',
         ], 401);
+    }
+
+    private function touchDeviceHeartbeat(Device $device, Request $request): void
+    {
+        $device->forceFill([
+            'last_seen_at' => Carbon::now(),
+            'last_seen_ip' => $request->ip(),
+        ])->save();
     }
 
     private function resolveAuthenticatedDevice(Request $request): ?Device

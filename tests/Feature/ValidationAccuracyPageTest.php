@@ -135,6 +135,8 @@ class ValidationAccuracyPageTest extends TestCase
             ->assertSee('egg-val-002')
             ->assertSee('50.00%')
             ->assertSee('0.95 g')
+            ->assertSee('0.97 g')
+            ->assertSee('0.98 g')
             ->assertSee('-0.25 g');
     }
 
@@ -174,9 +176,10 @@ class ValidationAccuracyPageTest extends TestCase
         $response->assertHeader('content-type', 'text/csv; charset=UTF-8');
 
         $content = $response->streamedContent();
-        $this->assertStringContainsString('measurement_id,measured_at,egg_uid,batch_code,reference_weight_grams', $content);
+        $this->assertStringContainsString('measurement_id,measured_at,egg_uid,batch_code,reference_weight_grams,automated_weight_grams,weight_error_grams,absolute_error_grams,squared_error_grams', $content);
         $this->assertStringContainsString('egg-export-001', $content);
         $this->assertStringContainsString('1.10', $content);
+        $this->assertStringContainsString('1.21', $content);
     }
 
     public function test_validation_page_shows_unavailable_state_when_tables_are_missing(): void

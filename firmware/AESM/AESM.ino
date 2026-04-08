@@ -137,7 +137,10 @@ struct PendingCloudEvent {
   String batchCode;
 };
 
-PendingCloudEvent pendingCloudEvent = {};
+const uint8_t maxPendingCloudEvents = 12;
+PendingCloudEvent pendingCloudEvents[maxPendingCloudEvents];
+uint8_t pendingCloudEventHead = 0;
+uint8_t pendingCloudEventCount = 0;
 
 
 // ======================================================================
@@ -396,6 +399,13 @@ bool syncClockIfNeeded(bool forceSync = false);
 bool fetchRuntimeConfig(bool forceFetch = false);
 bool flushPendingCloudEvent(bool forceAttempt = false);
 void queueCloudEvent(float weight, const WeightStats &stats, const String &localClass, const String &cloudClass, const String &sortResult);
+void clearPendingCloudEvent(PendingCloudEvent &event);
+void clearPendingCloudQueue();
+bool hasPendingCloudEvent();
+uint8_t pendingCloudQueueDepth();
+PendingCloudEvent* currentPendingCloudEvent();
+PendingCloudEvent* appendPendingCloudEvent();
+void removeCurrentPendingCloudEvent();
 
 void setupWebRoutes();
 String buildDashboardHTML();
@@ -485,6 +495,7 @@ void setup() {
   delay(1000);
 
   systemStartMillis = millis();
+  clearPendingCloudQueue();
 
   initializeLCD();
   showStatusOnLCD("Booting...", "Please wait");
@@ -733,37 +744,106 @@ bool fetchRuntimeConfig(bool forceFetch) {
   return true;
 }
 
+void clearPendingCloudEvent(PendingCloudEvent &event) {
+  event.pending = false;
+  event.attempts = 0;
+  event.nextAttemptAtMs = 0;
+  event.weight_g = 0.0f;
+  event.average_g = 0.0f;
+  event.median_g = 0.0f;
+  event.trimmedAverage_g = 0.0f;
+  event.span_g = 0.0f;
+  event.sampleCount = 0;
+  event.cloudClass = "";
+  event.localClass = "";
+  event.sortResult = "";
+  event.recordedAt = "";
+  event.eggUid = "";
+  event.batchCode = "";
+}
+
+void clearPendingCloudQueue() {
+  for (uint8_t index = 0; index < maxPendingCloudEvents; index++) {
+    clearPendingCloudEvent(pendingCloudEvents[index]);
+  }
+
+  pendingCloudEventHead = 0;
+  pendingCloudEventCount = 0;
+}
+
+bool hasPendingCloudEvent() {
+  return pendingCloudEventCount > 0;
+}
+
+uint8_t pendingCloudQueueDepth() {
+  return pendingCloudEventCount;
+}
+
+PendingCloudEvent* currentPendingCloudEvent() {
+  if (!hasPendingCloudEvent()) {
+    return nullptr;
+  }
+
+  return &pendingCloudEvents[pendingCloudEventHead];
+}
+
+PendingCloudEvent* appendPendingCloudEvent() {
+  if (pendingCloudEventCount >= maxPendingCloudEvents) {
+    return nullptr;
+  }
+
+  uint8_t index = (pendingCloudEventHead + pendingCloudEventCount) % maxPendingCloudEvents;
+  clearPendingCloudEvent(pendingCloudEvents[index]);
+  pendingCloudEvents[index].pending = true;
+  pendingCloudEventCount++;
+  return &pendingCloudEvents[index];
+}
+
+void removeCurrentPendingCloudEvent() {
+  if (!hasPendingCloudEvent()) {
+    return;
+  }
+
+  clearPendingCloudEvent(pendingCloudEvents[pendingCloudEventHead]);
+  pendingCloudEventHead = (pendingCloudEventHead + 1) % maxPendingCloudEvents;
+  pendingCloudEventCount--;
+}
+
 void queueCloudEvent(float weight, const WeightStats &stats, const String &localClass, const String &cloudClass, const String &sortResult) {
-  if (pendingCloudEvent.pending) {
+  if (pendingCloudQueueDepth() >= maxPendingCloudEvents) {
     flushPendingCloudEvent(true);
   }
 
-  if (pendingCloudEvent.pending) {
+  PendingCloudEvent *event = appendPendingCloudEvent();
+  if (event == nullptr) {
     cloudDroppedCount++;
+    webCloudStatus = "Queue";
+    webCloudMessage = "Cloud queue full";
+    return;
   }
 
   time_t nowSeconds = time(nullptr);
-  pendingCloudEvent.pending = true;
-  pendingCloudEvent.attempts = 0;
-  pendingCloudEvent.nextAttemptAtMs = millis();
-  pendingCloudEvent.weight_g = weight;
-  pendingCloudEvent.average_g = stats.average;
-  pendingCloudEvent.median_g = stats.median;
-  pendingCloudEvent.trimmedAverage_g = stats.trimmedAverage;
-  pendingCloudEvent.span_g = stats.span;
-  pendingCloudEvent.sampleCount = stats.count;
-  pendingCloudEvent.localClass = localClass;
-  pendingCloudEvent.cloudClass = cloudClass;
-  pendingCloudEvent.sortResult = sortResult;
-  pendingCloudEvent.recordedAt = cloudClockSynced ? buildIso8601Utc(nowSeconds) : "";
-  pendingCloudEvent.eggUid = generateEggUid(nowSeconds);
-  pendingCloudEvent.batchCode = (webCloudBatchCode == "None") ? "" : webCloudBatchCode;
-  webCloudStatus = "Pending";
+  event->attempts = 0;
+  event->nextAttemptAtMs = millis();
+  event->weight_g = weight;
+  event->average_g = stats.average;
+  event->median_g = stats.median;
+  event->trimmedAverage_g = stats.trimmedAverage;
+  event->span_g = stats.span;
+  event->sampleCount = stats.count;
+  event->localClass = localClass;
+  event->cloudClass = cloudClass;
+  event->sortResult = sortResult;
+  event->recordedAt = cloudClockSynced ? buildIso8601Utc(nowSeconds) : "";
+  event->eggUid = generateEggUid(nowSeconds);
+  event->batchCode = (webCloudBatchCode == "None") ? "" : webCloudBatchCode;
+  webCloudStatus = pendingCloudQueueDepth() > 1 ? "Queued" : "Pending";
   webCloudMessage = "Queued " + cloudClass + " egg";
 }
 
 bool flushPendingCloudEvent(bool forceAttempt) {
-  if (!pendingCloudEvent.pending) {
+  PendingCloudEvent *event = currentPendingCloudEvent();
+  if (event == nullptr) {
     return true;
   }
 
@@ -777,29 +857,29 @@ bool flushPendingCloudEvent(bool forceAttempt) {
     return false;
   }
 
-  if (!forceAttempt && millis() < pendingCloudEvent.nextAttemptAtMs) {
+  if (!forceAttempt && millis() < event->nextAttemptAtMs) {
     return false;
   }
 
-  if (!pendingCloudEvent.recordedAt.length() && syncClockIfNeeded(false)) {
-    pendingCloudEvent.recordedAt = buildIso8601Utc(time(nullptr));
+  if (!event->recordedAt.length() && syncClockIfNeeded(false)) {
+    event->recordedAt = buildIso8601Utc(time(nullptr));
   }
 
-  pendingCloudEvent.attempts++;
-  String payload = buildCloudPayload(pendingCloudEvent);
+  event->attempts++;
+  String payload = buildCloudPayload(*event);
   String responseBody = "";
   int httpCode = performCloudJsonRequest("POST", API_INGEST_PATH, &payload, responseBody);
 
-  if (httpCode == 201) {
-    pendingCloudEvent.pending = false;
+  if (httpCode == 200 || httpCode == 201) {
+    removeCurrentPendingCloudEvent();
     cloudSendSuccessCount++;
-    webCloudStatus = "Uploaded";
-    webCloudMessage = "Event accepted";
+    webCloudStatus = hasPendingCloudEvent() ? "Queued" : "Uploaded";
+    webCloudMessage = httpCode == 200 ? "Event already stored" : "Event accepted";
     return true;
   }
 
   if (httpCode == 401) {
-    pendingCloudEvent.pending = false;
+    removeCurrentPendingCloudEvent();
     cloudSendFailureCount++;
     cloudUploadsBlocked = true;
     webCloudStatus = "Blocked";
@@ -808,7 +888,7 @@ bool flushPendingCloudEvent(bool forceAttempt) {
   }
 
   if (httpCode == 422) {
-    pendingCloudEvent.pending = false;
+    removeCurrentPendingCloudEvent();
     cloudSendFailureCount++;
     cloudValidationErrors++;
     webCloudStatus = "Invalid";
@@ -817,22 +897,22 @@ bool flushPendingCloudEvent(bool forceAttempt) {
   }
 
   if (httpCode > 0 && httpCode < 500) {
-    pendingCloudEvent.pending = false;
+    removeCurrentPendingCloudEvent();
     cloudSendFailureCount++;
     webCloudStatus = "Upload";
     webCloudMessage = "Upload HTTP " + String(httpCode);
     return false;
   }
 
-  if (pendingCloudEvent.attempts >= maxIngestAttempts) {
-    pendingCloudEvent.pending = false;
+  if (event->attempts >= maxIngestAttempts) {
+    removeCurrentPendingCloudEvent();
     cloudSendFailureCount++;
     webCloudStatus = "Failed";
     webCloudMessage = httpCode <= 0 ? "Network timeout" : "Upload failed";
     return false;
   }
 
-  pendingCloudEvent.nextAttemptAtMs = millis() + (unsigned long) pendingCloudEvent.attempts * 1500UL;
+  event->nextAttemptAtMs = millis() + (unsigned long) event->attempts * 1500UL;
   webCloudStatus = "Retry";
   webCloudMessage = httpCode <= 0
     ? "Retrying " + lastCloudTransportDetail
@@ -1303,7 +1383,8 @@ String buildJSONData() {
   json += "\"cloudFailure\":" + String(cloudSendFailureCount) + ",";
   json += "\"cloudDropped\":" + String(cloudDroppedCount) + ",";
   json += "\"cloudValidationErrors\":" + String(cloudValidationErrors) + ",";
-  json += "\"cloudPending\":" + String(pendingCloudEvent.pending ? "true" : "false") + ",";
+  json += "\"cloudPending\":" + String(hasPendingCloudEvent() ? "true" : "false") + ",";
+  json += "\"cloudQueueDepth\":" + String(pendingCloudQueueDepth()) + ",";
   json += "\"cloudClockSynced\":" + String(cloudClockSynced ? "true" : "false") + ",";
   json += "\"cloudConfigLoaded\":" + String(cloudConfigLoaded ? "true" : "false") + ",";
   json += "\"uptime\":\"" + formatUptime() + "\",";
@@ -1867,7 +1948,7 @@ void resetCounters() {
   cloudDroppedCount = 0;
   cloudValidationErrors = 0;
   eggUidSequence = 0;
-  pendingCloudEvent.pending = false;
+  clearPendingCloudQueue();
 
   webLastEggType = "None";
   webLastEggWeight = 0.0;
@@ -2802,7 +2883,8 @@ void printSystemStatus() {
   Serial.print("Cloud Sync    : "); Serial.println(webCloudLastSync);
   Serial.print("Cloud Success : "); Serial.println(cloudSendSuccessCount);
   Serial.print("Cloud Failure : "); Serial.println(cloudSendFailureCount);
-  Serial.print("Cloud Pending : "); Serial.println(pendingCloudEvent.pending ? "YES" : "NO");
+  Serial.print("Cloud Pending : "); Serial.println(hasPendingCloudEvent() ? "YES" : "NO");
+  Serial.print("Cloud Queue   : "); Serial.println(pendingCloudQueueDepth());
   Serial.print("Device ID     : "); Serial.println(DEVICE_SERIAL);
   Serial.print("Firmware      : "); Serial.println(FIRMWARE_VERSION);
   Serial.print("MAC           : "); Serial.println(WiFi.macAddress());
