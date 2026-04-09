@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Device;
+use App\Models\AppSetting;
 use App\Models\Farm;
 use App\Models\ProductionBatch;
 use App\Models\User;
+use App\Support\AppTimezone;
 use App\Support\BatchCodeFormatter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -270,6 +272,29 @@ class BatchMonitoringPageTest extends TestCase
         $closedResponse->assertOk()
             ->assertSee('BATCH-CLOSED-FILTER')
             ->assertDontSee('BATCH-OPEN-FILTER');
+    }
+
+    public function test_batch_monitoring_uses_configured_timezone_label(): void
+    {
+        AppSetting::query()->updateOrCreate(
+            ['setting_key' => AppTimezone::SETTING_KEY],
+            ['setting_value' => 'UTC']
+        );
+        AppTimezone::clearCache();
+        AppTimezone::activate('UTC');
+
+        $owner = User::factory()->owner()->create();
+        [$farm, $device] = $this->createFarmAndDevice($owner, 'Timezone Farm', 'ESP32-TZ-001');
+
+        $this->insertEvent($device, $owner, 'BATCH-TZ-001', 'egg-tz-001', 60.5, 'Large', now()->subMinutes(3));
+
+        $response = $this->actingAs($owner)->get(route('monitoring.batches.index', [
+            'range' => '1d',
+        ]));
+
+        $response->assertOk()
+            ->assertSee('Timezone: Coordinated Universal Time')
+            ->assertSee('current Coordinated Universal Time time', false);
     }
 
     private function createFarmAndDevice(User $owner, string $farmName, string $serial): array

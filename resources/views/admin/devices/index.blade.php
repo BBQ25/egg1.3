@@ -134,7 +134,7 @@
                 </td>
                 <td>
                   @if ($device->last_seen_at)
-                    {{ $device->last_seen_at->format('Y-m-d H:i') }}
+                    {{ \App\Support\AppTimezone::formatDateTime($device->last_seen_at, 'Y-m-d H:i') }}
                     @if ($device->last_seen_ip)
                       <div class="small text-body-secondary">{{ $device->last_seen_ip }}</div>
                     @endif

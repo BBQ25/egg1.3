@@ -35,7 +35,8 @@
 
 <body class="nms-body-root">
   <div class="nms-shell" id="dashboardApp" data-dashboard-data-url="{{ route('dashboard.data') }}"
-    data-dashboard-view-url="{{ route('dashboard') }}">
+    data-dashboard-view-url="{{ route('dashboard') }}"
+    data-timezone="{{ $appTimezoneCode ?? \App\Support\AppTimezone::current() }}">
     <header class="nms-header">
       <div class="nms-header__brand">
         <div class="nms-brand-icon">

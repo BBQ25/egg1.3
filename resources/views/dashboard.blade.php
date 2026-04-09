@@ -79,7 +79,8 @@
 @section('content')
   <div id="dashboardAutoFitRoot">
     <div id="dashboardApp" class="dashboard-compact" data-dashboard-data-url="{{ route('dashboard.data') }}"
-      data-dashboard-view-url="{{ route('dashboard') }}">
+      data-dashboard-view-url="{{ route('dashboard') }}"
+      data-timezone="{{ $appTimezoneCode ?? \App\Support\AppTimezone::current() }}">
     <span class="visually-hidden">Real-Time Poultry Monitoring</span>
 
     <div class="card mb-1 dashboard-toolbar-card">
@@ -100,7 +101,7 @@
                 'alt' => 'Refresh status',
                 'classes' => 'app-shell-icon--kicker',
               ])
-              <span id="dashboardAsOfLabel">As of {{ now()->format('M j, g:i A') }}</span>
+              <span id="dashboardAsOfLabel">As of {{ \App\Support\AppTimezone::formatDateTime(now(), 'M j, g:i A') }}</span>
             </span>
           </div>
 
@@ -510,6 +511,20 @@
       const autoFitRoot = document.getElementById('dashboardAutoFitRoot');
       const autoFitBaseScale = 1;
       const chartFontFamily = resolveChartFontFamily();
+      const appTimezone = appRoot.dataset.timezone || 'Asia/Manila';
+      const asOfFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: appTimezone,
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      });
+      const timeOnlyFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: appTimezone,
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+      });
       const topActiveIconMap = @json($topActiveIconMap);
       let timelineChart = null;
       let fitRaf = 0;
@@ -575,7 +590,7 @@
           return 'As of --';
         }
 
-        return `As of ${parsed.toLocaleString()}`;
+        return `As of ${asOfFormatter.format(parsed)}`;
       };
 
       const resetAutoFit = () => {
@@ -943,7 +958,7 @@
 
           applyPayload(payload);
           if (refreshMessage) {
-            refreshMessage.textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
+            refreshMessage.textContent = `Last refresh: ${timeOnlyFormatter.format(new Date())}`;
           }
         } catch (error) {
           if (refreshMessage) {

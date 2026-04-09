@@ -296,7 +296,7 @@
                     <span class="badge bg-label-danger">Rejected</span>
                   @endif
                 </td>
-                <td>{{ optional($requestRow->submitted_at)->format('M j, Y g:i A') }}</td>
+                <td>{{ \App\Support\AppTimezone::formatDateTime($requestRow->submitted_at) }}</td>
               </tr>
             @empty
               <tr>

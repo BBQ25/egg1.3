@@ -9,6 +9,7 @@ if (!appRoot || !initialPayloadEl) {
   // Dashboard assets are loaded only on the dashboard shell.
 } else {
   const dataUrl = appRoot.dataset.dashboardDataUrl || '';
+  const appTimezone = appRoot.dataset.timezone || 'Asia/Manila';
   const farmSwitcher = document.getElementById('dashboardFarmSwitcher');
   const deviceSwitcher = document.getElementById('dashboardDeviceSwitcher');
   const rangeButtons = Array.from(document.querySelectorAll('[data-range-btn]'));
@@ -630,6 +631,7 @@ if (!appRoot || !initialPayloadEl) {
 
   function formatDateTime(date) {
     return date.toLocaleString('en-US', {
+      timeZone: appTimezone,
       month: 'short',
       day: '2-digit',
       year: 'numeric',

@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\Farm;
 use App\Models\User;
+use App\Support\AppTimezone;
 use App\Support\EggWeightRanges;
 use App\Support\FarmPremises;
 use App\Support\Geofence;
@@ -321,6 +322,7 @@ class SettingsController extends Controller
     {
         $allowedPages = $this->discoverAllPages();
         $rules = [
+            'app_timezone' => ['required', Rule::in(array_keys(AppTimezone::options()))],
             'font_style' => ['required', Rule::in(array_keys(UiFont::options()))],
             'disabled_pages' => ['nullable', 'array'],
             'disabled_pages.*' => ['string', Rule::in($allowedPages)],
@@ -350,6 +352,7 @@ class SettingsController extends Controller
 
         $validated = $validator->validate();
 
+        AppTimezone::set($validated['app_timezone']);
         UiFont::set($validated['font_style']);
         MenuVisibility::setDisabled($validated['disabled_pages'] ?? []);
         EggWeightRanges::set($validated['egg_weight_ranges']);
@@ -362,6 +365,9 @@ class SettingsController extends Controller
 
     /**
      * @return array{
+     *   timezoneOptions:array<string,string>,
+     *   currentAppTimezone:string,
+     *   currentAppTimezoneLabel:string,
      *   fontOptions:array<string,string>,
      *   currentFontStyle:string,
      *   eggWeightRanges:array<string,array{slug:string,class:string,label:string,min:string,max:string}>,
@@ -436,6 +442,9 @@ class SettingsController extends Controller
         }
 
         return [
+            'timezoneOptions' => AppTimezone::options(),
+            'currentAppTimezone' => AppTimezone::current(),
+            'currentAppTimezoneLabel' => AppTimezone::label(),
             'fontOptions' => UiFont::options(),
             'currentFontStyle' => UiFont::current(),
             'eggWeightRanges' => EggWeightRanges::current(),

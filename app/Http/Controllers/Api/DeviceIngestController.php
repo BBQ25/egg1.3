@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\DeviceIngestEvent;
 use App\Services\AutomaticBatchLifecycleService;
+use App\Support\AppTimezone;
 use App\Support\EggUid;
 use App\Support\EggSizeClass;
 use App\Support\EggWeightRanges;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -60,8 +60,8 @@ class DeviceIngestController extends Controller
 
         $validated = $validator->validated();
         $recordedAt = isset($validated['recorded_at'])
-            ? Carbon::parse((string) $validated['recorded_at'])
-            : Carbon::now();
+            ? AppTimezone::parseInbound((string) $validated['recorded_at'])
+            : AppTimezone::now();
         $batchCode = isset($validated['batch_code']) ? trim((string) $validated['batch_code']) : null;
         if ($batchCode === '') {
             $batchCode = null;
@@ -152,7 +152,9 @@ class DeviceIngestController extends Controller
         return response()->json([
             'ok' => true,
             'data' => [
-                'server_time' => Carbon::now()->toIso8601String(),
+                'server_time' => AppTimezone::now()->toIso8601String(),
+                'server_timezone' => AppTimezone::current(),
+                'server_timezone_label' => AppTimezone::label(),
                 'device_serial' => (string) $device->primary_serial_no,
                 'open_batch_code' => $openBatch?->batch_code ? (string) $openBatch->batch_code : null,
                 'refresh_after_seconds' => 60,
@@ -172,7 +174,7 @@ class DeviceIngestController extends Controller
     private function touchDeviceHeartbeat(Device $device, Request $request): void
     {
         $device->forceFill([
-            'last_seen_at' => Carbon::now(),
+            'last_seen_at' => AppTimezone::now(),
             'last_seen_ip' => $request->ip(),
         ])->save();
     }

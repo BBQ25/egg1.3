@@ -19,12 +19,13 @@
     $oldFarmId = (int) old('farm_id', $selectedFarmId ?? 0);
     $oldDeviceId = (int) old('device_id', $selectedDeviceId ?? 0);
     $oldBatchCode = (string) old('batch_code', '');
-    $timezoneLabel = 'Philippine Standard Time';
+    $timezoneCode = $appTimezoneCode ?? \App\Support\AppTimezone::current();
+    $timezoneLabel = $appTimezoneLabel ?? \App\Support\AppTimezone::label($timezoneCode);
 
     $formatInt = static fn ($value): string => number_format((int) ($value ?? 0));
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
     $formatDateTime = static function ($value): string {
-        return \App\Support\BatchCodeFormatter::formatPhilippineDateTime($value);
+        return \App\Support\AppTimezone::formatDateTime($value);
     };
     $durationLabel = static function ($start, $end): string {
         if (!$start) {
@@ -35,8 +36,8 @@
             return 'In progress';
         }
 
-        $minutes = \App\Support\BatchCodeFormatter::toPhilippineTime($start)
-            ->diffInMinutes(\App\Support\BatchCodeFormatter::toPhilippineTime($end));
+        $minutes = \App\Support\AppTimezone::toAppTime($start)
+            ->diffInMinutes(\App\Support\AppTimezone::toAppTime($end));
 
         if ($minutes < 1) {
             return 'Under 1 minute';
@@ -453,7 +454,7 @@
 
       const formatTimestamp = () => {
         const parts = new Intl.DateTimeFormat('en-GB', {
-          timeZone: 'Asia/Manila',
+          timeZone: @json($timezoneCode),
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',

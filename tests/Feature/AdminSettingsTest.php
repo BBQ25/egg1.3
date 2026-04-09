@@ -8,6 +8,7 @@ use App\Models\Farm;
 use App\Models\FarmPremisesZone;
 use App\Models\GeofenceZone;
 use App\Models\User;
+use App\Support\AppTimezone;
 use App\Support\EggWeightRanges;
 use App\Support\Geofence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,6 +45,8 @@ class AdminSettingsTest extends TestCase
         $response->assertSee('Search pages to hide');
         $response->assertSee('Hide visible results');
         $response->assertSee('Clear all hidden');
+        $response->assertSee('Timezone &amp; Clock', false);
+        $response->assertSee('Philippine Standard Time');
         $response->assertSee('Weight Range Settings');
         $response->assertSee('Peewee');
         $response->assertSee('Extra-Large');
@@ -124,6 +127,7 @@ class AdminSettingsTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'Asia/Manila',
             'font_style' => 'poppins',
             'egg_weight_ranges' => $this->defaultEggWeightRangePayload(),
         ]);
@@ -144,6 +148,7 @@ class AdminSettingsTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'Asia/Manila',
             'font_style' => 'cambria',
             'egg_weight_ranges' => $this->defaultEggWeightRangePayload(),
         ]);
@@ -163,6 +168,7 @@ class AdminSettingsTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'Asia/Manila',
             'font_style' => 'figtree',
             'disabled_pages' => ['not-a-real-page'],
             'egg_weight_ranges' => $this->defaultEggWeightRangePayload(),
@@ -179,6 +185,7 @@ class AdminSettingsTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'Asia/Manila',
             'font_style' => 'figtree',
             'disabled_pages' => [
                 'layouts',
@@ -217,6 +224,7 @@ class AdminSettingsTest extends TestCase
         $payload['extra_large']['max'] = '69.99';
 
         $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'Asia/Manila',
             'font_style' => 'figtree',
             'egg_weight_ranges' => $payload,
         ]);
@@ -242,6 +250,7 @@ class AdminSettingsTest extends TestCase
         $payload['medium']['min'] = '55.00';
 
         $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'Asia/Manila',
             'font_style' => 'figtree',
             'egg_weight_ranges' => $payload,
         ]);
@@ -250,6 +259,38 @@ class AdminSettingsTest extends TestCase
 
         $stored = AppSetting::query()->where('setting_key', EggWeightRanges::SETTING_KEY)->value('setting_value');
         $this->assertNull($stored);
+    }
+
+    public function test_admin_can_update_timezone_to_utc(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'UTC',
+            'font_style' => 'figtree',
+            'egg_weight_ranges' => $this->defaultEggWeightRangePayload(),
+        ]);
+
+        $response->assertRedirect(route('admin.settings.edit'));
+
+        $this->assertDatabaseHas('app_settings', [
+            'setting_key' => AppTimezone::SETTING_KEY,
+            'setting_value' => 'UTC',
+        ]);
+    }
+
+    public function test_admin_settings_reject_invalid_timezone(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $response = $this->actingAs($admin)->put(route('admin.settings.update'), [
+            'app_timezone' => 'Mars/Phobos',
+            'font_style' => 'figtree',
+            'egg_weight_ranges' => $this->defaultEggWeightRangePayload(),
+        ]);
+
+        $response->assertSessionHasErrors(['app_timezone']);
+        $this->assertNull(AppSetting::query()->where('setting_key', AppTimezone::SETTING_KEY)->value('setting_value'));
     }
 
     public function test_admin_can_enable_polygon_geofence_and_persist_geometry(): void

@@ -687,6 +687,8 @@
     $eggWeightRangeCount = count($resolvedEggWeightRanges);
     $eggWeightRangeReject = $resolvedEggWeightRanges['reject'] ?? null;
     $eggWeightRangeJumbo = $resolvedEggWeightRanges['jumbo'] ?? null;
+    $selectedAppTimezone = old('app_timezone', $currentAppTimezone ?? ($appTimezoneCode ?? \App\Support\AppTimezone::current()));
+    $selectedAppTimezoneLabel = $timezoneOptions[$selectedAppTimezone] ?? ($currentAppTimezoneLabel ?? ($appTimezoneLabel ?? \App\Support\AppTimezone::label($selectedAppTimezone)));
     $loginBypassAvailable = (bool) ($loginBypassAvailable ?? false);
     $loginBypassEnabledValue = (bool) (old('login_bypass_enabled', $loginBypassEnabled ?? false));
     $loginBypassRulesForm = old('login_bypass_rules', $loginBypassRules ?? []);
@@ -739,6 +741,15 @@
         </div>
       </div>
       <div class="settings-overview-grid mt-4">
+        <div class="settings-overview-stat">
+          <span class="settings-overview-stat-icon bg-label-info">
+            <i class="bx bx-time-five"></i>
+          </span>
+          <div>
+            <div class="settings-overview-stat-label">Timezone</div>
+            <div class="settings-overview-stat-value">{{ $selectedAppTimezoneLabel }}</div>
+          </div>
+        </div>
         <div class="settings-overview-stat">
           <span class="settings-overview-stat-icon bg-label-primary">
             <i class="bx bx-font-family"></i>
@@ -908,6 +919,57 @@
               <div class="text-danger small mt-3">{{ $message }}</div>
             @enderror
             <div class="settings-form-note mt-3">Use this only for a system-wide visual change. Existing functionality and content stay the same.</div>
+          </div>
+        </div>
+        </section>
+
+        <section id="settings-timezone" class="settings-section-anchor">
+        <div class="card settings-section-card mb-4">
+          <div class="card-header">
+            <div class="d-flex align-items-start gap-3">
+              <div class="settings-section-icon">
+                <i class="bx bx-time-five fs-3"></i>
+              </div>
+              <div class="flex-grow-1 min-w-0">
+                <div class="settings-section-eyebrow mb-1">Clock Source</div>
+                <h5 class="card-title settings-section-title mb-1">Timezone &amp; Clock</h5>
+                <p class="settings-section-subtitle">Choose the timezone used for server-generated timestamps, ingest normalization, monitoring pages, and runtime config responses.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="settings-status-grid mb-4">
+              <div class="settings-status-card">
+                <div class="label">Current Timezone</div>
+                <div class="value">{{ $currentAppTimezoneLabel ?? ($appTimezoneLabel ?? \App\Support\AppTimezone::label()) }}</div>
+              </div>
+              <div class="settings-status-card">
+                <div class="label">Timezone Code</div>
+                <div class="value">{{ $currentAppTimezone ?? ($appTimezoneCode ?? \App\Support\AppTimezone::current()) }}</div>
+              </div>
+            </div>
+
+            <div class="row g-3 align-items-start">
+              <div class="col-lg-7">
+                <label for="app_timezone" class="form-label fw-semibold">App Timezone</label>
+                <select id="app_timezone" name="app_timezone" class="form-select @error('app_timezone') is-invalid @enderror">
+                  @foreach ($timezoneOptions as $timezoneValue => $timezoneLabelOption)
+                    <option value="{{ $timezoneValue }}" @selected($selectedAppTimezone === $timezoneValue)>{{ $timezoneLabelOption }} ({{ $timezoneValue }})</option>
+                  @endforeach
+                </select>
+                @error('app_timezone')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+              </div>
+              <div class="col-lg-5">
+                <div class="settings-weight-range-preview">
+                  Selected timezone: <strong>{{ $selectedAppTimezoneLabel }}</strong><br />
+                  Code: {{ $selectedAppTimezone }}
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-form-note mt-3">Changing this affects new ingest timestamps, batch code generation, monitoring displays, dashboard clocks, and runtime config timestamps. Historical records are not rewritten.</div>
           </div>
         </div>
         </section>
@@ -1910,6 +1972,10 @@
         <div class="card-body">
           <div class="settings-mini-stat-grid mb-4">
             <div class="settings-mini-stat">
+              <div class="settings-mini-stat-label">Timezone</div>
+              <div class="settings-mini-stat-value">{{ $selectedAppTimezoneLabel }}</div>
+            </div>
+            <div class="settings-mini-stat">
               <div class="settings-mini-stat-label">Typography</div>
               <div class="settings-mini-stat-value">{{ $fontOptions[$currentFontStyle] ?? 'Figtree' }}</div>
             </div>
@@ -1934,6 +2000,15 @@
           </div>
 
           <div class="settings-sidebar-nav d-grid gap-2 mb-4">
+            <a href="#settings-timezone" class="settings-quick-link">
+              <span class="settings-quick-link-label">
+                <span class="settings-quick-link-icon">
+                  <i class="bx bx-time-five fs-5"></i>
+                </span>
+                <span>Timezone</span>
+              </span>
+              <span class="badge bg-label-info">{{ $selectedAppTimezone }}</span>
+            </a>
             <a href="#settings-typography" class="settings-quick-link">
               <span class="settings-quick-link-label">
                 <span class="settings-quick-link-icon">
@@ -2178,4 +2253,3 @@
     });
   </script>
 @endsection
-

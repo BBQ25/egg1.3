@@ -401,7 +401,7 @@
           </div>
 
           @if (! $user->is_active && $user->deactivated_at)
-            <p class="text-body-secondary mb-3">Deactivated at: {{ $user->deactivated_at->format('Y-m-d H:i') }}</p>
+            <p class="text-body-secondary mb-3">Deactivated at: {{ \App\Support\AppTimezone::formatDateTime($user->deactivated_at, 'Y-m-d H:i') }}</p>
           @endif
 
           @if ($user->is_active)

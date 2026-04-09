@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 class BatchCodeFormatter
 {
-    public const TIMEZONE = 'Asia/Manila';
     public const MAX_LENGTH = 80;
 
     public static function farmPrefix(?string $farmName): string
@@ -37,30 +36,31 @@ class BatchCodeFormatter
 
     public static function timestamp(CarbonInterface $observedAt): string
     {
-        return CarbonImmutable::instance($observedAt)
-            ->setTimezone(self::TIMEZONE)
-            ->format('Ymd-His');
+        return AppTimezone::toAppTime($observedAt)?->format('Ymd-His') ?? '';
+    }
+
+    public static function toAppTime(CarbonInterface|string $value): CarbonImmutable
+    {
+        if ($value instanceof CarbonInterface) {
+            return CarbonImmutable::instance($value)->setTimezone(AppTimezone::current());
+        }
+
+        return AppTimezone::parseInbound($value);
+    }
+
+    public static function formatAppDateTime(CarbonInterface|string|null $value, string $format = 'M j, Y g:i A'): string
+    {
+        return AppTimezone::formatDateTime($value, $format);
     }
 
     public static function toPhilippineTime(CarbonInterface|string $value): CarbonImmutable
     {
-        if ($value instanceof CarbonInterface) {
-            return CarbonImmutable::instance($value)
-                ->utc()
-                ->setTimezone(self::TIMEZONE);
-        }
-
-        return CarbonImmutable::parse((string) $value, 'UTC')
-            ->setTimezone(self::TIMEZONE);
+        return self::toAppTime($value);
     }
 
     public static function formatPhilippineDateTime(CarbonInterface|string|null $value, string $format = 'M j, Y g:i A'): string
     {
-        if ($value === null || $value === '') {
-            return 'N/A';
-        }
-
-        return self::toPhilippineTime($value)->format($format);
+        return self::formatAppDateTime($value, $format);
     }
 
     public static function matchesGeneratedPattern(string $batchCode): bool

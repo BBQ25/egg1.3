@@ -29,11 +29,7 @@
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
     $formatPercent = static fn ($value): string => number_format((float) ($value ?? 0), 2) . '%';
     $formatDateTime = static function ($value): string {
-        if (!$value) {
-            return 'N/A';
-        }
-
-        return \Illuminate\Support\Carbon::parse($value)->format('M j, Y g:i A');
+        return \App\Support\AppTimezone::formatDateTime($value);
     };
     $runStatusTheme = static function ($status): string {
         return match ((string) $status) {

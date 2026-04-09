@@ -175,7 +175,7 @@
                     @endif
                   </td>
                   <td class="text-end pe-4 text-body-secondary">
-                    {{ optional($user->created_at)->format('M d, Y h:i A') ?? 'N/A' }}
+                    {{ \App\Support\AppTimezone::formatDateTime($user->created_at, 'M d, Y h:i A') }}
                   </td>
                 </tr>
               @empty

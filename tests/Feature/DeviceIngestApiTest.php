@@ -11,6 +11,7 @@ use App\Models\DeviceSerialAlias;
 use App\Models\Farm;
 use App\Models\User;
 use App\Services\AutomaticBatchLifecycleService;
+use App\Support\AppTimezone;
 use App\Support\BatchCodeFormatter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -217,6 +218,48 @@ class DeviceIngestApiTest extends TestCase
         $duplicateResponse->assertJsonPath('data.deduplicated', true);
 
         $this->assertSame(1, DeviceIngestEvent::query()->where('device_id', $device->id)->count());
+    }
+
+    public function test_ingest_with_explicit_utc_timestamp_is_normalized_into_app_timezone(): void
+    {
+        AppTimezone::set('Asia/Manila');
+        [$device, $plainKey] = $this->createDevice('ESP32-INGEST-TZ-UTC', 'tz-utc-key');
+
+        $response = $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 60.40,
+            'size_class' => 'Large',
+            'recorded_at' => '2026-04-09T02:15:00Z',
+            'egg_uid' => 'EGG-TZ-UTC-001',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ]);
+
+        $response->assertStatus(201);
+
+        $event = DeviceIngestEvent::query()->where('egg_uid', 'egg-tz-utc-001')->firstOrFail();
+        $this->assertSame('2026-04-09T10:15:00+08:00', $event->recorded_at?->toIso8601String());
+    }
+
+    public function test_ingest_without_offset_assumes_configured_app_timezone(): void
+    {
+        AppTimezone::set('Asia/Manila');
+        [$device, $plainKey] = $this->createDevice('ESP32-INGEST-TZ-LOCAL', 'tz-local-key');
+
+        $response = $this->postJson(route('api.devices.ingest'), [
+            'weight_grams' => 57.10,
+            'size_class' => 'Medium',
+            'recorded_at' => '2026-04-09 10:15:00',
+            'egg_uid' => 'EGG-TZ-LOCAL-001',
+        ], [
+            'X-Device-Serial' => $device->primary_serial_no,
+            'X-Device-Key' => $plainKey,
+        ]);
+
+        $response->assertStatus(201);
+
+        $event = DeviceIngestEvent::query()->where('egg_uid', 'egg-tz-local-001')->firstOrFail();
+        $this->assertSame('2026-04-09T10:15:00+08:00', $event->recorded_at?->toIso8601String());
     }
 
     public function test_ingest_with_batch_code_creates_and_links_production_batch(): void
@@ -445,6 +488,8 @@ class DeviceIngestApiTest extends TestCase
         $response->assertJsonPath('data.device_serial', $device->primary_serial_no);
         $response->assertJsonPath('data.open_batch_code', 'BATCH-OPEN-001');
         $response->assertJsonPath('data.refresh_after_seconds', 60);
+        $response->assertJsonPath('data.server_timezone', 'Asia/Manila');
+        $response->assertJsonPath('data.server_timezone_label', 'Philippine Standard Time');
         $response->assertJsonPath('data.weight_ranges.reject.min', 0);
         $response->assertJsonPath('data.weight_ranges.reject.max', 30.99);
         $response->assertJsonPath('data.weight_ranges.extra_large.label', 'Extra-Large');
@@ -531,6 +576,8 @@ class DeviceIngestApiTest extends TestCase
         $response->assertJsonPath('data.weight_ranges.medium.label', 'Medium');
         $response->assertJsonPath('data.weight_ranges.medium.min', 55);
         $response->assertJsonPath('data.weight_ranges.medium.max', 59.99);
+        $response->assertJsonPath('data.server_timezone', 'Asia/Manila');
+        $response->assertJsonPath('data.server_timezone_label', 'Philippine Standard Time');
     }
 
     public function test_runtime_config_rejects_invalid_device_credentials(): void

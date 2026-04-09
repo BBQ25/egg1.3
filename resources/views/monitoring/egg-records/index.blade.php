@@ -35,11 +35,7 @@
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
     $formatSeconds = static fn ($value): string => $value === null ? 'Awaiting device timestamps' : number_format((float) $value, 1) . ' s';
     $formatDateTime = static function ($value): string {
-        if (!$value) {
-            return 'N/A';
-        }
-
-        return \Illuminate\Support\Carbon::parse($value)->format('M j, Y g:i A');
+        return \App\Support\AppTimezone::formatDateTime($value);
     };
     $statusTheme = static function ($status): string {
         return match ((string) $status) {
@@ -302,6 +298,7 @@
       <div id="eggRecordLivePanel" class="egg-record-card-body egg-record-live-card"
         data-live-url="{{ route('monitoring.records.live') }}"
         data-live-page="{{ (int) ($livePagination['current_page'] ?? 1) }}"
+        data-timezone="{{ $appTimezoneCode ?? \App\Support\AppTimezone::current() }}"
         data-refresh-interval-ms="{{ $liveRefreshIntervalMs }}">
         <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
           <div>

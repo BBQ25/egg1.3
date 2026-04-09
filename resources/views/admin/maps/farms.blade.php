@@ -197,7 +197,7 @@
                 </td>
                 <td>
                   <div class="fw-semibold">{{ $requestRow->request_type === 'CLAIM' ? 'Farm Claim' : 'Location Update' }}</div>
-                  <div class="small text-body-secondary">{{ optional($requestRow->submitted_at)->format('M j, Y g:i A') }}</div>
+                  <div class="small text-body-secondary">{{ \App\Support\AppTimezone::formatDateTime($requestRow->submitted_at) }}</div>
                 </td>
                 <td>
                   <div>{{ $requestRow->farm_name }}</div>

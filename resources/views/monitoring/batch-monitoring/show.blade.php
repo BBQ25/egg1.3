@@ -20,11 +20,12 @@
       'q' => $selectedSearch !== '' ? $selectedSearch : null,
       'status' => $selectedStatus !== 'all' ? $selectedStatus : null,
     ];
+    $timezoneLabel = $appTimezoneLabel ?? \App\Support\AppTimezone::label();
 
     $formatInt = static fn ($value): string => number_format((int) ($value ?? 0));
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
     $formatDateTime = static function ($value): string {
-        return \App\Support\BatchCodeFormatter::formatPhilippineDateTime($value);
+        return \App\Support\AppTimezone::formatDateTime($value);
     };
     $durationLabel = static function ($start, $end): string {
         if (!$start) {
@@ -35,8 +36,8 @@
             return 'In progress';
         }
 
-        $minutes = \App\Support\BatchCodeFormatter::toPhilippineTime($start)
-            ->diffInMinutes(\App\Support\BatchCodeFormatter::toPhilippineTime($end));
+        $minutes = \App\Support\AppTimezone::toAppTime($start)
+            ->diffInMinutes(\App\Support\AppTimezone::toAppTime($end));
 
         if ($minutes < 1) {
             return 'Under 1 minute';
@@ -146,7 +147,7 @@
             <div class="text-body-secondary">
               {{ $summary->farm_name ?? 'Farm' }} · {{ $summary->device_name ?? 'Device' }} · Serial {{ $summary->device_serial ?? 'N/A' }}
             </div>
-            <div class="text-body-secondary small mt-1">Times shown in Philippine Standard Time.</div>
+            <div class="text-body-secondary small mt-1">Times shown in {{ $timezoneLabel }}.</div>
             <div class="mt-2">
               <span class="badge {{ $statusTheme }}">{{ ucfirst((string) ($summary->status ?? 'unknown')) }}</span>
             </div>

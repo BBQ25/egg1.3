@@ -18,11 +18,7 @@
 
     $formatInt = static fn ($value): string => number_format((int) ($value ?? 0));
     $formatDateTime = static function ($value): string {
-        if (!$value) {
-            return 'N/A';
-        }
-
-        return \Illuminate\Support\Carbon::parse($value)->format('M j, Y g:i A');
+        return \App\Support\AppTimezone::formatDateTime($value);
     };
     $severityTheme = static function ($severity): string {
         return match ((string) $severity) {

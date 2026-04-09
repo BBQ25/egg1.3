@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\DeployTriggerRunner;
+use App\Support\AppTimezone;
 use App\Support\FileDeployTriggerRunner;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -29,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+        AppTimezone::clearCache();
+        AppTimezone::activate();
 
         RateLimiter::for('device-ingest', static function (Request $request): array {
             $serial = strtoupper(trim((string) $request->header('X-Device-Serial', 'unknown')));
@@ -92,6 +95,12 @@ class AppServiceProvider extends ServiceProvider
         }
 
         View::share('uiFontStyle', UiFont::current());
+        View::composer('*', static function ($view): void {
+            $timezone = AppTimezone::activate();
+
+            $view->with('appTimezoneCode', $timezone);
+            $view->with('appTimezoneLabel', AppTimezone::label($timezone));
+        });
     }
 
     private function formatRootUrl(string $scheme, string $host, int $port, string $pathPrefix): ?string

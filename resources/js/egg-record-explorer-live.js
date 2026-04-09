@@ -13,6 +13,7 @@ if (root) {
     const prevButton = document.getElementById('eggRecordLivePrev');
     const nextButton = document.getElementById('eggRecordLiveNext');
     const intervalMs = Number(root.dataset.refreshIntervalMs || 2000);
+    const appTimezone = root.dataset.timezone || 'Asia/Manila';
     let currentPage = Math.max(1, Number(root.dataset.livePage || 1));
     let inFlight = false;
 
@@ -28,7 +29,8 @@ if (root) {
             return 'N/A';
         }
 
-        return new Intl.DateTimeFormat(undefined, {
+        return new Intl.DateTimeFormat('en-US', {
+            timeZone: appTimezone,
             month: 'short',
             day: 'numeric',
             year: 'numeric',

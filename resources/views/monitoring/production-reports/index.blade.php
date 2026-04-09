@@ -27,18 +27,10 @@
     $formatInt = static fn ($value): string => number_format((int) ($value ?? 0));
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
     $formatDate = static function ($value): string {
-        if (!$value) {
-            return 'N/A';
-        }
-
-        return \Illuminate\Support\Carbon::parse($value)->format('M j, Y');
+        return \App\Support\AppTimezone::formatDate($value);
     };
     $formatDateTime = static function ($value): string {
-        if (!$value) {
-            return 'N/A';
-        }
-
-        return \Illuminate\Support\Carbon::parse($value)->format('M j, Y g:i A');
+        return \App\Support\AppTimezone::formatDateTime($value);
     };
     $sizeTheme = static function ($sizeClass): string {
         return match ((string) $sizeClass) {
