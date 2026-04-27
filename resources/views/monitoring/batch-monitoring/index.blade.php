@@ -80,16 +80,14 @@
     .batch-monitor-hero,
     .batch-monitor-card {
       border: 1px solid rgba(67, 89, 113, 0.12);
-      border-radius: 1.35rem;
+      border-radius: .5rem;
       background: #fff;
       box-shadow: 0 0.9rem 2rem rgba(67, 89, 113, 0.08);
     }
 
     .batch-monitor-hero {
       overflow: hidden;
-      background:
-        radial-gradient(circle at top right, rgba(105, 108, 255, 0.16), transparent 30%),
-        linear-gradient(135deg, #f8fbff 0%, #ffffff 50%, #fff8ed 100%);
+      background: linear-gradient(135deg, #f8fbff 0%, #ffffff 58%, #fffaf1 100%);
     }
 
     .batch-monitor-hero-body,
@@ -107,9 +105,9 @@
 
     .batch-monitor-title {
       margin: 0.35rem 0 0;
-      font-size: clamp(1.45rem, 1.2rem + 0.5vw, 2rem);
+      font-size: 1.75rem;
       line-height: 1.08;
-      letter-spacing: -0.03em;
+      letter-spacing: 0;
       color: #243448;
     }
 
@@ -149,12 +147,12 @@
 
     .batch-monitor-metrics {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
     }
 
     .batch-monitor-metric {
       padding: 1rem 1.05rem;
-      border-radius: 1rem;
+      border-radius: .5rem;
       background: rgba(255, 255, 255, 0.92);
       border: 1px solid rgba(67, 89, 113, 0.1);
     }
@@ -178,26 +176,61 @@
       overflow-x: auto;
     }
 
+    .batch-monitor-table {
+      min-width: 82rem;
+    }
+
+    .batch-monitor-table th,
+    .batch-monitor-table td {
+      white-space: nowrap;
+    }
+
+    .batch-monitor-table td:nth-child(1),
+    .batch-monitor-table td:nth-child(3),
+    .batch-monitor-table td:nth-child(4) {
+      white-space: normal;
+      min-width: 12rem;
+    }
+
+    .batch-monitor-filter-controls > div {
+      flex: 1 1 12rem;
+    }
+
+    .batch-monitor-filter-actions {
+      flex: 0 0 auto;
+    }
+
+    .batch-monitor-filter-actions .btn {
+      min-width: 6rem;
+    }
+
     .batch-monitor-empty {
       padding: 1.8rem;
       text-align: center;
       color: #6e7f92;
       border: 1px dashed rgba(67, 89, 113, 0.18);
-      border-radius: 1rem;
+      border-radius: .5rem;
       background: rgba(245, 247, 250, 0.72);
     }
 
     @media (max-width: 991.98px) {
-      .batch-monitor-dual-grid,
-      .batch-monitor-metrics {
+      .batch-monitor-dual-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 575.98px) {
-      .batch-monitor-dual-grid,
-      .batch-monitor-metrics {
+      .batch-monitor-dual-grid {
         grid-template-columns: minmax(0, 1fr);
+      }
+
+      .batch-monitor-hero-body,
+      .batch-monitor-card-body {
+        padding: 1rem;
+      }
+
+      .batch-monitor-title {
+        font-size: 1.45rem;
       }
     }
   </style>
@@ -256,7 +289,7 @@
         @endif
 
         <form method="GET" class="batch-monitor-filter-row align-items-end justify-content-between">
-          <div class="batch-monitor-filter-row align-items-end">
+          <div class="batch-monitor-filter-row batch-monitor-filter-controls align-items-end">
             <div>
               <label for="batch_monitor_range" class="form-label mb-1">Range</label>
               <select id="batch_monitor_range" name="range" class="form-select">
@@ -297,7 +330,7 @@
             </div>
           </div>
 
-          <div class="batch-monitor-filter-row align-items-end">
+          <div class="batch-monitor-filter-row batch-monitor-filter-actions align-items-end">
             <button type="submit" class="btn btn-primary">Apply</button>
             <a href="{{ route('monitoring.batches.index') }}" class="btn btn-outline-secondary">Reset</a>
           </div>
@@ -326,7 +359,7 @@
 
           @if ($batches && $batches->count() > 0)
             <div class="batch-monitor-table-wrap">
-              <table class="table table-hover align-middle mb-0">
+              <table class="table table-hover align-middle mb-0 batch-monitor-table">
                 <thead>
                   <tr>
                     <th>Batch</th>

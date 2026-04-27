@@ -82,7 +82,7 @@
 
     .batch-detail-card {
       border: 1px solid rgba(67, 89, 113, 0.12);
-      border-radius: 1.35rem;
+      border-radius: .5rem;
       background: #fff;
       box-shadow: 0 0.9rem 2rem rgba(67, 89, 113, 0.08);
     }
@@ -93,12 +93,12 @@
 
     .batch-detail-metrics {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
       gap: 0.85rem;
     }
 
     .batch-detail-metric {
-      border-radius: 1rem;
+      border-radius: .5rem;
       border: 1px solid rgba(67, 89, 113, 0.1);
       background: rgba(248, 250, 252, 0.9);
       padding: 1rem 1.05rem;
@@ -130,17 +130,37 @@
       overflow-x: auto;
     }
 
+    .batch-detail-records-table {
+      min-width: 66rem;
+    }
+
+    .batch-detail-records-table th,
+    .batch-detail-records-table td {
+      white-space: nowrap;
+    }
+
+    .batch-detail-records-table td:nth-child(1),
+    .batch-detail-records-table td:nth-child(2) {
+      min-width: 12rem;
+    }
+
     @media (max-width: 991.98px) {
-      .batch-detail-grid,
-      .batch-detail-metrics {
+      .batch-detail-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 575.98px) {
-      .batch-detail-grid,
-      .batch-detail-metrics {
+      .batch-detail-grid {
         grid-template-columns: minmax(0, 1fr);
+      }
+
+      .batch-detail-card-body {
+        padding: 1rem;
+      }
+
+      .batch-detail-card .text-end {
+        text-align: left !important;
       }
     }
   </style>
@@ -264,7 +284,7 @@
 
           @if ($records && $records->count() > 0)
             <div class="batch-detail-table-wrap">
-              <table class="table table-hover align-middle mb-0">
+              <table class="table table-hover align-middle mb-0 batch-detail-records-table">
                 <thead>
                   <tr>
                     <th>Recorded At ({{ $timezoneLabel }})</th>

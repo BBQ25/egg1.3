@@ -62,16 +62,14 @@
     .validation-hero,
     .validation-card {
       border: 1px solid rgba(67, 89, 113, 0.12);
-      border-radius: 1.35rem;
+      border-radius: .5rem;
       background: #fff;
       box-shadow: 0 0.9rem 2rem rgba(67, 89, 113, 0.08);
     }
 
     .validation-hero {
       overflow: hidden;
-      background:
-        radial-gradient(circle at top right, rgba(32, 201, 151, 0.12), transparent 30%),
-        linear-gradient(135deg, #f5fff8 0%, #ffffff 45%, #f4f7ff 100%);
+      background: linear-gradient(135deg, #f5fff8 0%, #ffffff 52%, #f4f7ff 100%);
     }
 
     .validation-hero-body,
@@ -89,9 +87,9 @@
 
     .validation-title {
       margin: 0.35rem 0 0;
-      font-size: clamp(1.45rem, 1.2rem + 0.5vw, 2rem);
+      font-size: 1.75rem;
       line-height: 1.08;
-      letter-spacing: -0.03em;
+      letter-spacing: 0;
       color: #243448;
     }
 
@@ -123,13 +121,13 @@
 
     .validation-metrics {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
       gap: 0.85rem;
     }
 
     .validation-metric {
       padding: 1rem 1.05rem;
-      border-radius: 1rem;
+      border-radius: .5rem;
       background: rgba(255, 255, 255, 0.92);
       border: 1px solid rgba(67, 89, 113, 0.1);
     }
@@ -160,34 +158,65 @@
       overflow-x: auto;
     }
 
+    .validation-table {
+      min-width: 72rem;
+    }
+
+    .validation-table th,
+    .validation-table td {
+      white-space: nowrap;
+    }
+
+    .validation-table td:first-child {
+      white-space: normal;
+      min-width: 18rem;
+    }
+
     .validation-empty {
       padding: 1.8rem;
       text-align: center;
       color: #6e7f92;
       border: 1px dashed rgba(67, 89, 113, 0.18);
-      border-radius: 1rem;
+      border-radius: .5rem;
       background: rgba(245, 247, 250, 0.72);
     }
 
     .validation-run-metrics {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
       gap: 0.85rem;
     }
 
+    .validation-filter-controls > div {
+      flex: 1 1 12rem;
+    }
+
+    .validation-filter-actions {
+      flex: 0 0 auto;
+    }
+
+    .validation-filter-actions .btn {
+      min-width: 6rem;
+    }
+
     @media (max-width: 1199.98px) {
-      .validation-grid,
-      .validation-metrics,
-      .validation-run-metrics {
+      .validation-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 767.98px) {
-      .validation-grid,
-      .validation-metrics,
-      .validation-run-metrics {
+      .validation-grid {
         grid-template-columns: minmax(0, 1fr);
+      }
+
+      .validation-hero-body,
+      .validation-card-body {
+        padding: 1rem;
+      }
+
+      .validation-title {
+        font-size: 1.45rem;
       }
     }
   </style>
@@ -255,7 +284,7 @@
     <section class="validation-card">
       <div class="validation-card-body">
         <form method="GET" class="validation-filter-row align-items-end justify-content-between">
-          <div class="validation-filter-row align-items-end">
+          <div class="validation-filter-row validation-filter-controls align-items-end">
             <div>
               <label for="validation_range" class="form-label mb-1">Range</label>
               <select id="validation_range" name="range" class="form-select">
@@ -301,7 +330,7 @@
             </div>
           </div>
 
-          <div class="validation-filter-row align-items-end">
+          <div class="validation-filter-row validation-filter-actions align-items-end">
             <button type="submit" class="btn btn-primary">Apply</button>
             <a href="{{ route('monitoring.validation.index') }}" class="btn btn-outline-secondary">Reset</a>
           </div>
@@ -378,7 +407,7 @@
 
           @if ($runs->count() > 0)
             <div class="validation-table-wrap">
-              <table class="table table-hover align-middle mb-0">
+              <table class="table table-hover align-middle mb-0 validation-table">
                 <thead>
                   <tr>
                     <th>Run</th>
@@ -551,7 +580,7 @@
           <div class="validation-card-body">
             <h2 class="h5 mb-3">Confusion Matrix</h2>
             <div class="validation-table-wrap">
-              <table class="table table-sm align-middle mb-0">
+              <table class="table table-sm align-middle mb-0 validation-table">
                 <thead>
                   <tr>
                     <th>Manual \ Automated</th>
@@ -584,7 +613,7 @@
 
           @if ($measurements->count() > 0)
             <div class="validation-table-wrap">
-              <table class="table table-hover align-middle mb-0">
+              <table class="table table-hover align-middle mb-0 validation-table">
                 <thead>
                   <tr>
                     <th>Measured At</th>

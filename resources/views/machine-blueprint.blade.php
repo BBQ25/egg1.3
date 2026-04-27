@@ -20,7 +20,7 @@
         linear-gradient(90deg, rgba(91, 141, 239, 0.04) 1px, transparent 1px),
         linear-gradient(rgba(91, 141, 239, 0.04) 1px, transparent 1px);
       background-size: auto, 24px 24px, 24px 24px;
-      border-radius: 1.25rem;
+      border-radius: .5rem;
       box-shadow: 0 22px 44px rgba(18, 38, 63, 0.08);
     }
 
@@ -31,10 +31,16 @@
     .machine-blueprint-frame {
       position: relative;
       width: 100%;
-      border-radius: 1rem;
-      overflow: hidden;
+      border-radius: .5rem;
+      overflow-x: auto;
+      overflow-y: hidden;
       background: rgba(255, 255, 255, 0.4);
       border: 1px solid rgba(67, 89, 113, 0.12);
+    }
+
+    .machine-blueprint-canvas {
+      position: relative;
+      min-width: 48rem;
     }
 
     .machine-blueprint-image {
@@ -200,7 +206,7 @@
 
     .machine-blueprint-legend-item {
       padding: 1rem;
-      border-radius: 1rem;
+      border-radius: .5rem;
       border: 1px solid rgba(67, 89, 113, 0.12);
       background: #fff;
       box-shadow: 0 10px 24px rgba(18, 38, 63, 0.06);
@@ -224,7 +230,7 @@
 
     .machine-blueprint-note {
       padding: 1rem 1.1rem;
-      border-radius: 1rem;
+      border-radius: .5rem;
       background: linear-gradient(180deg, #fff, #f7f9fc);
       border: 1px solid rgba(67, 89, 113, 0.12);
     }
@@ -235,7 +241,7 @@
       border-spacing: 0;
       overflow: hidden;
       border: 1px solid rgba(67, 89, 113, 0.12);
-      border-radius: 1rem;
+      border-radius: .5rem;
       background: #fff;
     }
 
@@ -257,6 +263,32 @@
       font-weight: 700;
       background: #f7f9fc;
     }
+
+    @media (min-width: 992px) {
+      .machine-blueprint-canvas {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .machine-blueprint-spec-table,
+      .machine-blueprint-spec-table tbody,
+      .machine-blueprint-spec-table tr,
+      .machine-blueprint-spec-table th,
+      .machine-blueprint-spec-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .machine-blueprint-spec-table th {
+        border-bottom: 0;
+        padding-bottom: .35rem;
+      }
+
+      .machine-blueprint-spec-table td {
+        padding-top: .35rem;
+      }
+    }
   </style>
 @endpush
 
@@ -276,58 +308,60 @@
 
           <div class="machine-blueprint-frame">
             @if ($deviceBlueprintSrc)
-              <img src="{{ $deviceBlueprintSrc }}" alt="Actual egg sorting device image" class="machine-blueprint-image" />
-              <div class="machine-blueprint-overlay" aria-hidden="true">
-                <svg viewBox="0 0 1296 674" class="machine-blueprint-svg">
-                  <defs>
-                    <filter id="machineBlueprintLabelShadow" x="-20%" y="-40%" width="140%" height="180%">
-                      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#12263f" flood-opacity="0.16" />
-                    </filter>
-                  </defs>
+              <div class="machine-blueprint-canvas">
+                <img src="{{ $deviceBlueprintSrc }}" alt="Actual egg sorting device image" class="machine-blueprint-image" />
+                <div class="machine-blueprint-overlay" aria-hidden="true">
+                  <svg viewBox="0 0 1296 674" class="machine-blueprint-svg">
+                    <defs>
+                      <filter id="machineBlueprintLabelShadow" x="-20%" y="-40%" width="140%" height="180%">
+                        <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#12263f" flood-opacity="0.16" />
+                      </filter>
+                    </defs>
 
-                  <g class="machine-blueprint-annotation" style="--callout-color:#ff1f1f; --point-delay:.25s; --line-delay:.66s; --label-delay:1.5s;">
-                    <circle class="machine-blueprint-annotation-pulse" cx="970" cy="96" r="12"></circle>
-                    <circle class="machine-blueprint-annotation-point" cx="970" cy="96" r="9"></circle>
-                    <path class="machine-blueprint-annotation-line" d="M970 96 L970 154 L290 154"></path>
-                    <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
-                      <rect class="machine-blueprint-annotation-label-box" x="92" y="130" rx="24" ry="24" width="182" height="48"></rect>
-                      <text class="machine-blueprint-annotation-label-text" x="114" y="161">Queue Ramp</text>
+                    <g class="machine-blueprint-annotation" style="--callout-color:#ff1f1f; --point-delay:.25s; --line-delay:.66s; --label-delay:1.5s;">
+                      <circle class="machine-blueprint-annotation-pulse" cx="970" cy="96" r="12"></circle>
+                      <circle class="machine-blueprint-annotation-point" cx="970" cy="96" r="9"></circle>
+                      <path class="machine-blueprint-annotation-line" d="M970 96 L970 154 L290 154"></path>
+                      <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
+                        <rect class="machine-blueprint-annotation-label-box" x="92" y="130" rx="10" ry="10" width="182" height="48"></rect>
+                        <text class="machine-blueprint-annotation-label-text" x="114" y="161">Queue Ramp</text>
+                      </g>
                     </g>
-                  </g>
 
-                  <g class="machine-blueprint-annotation" style="--callout-color:#24df00; --point-delay:1.95s; --line-delay:2.36s; --label-delay:3.2s;">
-                    <circle class="machine-blueprint-annotation-pulse" cx="1120" cy="165" r="12"></circle>
-                    <circle class="machine-blueprint-annotation-point" cx="1120" cy="165" r="9"></circle>
-                    <path class="machine-blueprint-annotation-line" d="M1120 165 L1120 204"></path>
-                    <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
-                      <rect class="machine-blueprint-annotation-label-box" x="968" y="216" rx="24" ry="24" width="264" height="48"></rect>
-                      <text class="machine-blueprint-annotation-label-text" x="988" y="247">Weighing Section</text>
+                    <g class="machine-blueprint-annotation" style="--callout-color:#24df00; --point-delay:1.95s; --line-delay:2.36s; --label-delay:3.2s;">
+                      <circle class="machine-blueprint-annotation-pulse" cx="1120" cy="165" r="12"></circle>
+                      <circle class="machine-blueprint-annotation-point" cx="1120" cy="165" r="9"></circle>
+                      <path class="machine-blueprint-annotation-line" d="M1120 165 L1120 204"></path>
+                      <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
+                        <rect class="machine-blueprint-annotation-label-box" x="968" y="216" rx="10" ry="10" width="264" height="48"></rect>
+                        <text class="machine-blueprint-annotation-label-text" x="988" y="247">Weighing Section</text>
+                      </g>
                     </g>
-                  </g>
 
-                  <g class="machine-blueprint-annotation" style="--callout-color:#6b1fe0; --point-delay:3.65s; --line-delay:4.06s; --label-delay:4.9s;">
-                    <circle class="machine-blueprint-annotation-pulse" cx="450" cy="302" r="12"></circle>
-                    <circle class="machine-blueprint-annotation-point" cx="450" cy="302" r="9"></circle>
-                    <path class="machine-blueprint-annotation-line" d="M450 302 L610 302 L610 262"></path>
-                    <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
-                      <rect class="machine-blueprint-annotation-label-box" x="528" y="214" rx="24" ry="24" width="156" height="48"></rect>
-                      <text class="machine-blueprint-annotation-label-text" x="562" y="245">Chute</text>
+                    <g class="machine-blueprint-annotation" style="--callout-color:#6b1fe0; --point-delay:3.65s; --line-delay:4.06s; --label-delay:4.9s;">
+                      <circle class="machine-blueprint-annotation-pulse" cx="450" cy="302" r="12"></circle>
+                      <circle class="machine-blueprint-annotation-point" cx="450" cy="302" r="9"></circle>
+                      <path class="machine-blueprint-annotation-line" d="M450 302 L610 302 L610 262"></path>
+                      <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
+                        <rect class="machine-blueprint-annotation-label-box" x="528" y="214" rx="10" ry="10" width="156" height="48"></rect>
+                        <text class="machine-blueprint-annotation-label-text" x="562" y="245">Chute</text>
+                      </g>
                     </g>
-                  </g>
 
-                  <g class="machine-blueprint-annotation" style="--callout-color:#ffd400; --point-delay:5.35s; --line-delay:5.76s; --label-delay:6.6s;">
-                    <circle class="machine-blueprint-annotation-pulse" cx="205" cy="478" r="12"></circle>
-                    <circle class="machine-blueprint-annotation-point" cx="205" cy="478" r="9"></circle>
-                    <path class="machine-blueprint-annotation-line" d="M205 478 L205 548 L92 548"></path>
-                    <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
-                      <rect class="machine-blueprint-annotation-label-box" x="52" y="556" rx="28" ry="28" width="632" height="74"></rect>
-                      <text class="machine-blueprint-annotation-label-text" x="74" y="590">Section Bins</text>
-                      <text class="machine-blueprint-annotation-label-text" x="74" y="620">
-                        <tspan>(Reject, Jumbo, Extra-Large, Large, Medium, Small, Pullet, Pewee)</tspan>
-                      </text>
+                    <g class="machine-blueprint-annotation" style="--callout-color:#ffd400; --point-delay:5.35s; --line-delay:5.76s; --label-delay:6.6s;">
+                      <circle class="machine-blueprint-annotation-pulse" cx="205" cy="478" r="12"></circle>
+                      <circle class="machine-blueprint-annotation-point" cx="205" cy="478" r="9"></circle>
+                      <path class="machine-blueprint-annotation-line" d="M205 478 L205 548 L92 548"></path>
+                      <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
+                        <rect class="machine-blueprint-annotation-label-box" x="52" y="556" rx="10" ry="10" width="632" height="74"></rect>
+                        <text class="machine-blueprint-annotation-label-text" x="74" y="590">Section Bins</text>
+                        <text class="machine-blueprint-annotation-label-text" x="74" y="620">
+                          <tspan>(Reject, Jumbo, Extra-Large, Large, Medium, Small, Pullet, Peewee)</tspan>
+                        </text>
+                      </g>
                     </g>
-                  </g>
-                </svg>
+                  </svg>
+                </div>
               </div>
             @else
               <div class="machine-blueprint-image-fallback">
@@ -352,7 +386,7 @@
         <article class="machine-blueprint-legend-item">
           <h6 class="mb-2">Sorting Bins</h6>
           <p class="text-body-secondary small mb-0">
-            Reject, Jumbo, Extra-Large, Large, Medium, Small, Pullet, and Pewee are grouped under the highlighted
+            Reject, Jumbo, Extra-Large, Large, Medium, Small, Pullet, and Peewee are grouped under the highlighted
             section bins call-out for presentation and device orientation.
           </p>
         </article>
