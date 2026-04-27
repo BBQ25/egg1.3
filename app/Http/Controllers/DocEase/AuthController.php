@@ -101,7 +101,7 @@ class AuthController extends Controller
     {
         Auth::guard('doc_ease')->logout();
 
-        $request->session()->regenerate();
+        $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('doc-ease.login');

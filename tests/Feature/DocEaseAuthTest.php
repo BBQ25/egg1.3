@@ -118,6 +118,28 @@ class DocEaseAuthTest extends TestCase
         $this->assertGuest('doc_ease');
     }
 
+    public function test_doc_ease_inactive_admin_user_is_blocked(): void
+    {
+        config()->set('doc_ease.enabled', true);
+
+        $this->makeDocEaseUser(
+            username: 'admin-inactive',
+            useremail: 'admin-inactive@example.com',
+            password: 'secret123',
+            role: 'admin',
+            isActive: false,
+        );
+
+        $response = $this->from(route('doc-ease.login'))->post(route('doc-ease.login.store'), [
+            'login' => 'admin-inactive@example.com',
+            'password' => 'secret123',
+        ]);
+
+        $response->assertRedirect(route('doc-ease.login'));
+        $response->assertSessionHasErrors(['login']);
+        $this->assertGuest('doc_ease');
+    }
+
     public function test_doc_ease_portal_launch_legacy_redirects_to_entrypoint_when_bridge_disabled(): void
     {
         config()->set('doc_ease.enabled', true);
@@ -155,6 +177,28 @@ class DocEaseAuthTest extends TestCase
         $this->assertGuest('doc_ease');
     }
 
+    public function test_doc_ease_logout_invalidates_existing_session_data(): void
+    {
+        config()->set('doc_ease.enabled', true);
+
+        $user = $this->makeDocEaseUser(
+            username: 'teacher-four',
+            useremail: 'teacher4@example.com',
+            password: 'secret123',
+            role: 'teacher',
+            isActive: true,
+        );
+
+        $response = $this
+            ->withSession(['doc_ease.banner' => 'keep-out'])
+            ->actingAs($user, 'doc_ease')
+            ->post(route('doc-ease.logout'));
+
+        $response->assertRedirect(route('doc-ease.login'));
+        $response->assertSessionMissing('doc_ease.banner');
+        $this->assertGuest('doc_ease');
+    }
+
     private function makeDocEaseUser(
         string $username,
         string $useremail,
@@ -175,4 +219,3 @@ class DocEaseAuthTest extends TestCase
         return DocEaseUser::on('doc_ease')->findOrFail($id);
     }
 }
-

@@ -17,7 +17,7 @@ final class AppTimezone
      * @var array<string, string>
      */
     private const OPTIONS = [
-        'Asia/Manila' => 'Philippine Standard Time',
+        'Asia/Manila' => 'Philippine Standard Time (PST / UTC+8)',
         'UTC' => 'Coordinated Universal Time',
     ];
 
@@ -138,6 +138,29 @@ final class AppTimezone
         $resolved = self::toAppTime($value);
 
         return $resolved?->format($format) ?? 'N/A';
+    }
+
+    public static function secondsBetween(
+        CarbonInterface|string|null $start,
+        CarbonInterface|string|null $end,
+        bool $useCurrentWhenMissingEnd = true
+    ): ?float {
+        $startAt = self::toAppTime($start);
+        $endAt = self::toAppTime($end);
+
+        if ($startAt === null) {
+            return null;
+        }
+
+        if ($endAt === null) {
+            if (!$useCurrentWhenMissingEnd) {
+                return null;
+            }
+
+            $endAt = self::now();
+        }
+
+        return max(0.0, ((float) $endAt->format('U.u')) - ((float) $startAt->format('U.u')));
     }
 
     public static function hasExplicitTimezone(string $value): bool

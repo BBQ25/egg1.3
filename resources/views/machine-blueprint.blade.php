@@ -228,6 +228,35 @@
       background: linear-gradient(180deg, #fff, #f7f9fc);
       border: 1px solid rgba(67, 89, 113, 0.12);
     }
+
+    .machine-blueprint-spec-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border: 1px solid rgba(67, 89, 113, 0.12);
+      border-radius: 1rem;
+      background: #fff;
+    }
+
+    .machine-blueprint-spec-table th,
+    .machine-blueprint-spec-table td {
+      padding: .9rem 1rem;
+      border-bottom: 1px solid rgba(67, 89, 113, 0.1);
+      vertical-align: top;
+    }
+
+    .machine-blueprint-spec-table tr:last-child th,
+    .machine-blueprint-spec-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .machine-blueprint-spec-table th {
+      width: 16rem;
+      color: #1f2d3d;
+      font-weight: 700;
+      background: #f7f9fc;
+    }
   </style>
 @endpush
 
@@ -262,7 +291,7 @@
                     <path class="machine-blueprint-annotation-line" d="M970 96 L970 154 L290 154"></path>
                     <g class="machine-blueprint-annotation-label" filter="url(#machineBlueprintLabelShadow)">
                       <rect class="machine-blueprint-annotation-label-box" x="92" y="130" rx="24" ry="24" width="182" height="48"></rect>
-                      <text class="machine-blueprint-annotation-label-text" x="114" y="161">Que Ramp</text>
+                      <text class="machine-blueprint-annotation-label-text" x="114" y="161">Queue Ramp</text>
                     </g>
                   </g>
 
@@ -314,7 +343,7 @@
       <section class="machine-blueprint-legend">
         <article class="machine-blueprint-legend-item">
           <h6 class="mb-2">Color Legend</h6>
-          <div class="text-body-secondary small"><span class="machine-blueprint-swatch" style="background:#ff1f1f;"></span>Que Ramp</div>
+          <div class="text-body-secondary small"><span class="machine-blueprint-swatch" style="background:#ff1f1f;"></span>Queue Ramp</div>
           <div class="text-body-secondary small mt-2"><span class="machine-blueprint-swatch" style="background:#24df00;"></span>Weighing Section</div>
           <div class="text-body-secondary small mt-2"><span class="machine-blueprint-swatch" style="background:#6b1fe0;"></span>Chute</div>
           <div class="text-body-secondary small mt-2"><span class="machine-blueprint-swatch" style="background:#ffd400;"></span>Section Bins</div>
@@ -359,6 +388,85 @@
           <p class="text-body-secondary small mb-0">
             The tapered lower body collects eggs into the designated classification bins after the servo-driven routing
             action.
+          </p>
+        </article>
+      </section>
+    </div>
+
+    <div class="col-12">
+      <section class="card">
+        <div class="card-body p-4">
+          <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-3">
+            <div>
+              <span class="badge bg-label-success mb-2">Technical Requirements</span>
+              <h4 class="mb-1">Prototype Components and Runtime Requirements</h4>
+              <p class="text-body-secondary mb-0">
+                The entries below are derived from the active firmware and Laravel application configuration.
+              </p>
+            </div>
+            <span class="badge bg-label-primary">Final model: SGMA</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="machine-blueprint-spec-table">
+              <tbody>
+                <tr>
+                  <th>Controller</th>
+                  <td>ESP32 board running <code>firmware/AESM/AESM.ino</code>, firmware version <code>aesm-live-v1</code>.</td>
+                </tr>
+                <tr>
+                  <th>Weight Sensor</th>
+                  <td>HX711 amplifier on GPIO DOUT 4 and SCK 5 with a calibrated load cell. The exact load cell capacity must match the physical label/BOM used in the prototype.</td>
+                </tr>
+                <tr>
+                  <th>Servo Actuation</th>
+                  <td>Five PWM servo channels: Gate 1 GPIO 14, Gate 2 GPIO 26, Pusher GPIO 27, Pan GPIO 12, and Tilt GPIO 13. Confirm the installed servo model from the physical prototype label or purchase record.</td>
+                </tr>
+                <tr>
+                  <th>Display and Controls</th>
+                  <td>16x2 I2C LCD at address <code>0x27</code>, serial control commands for status, reset, tare, feed cycle, pause, and speed mode.</td>
+                </tr>
+                <tr>
+                  <th>Power</th>
+                  <td>ESP32 5V/USB input with a separate regulated servo supply sized for the installed motors; all grounds must be common.</td>
+                </tr>
+                <tr>
+                  <th>Network</th>
+                  <td>Wi-Fi access with NTP time sync and HTTPS access to <code>/api/devices/runtime-config</code> and <code>/api/devices/ingest</code>.</td>
+                </tr>
+                <tr>
+                  <th>Server and Database</th>
+                  <td>Laravel/PHP application with database tables for users, farms, devices, ingest events, production batches, validation runs, and measurements.</td>
+                </tr>
+                <tr>
+                  <th>Monitoring Client</th>
+                  <td>Browser-based PWA with <code>manifest.webmanifest</code>, <code>sw.js</code>, and dashboard pages for live monitoring, batch monitoring, reports, and validation accuracy.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-12">
+      <section class="machine-blueprint-notes">
+        <article class="machine-blueprint-note">
+          <h6 class="mb-1">Hardware Capture</h6>
+          <p class="text-body-secondary small mb-0">
+            The ESP32 reads HX711 weight samples, applies the SGMA final weight blend, classifies the egg, and moves the servo routing path.
+          </p>
+        </article>
+        <article class="machine-blueprint-note">
+          <h6 class="mb-1">Server Ingest</h6>
+          <p class="text-body-secondary small mb-0">
+            The firmware posts authenticated JSON records to the Laravel ingest API with egg UID, batch code, weight, class, metadata, and recorded time.
+          </p>
+        </article>
+        <article class="machine-blueprint-note">
+          <h6 class="mb-1">PWA Monitoring</h6>
+          <p class="text-body-secondary small mb-0">
+            The database record is shown in the dashboard, egg record explorer, batch monitoring page, production reports, and validation accuracy exports.
           </p>
         </article>
       </section>

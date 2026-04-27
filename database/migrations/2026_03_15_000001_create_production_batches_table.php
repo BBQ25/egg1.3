@@ -49,6 +49,11 @@ return new class extends Migration
             Schema::table('device_ingest_events', function (Blueprint $table) {
                 $table->unsignedBigInteger('production_batch_id')->nullable()->after('owner_user_id');
                 $table->index(['production_batch_id', 'recorded_at'], 'idx_ingest_batch_date');
+                $table->foreign('production_batch_id', 'fk_ingest_production_batch')
+                    ->references('id')
+                    ->on('production_batches')
+                    ->cascadeOnUpdate()
+                    ->nullOnDelete();
             });
         }
 
@@ -59,6 +64,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('device_ingest_events') && Schema::hasColumn('device_ingest_events', 'production_batch_id')) {
             Schema::table('device_ingest_events', function (Blueprint $table) {
+                $table->dropForeign('fk_ingest_production_batch');
                 $table->dropIndex('idx_ingest_batch_date');
                 $table->dropColumn('production_batch_id');
             });

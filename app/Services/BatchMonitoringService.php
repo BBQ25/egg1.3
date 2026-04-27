@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Device;
 use App\Models\ProductionBatch;
+use App\Support\AppTimezone;
 use App\Support\BatchCodeFormatter;
 use App\Support\EggSizeClass;
 use Carbon\CarbonImmutable;
@@ -353,7 +354,7 @@ class BatchMonitoringService
                 ],
             ],
             CarbonImmutable::create(2000, 1, 1, 0, 0, 0),
-            CarbonImmutable::now()->addYears(10),
+            AppTimezone::now()->addYears(10),
             ''
         )
             ->where('batches.farm_id', $farmId)
@@ -502,7 +503,7 @@ class BatchMonitoringService
      */
     private function resolveWindow(string $range): array
     {
-        $end = CarbonImmutable::now();
+        $end = AppTimezone::now();
 
         $start = match ($range) {
             DashboardContextService::RANGE_1W => $end->subWeek(),
@@ -544,7 +545,7 @@ class BatchMonitoringService
     public function closeBatch(ProductionBatch $batch): void
     {
         $latestRecordedAt = $batch->ingestEvents()->max('recorded_at');
-        $endedAt = $latestRecordedAt ? CarbonImmutable::parse((string) $latestRecordedAt) : CarbonImmutable::now();
+        $endedAt = $latestRecordedAt ? AppTimezone::parseInbound((string) $latestRecordedAt) : AppTimezone::now();
 
         $batch->update([
             'status' => 'closed',
@@ -590,7 +591,7 @@ class BatchMonitoringService
             'owner_user_id' => (int) $device->owner_user_id,
             'batch_code' => $batchCode,
             'status' => self::STATUS_OPEN,
-            'started_at' => CarbonImmutable::now(),
+            'started_at' => AppTimezone::now(),
             'ended_at' => null,
         ]);
     }
@@ -605,7 +606,7 @@ class BatchMonitoringService
         $device->loadMissing('farm');
         $observedAt = $observedAt
             ? CarbonImmutable::instance($observedAt)
-            : CarbonImmutable::now();
+            : AppTimezone::now();
 
         $candidate = BatchCodeFormatter::build($device->farm?->farm_name, $observedAt);
         $suffix = 1;

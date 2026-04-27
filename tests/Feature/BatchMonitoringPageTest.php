@@ -61,6 +61,8 @@ class BatchMonitoringPageTest extends TestCase
 
         $listResponse->assertOk()
             ->assertSee('BATCH-GROUPED')
+            ->assertSee('Total Weight')
+            ->assertSee('Time/Egg')
             ->assertSee('3')
             ->assertSee('1');
 
@@ -75,6 +77,7 @@ class BatchMonitoringPageTest extends TestCase
             ->assertSee('Batch Detail')
             ->assertSee('Grouped Farm')
             ->assertSee('ESP32 Dev Board')
+            ->assertSee('Received / Delay')
             ->assertSee('egg-101')
             ->assertSee('egg-103')
             ->assertSee('Reject')
@@ -121,6 +124,7 @@ class BatchMonitoringPageTest extends TestCase
 
         $content = $response->streamedContent();
         $this->assertStringContainsString('batch_code,farm_name,device_name,device_serial,owner_name,status', $content);
+        $this->assertStringContainsString('time_per_egg_seconds,throughput_eggs_per_minute', $content);
         $this->assertStringContainsString('BATCH-CSV', $content);
         $this->assertStringContainsString('Export Farm', $content);
     }
@@ -145,6 +149,7 @@ class BatchMonitoringPageTest extends TestCase
 
         $content = $response->streamedContent();
         $this->assertStringContainsString('record_id,batch_code,farm_name,device_name', $content);
+        $this->assertStringContainsString('received_at,monitoring_delay_seconds', $content);
         $this->assertStringContainsString('BATCH-DETAIL-CSV', $content);
         $this->assertStringContainsString('egg-401', $content);
         $this->assertStringContainsString('egg-402', $content);

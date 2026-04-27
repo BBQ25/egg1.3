@@ -40,6 +40,8 @@ class DeviceIngestApiTest extends TestCase
         $response->assertStatus(201);
         $response->assertJsonPath('ok', true);
         $response->assertJsonPath('message', 'Ingest accepted.');
+        $response->assertJsonPath('data.recorded_timezone', 'Asia/Manila');
+        $response->assertJsonPath('data.recorded_timezone_label', 'Philippine Standard Time (PST / UTC+8)');
 
         $this->assertDatabaseHas('device_ingest_events', [
             'device_id' => $device->id,
@@ -215,6 +217,7 @@ class DeviceIngestApiTest extends TestCase
         $duplicateResponse->assertJsonPath('ok', true);
         $duplicateResponse->assertJsonPath('message', 'Ingest already accepted.');
         $duplicateResponse->assertJsonPath('data.event_id', $eventId);
+        $duplicateResponse->assertJsonPath('data.recorded_timezone', 'Asia/Manila');
         $duplicateResponse->assertJsonPath('data.deduplicated', true);
 
         $this->assertSame(1, DeviceIngestEvent::query()->where('device_id', $device->id)->count());
@@ -489,7 +492,7 @@ class DeviceIngestApiTest extends TestCase
         $response->assertJsonPath('data.open_batch_code', 'BATCH-OPEN-001');
         $response->assertJsonPath('data.refresh_after_seconds', 60);
         $response->assertJsonPath('data.server_timezone', 'Asia/Manila');
-        $response->assertJsonPath('data.server_timezone_label', 'Philippine Standard Time');
+        $response->assertJsonPath('data.server_timezone_label', 'Philippine Standard Time (PST / UTC+8)');
         $response->assertJsonPath('data.weight_ranges.reject.min', 0);
         $response->assertJsonPath('data.weight_ranges.reject.max', 30.99);
         $response->assertJsonPath('data.weight_ranges.extra_large.label', 'Extra-Large');
@@ -577,7 +580,7 @@ class DeviceIngestApiTest extends TestCase
         $response->assertJsonPath('data.weight_ranges.medium.min', 55);
         $response->assertJsonPath('data.weight_ranges.medium.max', 59.99);
         $response->assertJsonPath('data.server_timezone', 'Asia/Manila');
-        $response->assertJsonPath('data.server_timezone_label', 'Philippine Standard Time');
+        $response->assertJsonPath('data.server_timezone_label', 'Philippine Standard Time (PST / UTC+8)');
     }
 
     public function test_runtime_config_rejects_invalid_device_credentials(): void

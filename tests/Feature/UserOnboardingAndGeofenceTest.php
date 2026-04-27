@@ -236,6 +236,31 @@ class UserOnboardingAndGeofenceTest extends TestCase
         $restrictedResponse->assertSee('System Access Unavailable Outside Geofence');
     }
 
+    public function test_geofence_login_without_location_clears_the_previous_session(): void
+    {
+        Geofence::set(true, 10.3156992, 123.8854366, 1000);
+
+        User::factory()->create([
+            'username' => 'missing_location_user',
+            'password_hash' => 'password123',
+            'role' => UserRole::CUSTOMER,
+            'registration_status' => UserRegistrationStatus::APPROVED,
+        ]);
+
+        $response = $this
+            ->withSession(['legacy_state' => 'stale'])
+            ->from(route('login'))
+            ->post(route('login.store'), [
+                'username' => 'missing_location_user',
+                'password' => 'password123',
+            ]);
+
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHasErrors('username');
+        $response->assertSessionMissing('legacy_state');
+        $this->assertGuest();
+    }
+
     public function test_geofence_allows_non_admin_login_inside_perimeter(): void
     {
         Geofence::set(true, 10.3156992, 123.8854366, 2000);

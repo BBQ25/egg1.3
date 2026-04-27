@@ -27,6 +27,23 @@
     $formatDateTime = static function ($value): string {
         return \App\Support\AppTimezone::formatDateTime($value);
     };
+    $timePerEggLabel = static function ($start, $end, $eggs): string {
+        $totalEggs = (int) ($eggs ?? 0);
+        if (!$start || $totalEggs < 1) {
+            return 'N/A';
+        }
+
+        $startAt = \App\Support\AppTimezone::toAppTime($start);
+        $endAt = \App\Support\AppTimezone::toAppTime($end) ?? \App\Support\AppTimezone::now();
+
+        if (!$startAt || !$endAt) {
+            return 'N/A';
+        }
+
+        $seconds = \App\Support\AppTimezone::secondsBetween($startAt, $endAt);
+
+        return number_format($seconds / $totalEggs, 2) . ' s/egg';
+    };
     $durationLabel = static function ($start, $end): string {
         if (!$start) {
             return 'N/A';
@@ -320,6 +337,8 @@
                     <th>Eggs</th>
                     <th>Rejects</th>
                     <th>Average Weight</th>
+                    <th>Total Weight</th>
+                    <th>Time/Egg</th>
                     <th class="text-end">Action</th>
                   </tr>
                 </thead>
@@ -343,11 +362,14 @@
                       </td>
                       <td>
                         <div>{{ $formatDateTime($batch->started_at) }}</div>
+                        <div class="text-body-secondary small">to {{ $batch->ended_at ? $formatDateTime($batch->ended_at) : 'In progress' }}</div>
                         <div class="text-body-secondary small">{{ $durationLabel($batch->started_at, $batch->ended_at) }}</div>
                       </td>
                       <td>{{ $formatInt($batch->total_eggs) }}</td>
                       <td>{{ $formatInt($batch->reject_count) }}</td>
                       <td>{{ $formatWeight($batch->avg_weight_grams) }}</td>
+                      <td>{{ $formatWeight($batch->total_weight_grams) }}</td>
+                      <td>{{ $timePerEggLabel($batch->started_at, $batch->ended_at, $batch->total_eggs) }}</td>
                       <td class="text-end">
                         <a href="{{ route('monitoring.batches.show', [
                             'farm' => $batch->farm_id,

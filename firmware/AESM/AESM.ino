@@ -86,6 +86,7 @@ const char* DEVICE_SERIAL = "ESP32-INGEST-001";
 const char* DEVICE_KEY = "eggpulse_wr8yn78jh3yv";
 const char* MODULE_BOARD_NAME = "ESP32 Egg Sorter Controller";
 const char* FIRMWARE_VERSION = "aesm-live-v1";
+const char* FINAL_ALGORITHM_MODEL = "SGMA";
 const char* DEVICE_INFO_MARKER = "DEVICE_INFO_JSON:";
 const char* NTP_SERVER_PRIMARY = "pool.ntp.org";
 const char* NTP_SERVER_SECONDARY = "time.nist.gov";
@@ -949,6 +950,7 @@ String deviceMetadataJson(const PendingCloudEvent &event) {
   json += "\"wifi_ssid\":\"" + escapeJson(WiFi.SSID()) + "\",";
   json += "\"rssi_dbm\":" + String(WiFi.RSSI()) + ",";
   json += "\"firmware_version\":\"" + escapeJson(String(FIRMWARE_VERSION)) + "\",";
+  json += "\"algorithm_model\":\"" + escapeJson(String(FINAL_ALGORITHM_MODEL)) + "\",";
   json += "\"measurement_avg_g\":" + String(event.average_g, 2) + ",";
   json += "\"measurement_median_g\":" + String(event.median_g, 2) + ",";
   json += "\"measurement_trimmed_avg_g\":" + String(event.trimmedAverage_g, 2) + ",";
@@ -997,6 +999,7 @@ String buildDeviceInfoJson() {
   json += "\"primary_serial_no\":\"" + escapeJson(String(DEVICE_SERIAL)) + "\",";
   json += "\"aliases_text\":\"" + escapeJson(macAlias) + "\",";
   json += "\"firmware_version\":\"" + escapeJson(String(FIRMWARE_VERSION)) + "\",";
+  json += "\"algorithm_model\":\"" + escapeJson(String(FINAL_ALGORITHM_MODEL)) + "\",";
   json += "\"api_base_url\":\"" + escapeJson(String(API_BASE_URL)) + "\",";
   json += "\"wifi_ssid\":\"" + escapeJson(String(WIFI_SSID)) + "\",";
   json += "\"mac_address\":\"" + escapeJson(macAddress) + "\",";
@@ -2143,7 +2146,7 @@ WeightStats collectWeightStats(unsigned long durationMs, unsigned long sampleDel
 
 
 // ======================================================================
-// FINAL WEIGHT BLEND
+// FINAL WEIGHT BLEND (SGMA)
 // ======================================================================
 float finalizeWeight(const WeightStats &stats) {
   if (stats.count == 0) return 0;

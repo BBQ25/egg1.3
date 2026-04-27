@@ -9,6 +9,7 @@ use App\Models\ProductionBatch;
 use App\Models\User;
 use App\Services\BatchMonitoringService;
 use App\Services\DashboardContextService;
+use App\Support\AppTimezone;
 use App\Support\BatchCodeFormatter;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -103,7 +104,7 @@ class BatchMonitoringController extends Controller
         $search = trim((string) $request->query('q', ''));
         $status = $this->resolveStatusFilter($request);
         $rows = $this->batchMonitoringService->exportListRows($context, $search, $status);
-        $filename = 'batch-monitoring-' . now()->format('Ymd-His') . '.csv';
+        $filename = 'batch-monitoring-' . AppTimezone::now()->format('Ymd-His') . '.csv';
 
         return response()->streamDownload(function () use ($rows): void {
             $handle = fopen('php://output', 'wb');
@@ -122,11 +123,18 @@ class BatchMonitoringController extends Controller
                 'reject_count',
                 'avg_weight_grams',
                 'total_weight_grams',
+                'time_per_egg_seconds',
+                'throughput_eggs_per_minute',
                 'started_at',
                 'ended_at',
             ]);
 
             foreach ($rows as $row) {
+                $totalEggs = (int) ($row->total_eggs ?? 0);
+                $durationSeconds = $this->durationSeconds($row->started_at ?? null, $row->ended_at ?? null);
+                $timePerEgg = $durationSeconds !== null && $totalEggs > 0 ? $durationSeconds / $totalEggs : null;
+                $throughput = $durationSeconds !== null && $durationSeconds > 0 ? ($totalEggs / $durationSeconds) * 60 : null;
+
                 fputcsv($handle, [
                     $row->batch_code,
                     $row->farm_name,
@@ -138,6 +146,8 @@ class BatchMonitoringController extends Controller
                     (int) $row->reject_count,
                     number_format((float) $row->avg_weight_grams, 2, '.', ''),
                     number_format((float) $row->total_weight_grams, 2, '.', ''),
+                    $timePerEgg !== null ? number_format($timePerEgg, 2, '.', '') : null,
+                    $throughput !== null ? number_format($throughput, 2, '.', '') : null,
                     BatchCodeFormatter::formatPhilippineDateTime($row->started_at, 'Y-m-d H:i:s'),
                     $row->ended_at ? BatchCodeFormatter::formatPhilippineDateTime($row->ended_at, 'Y-m-d H:i:s') : null,
                 ]);
@@ -174,7 +184,7 @@ class BatchMonitoringController extends Controller
         $filename = sprintf(
             'batch-%s-%s.csv',
             preg_replace('/[^A-Za-z0-9_-]+/', '-', $batchCode) ?: 'records',
-            now()->format('Ymd-His')
+            AppTimezone::now()->format('Ymd-His')
         );
 
         return response()->streamDownload(function () use ($rows): void {
@@ -194,10 +204,18 @@ class BatchMonitoringController extends Controller
                 'size_class',
                 'weight_grams',
                 'recorded_at',
+                'received_at',
+                'monitoring_delay_seconds',
                 'source_ip',
             ]);
 
             foreach ($rows as $row) {
+                $delaySeconds = $this->durationSeconds(
+                    $row->recorded_at ?? null,
+                    $row->created_at ?? null,
+                    useCurrentWhenMissingEnd: false
+                );
+
                 fputcsv($handle, [
                     (int) $row->id,
                     $row->batch_code,
@@ -209,6 +227,8 @@ class BatchMonitoringController extends Controller
                     $row->size_class,
                     number_format((float) $row->weight_grams, 2, '.', ''),
                     BatchCodeFormatter::formatPhilippineDateTime($row->recorded_at, 'Y-m-d H:i:s'),
+                    $row->created_at ? BatchCodeFormatter::formatPhilippineDateTime($row->created_at, 'Y-m-d H:i:s') : null,
+                    $delaySeconds !== null ? number_format($delaySeconds, 2, '.', '') : null,
                     $row->source_ip,
                 ]);
             }
@@ -317,5 +337,10 @@ class BatchMonitoringController extends Controller
         }
 
         return $status;
+    }
+
+    private function durationSeconds(mixed $start, mixed $end, bool $useCurrentWhenMissingEnd = true): ?float
+    {
+        return AppTimezone::secondsBetween($start, $end, $useCurrentWhenMissingEnd);
     }
 }

@@ -27,6 +27,7 @@
 
     $formatInt = static fn ($value): string => number_format((int) ($value ?? 0));
     $formatWeight = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g';
+    $formatSquaredError = static fn ($value): string => number_format((float) ($value ?? 0), 2) . ' g^2';
     $formatPercent = static fn ($value): string => number_format((float) ($value ?? 0), 2) . '%';
     $formatDateTime = static function ($value): string {
         return \App\Support\AppTimezone::formatDateTime($value);
@@ -242,6 +243,10 @@
         <div class="validation-metric-value">{{ $formatWeight($summary->avg_mae_grams ?? 0) }}</div>
       </article>
       <article class="validation-metric">
+        <div class="validation-metric-label">Avg MSE</div>
+        <div class="validation-metric-value">{{ $formatSquaredError($summary->avg_mse_grams ?? 0) }}</div>
+      </article>
+      <article class="validation-metric">
         <div class="validation-metric-label">Avg RMSE</div>
         <div class="validation-metric-value">{{ $formatWeight($summary->avg_rmse_grams ?? 0) }}</div>
       </article>
@@ -390,6 +395,7 @@
                     <tr>
                       <td>
                         <div class="fw-semibold">{{ $run->run_code }} · {{ $run->title }}</div>
+                        <div class="text-body-secondary small">Final model {{ $run->algorithm_model ?: 'SGMA' }}</div>
                         <div class="text-body-secondary small">{{ $run->farm_name }} · {{ $run->device_name }} ({{ $run->device_serial }})</div>
                         <div class="text-body-secondary small">Started {{ $formatDateTime($run->started_at) }}</div>
                       </td>
@@ -432,7 +438,7 @@
           <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
             <div>
               <h2 class="h5 mb-1">Selected Run: {{ $selectedRun->run_code }}</h2>
-              <div class="text-body-secondary">{{ $selectedRun->title }} · {{ $selectedRun->farm_name }} · {{ $selectedRun->device_name }} ({{ $selectedRun->device_serial }})</div>
+              <div class="text-body-secondary">{{ $selectedRun->title }} · Final model {{ $selectedRun->algorithm_model ?: 'SGMA' }} · {{ $selectedRun->farm_name }} · {{ $selectedRun->device_name }} ({{ $selectedRun->device_serial }})</div>
             </div>
             <a href="{{ route('monitoring.validation.export', [
                 'run' => $selectedRun->id,
@@ -455,7 +461,7 @@
             </article>
             <article class="validation-metric">
               <div class="validation-metric-label">MSE</div>
-              <div class="validation-metric-value">{{ $formatWeight($selectedRun->mse_grams) }}</div>
+              <div class="validation-metric-value">{{ $formatSquaredError($selectedRun->mse_grams) }}</div>
             </article>
             <article class="validation-metric">
               <div class="validation-metric-label">RMSE</div>

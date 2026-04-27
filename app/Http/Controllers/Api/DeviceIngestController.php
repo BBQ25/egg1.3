@@ -85,6 +85,8 @@ class DeviceIngestController extends Controller
                         'event_id' => (int) $existingEvent->id,
                         'device_id' => (int) $device->id,
                         'recorded_at' => $existingEvent->recorded_at?->toIso8601String(),
+                        'recorded_timezone' => AppTimezone::current(),
+                        'recorded_timezone_label' => AppTimezone::label(),
                         'deduplicated' => true,
                     ],
                 ]);
@@ -125,6 +127,8 @@ class DeviceIngestController extends Controller
                 'event_id' => (int) $event->id,
                 'device_id' => (int) $device->id,
                 'recorded_at' => $event->recorded_at?->toIso8601String(),
+                'recorded_timezone' => AppTimezone::current(),
+                'recorded_timezone_label' => AppTimezone::label(),
             ],
         ], 201);
     }

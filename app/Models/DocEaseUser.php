@@ -77,11 +77,6 @@ class DocEaseUser extends Authenticatable
 
     public function canSignIn(): bool
     {
-        if ($this->isAdminRole()) {
-            return true;
-        }
-
         return (bool) $this->is_active;
     }
 }
-

@@ -18,6 +18,7 @@ class EvaluationRun extends Model
         'performed_by_user_id',
         'run_code',
         'title',
+        'algorithm_model',
         'status',
         'sample_size_target',
         'started_at',

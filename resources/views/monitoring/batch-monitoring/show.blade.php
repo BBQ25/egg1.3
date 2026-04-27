@@ -27,6 +27,18 @@
     $formatDateTime = static function ($value): string {
         return \App\Support\AppTimezone::formatDateTime($value);
     };
+    $delayLabel = static function ($recordedAt, $receivedAt): string {
+        $recorded = \App\Support\AppTimezone::toAppTime($recordedAt);
+        $received = \App\Support\AppTimezone::toAppTime($receivedAt);
+
+        if (!$recorded || !$received) {
+            return 'N/A';
+        }
+
+        $seconds = \App\Support\AppTimezone::secondsBetween($recorded, $received, useCurrentWhenMissingEnd: false);
+
+        return $seconds !== null ? number_format($seconds, 2) . ' s' : 'N/A';
+    };
     $durationLabel = static function ($start, $end): string {
         if (!$start) {
             return 'N/A';
@@ -255,7 +267,8 @@
               <table class="table table-hover align-middle mb-0">
                 <thead>
                   <tr>
-                    <th>Recorded At</th>
+                    <th>Recorded At ({{ $timezoneLabel }})</th>
+                    <th>Received / Delay</th>
                     <th>Egg UID</th>
                     <th>Size Class</th>
                     <th>Weight</th>
@@ -266,6 +279,10 @@
                   @foreach ($records as $record)
                     <tr>
                       <td>{{ $formatDateTime($record->recorded_at) }}</td>
+                      <td>
+                        <div>{{ $formatDateTime($record->created_at) }}</div>
+                        <div class="text-body-secondary small">{{ $delayLabel($record->recorded_at, $record->created_at) }}</div>
+                      </td>
                       <td>{{ $record->egg_uid ?: 'Not set' }}</td>
                       <td><span class="badge {{ $sizeClassThemes[$record->size_class] ?? 'bg-label-primary' }}">{{ $record->size_class }}</span></td>
                       <td>{{ $formatWeight($record->weight_grams) }}</td>

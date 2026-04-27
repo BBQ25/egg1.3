@@ -119,6 +119,7 @@ class ValidationAccuracyPageTest extends TestCase
 
         $run->refresh();
         $this->assertSame('completed', $run->status);
+        $this->assertSame('SGMA', $run->algorithm_model);
         $this->assertNotNull($run->ended_at);
 
         $pageResponse = $this->actingAs($owner)->get(route('monitoring.validation.index', [
@@ -131,6 +132,7 @@ class ValidationAccuracyPageTest extends TestCase
         $pageResponse->assertOk()
             ->assertSee('RUN-VAL-001')
             ->assertSee('Reference scale comparison')
+            ->assertSee('Final model SGMA')
             ->assertSee('egg-val-001')
             ->assertSee('egg-val-002')
             ->assertSee('50.00%')
@@ -176,7 +178,8 @@ class ValidationAccuracyPageTest extends TestCase
         $response->assertHeader('content-type', 'text/csv; charset=UTF-8');
 
         $content = $response->streamedContent();
-        $this->assertStringContainsString('measurement_id,measured_at,egg_uid,batch_code,reference_weight_grams,automated_weight_grams,weight_error_grams,absolute_error_grams,squared_error_grams', $content);
+        $this->assertStringContainsString('measurement_id,algorithm_model,measured_at,egg_uid,batch_code,reference_weight_grams,automated_weight_grams,weight_error_grams,absolute_error_grams,squared_error_grams', $content);
+        $this->assertStringContainsString('SGMA', $content);
         $this->assertStringContainsString('egg-export-001', $content);
         $this->assertStringContainsString('1.10', $content);
         $this->assertStringContainsString('1.21', $content);

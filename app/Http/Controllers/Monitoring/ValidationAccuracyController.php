@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EvaluationRun;
 use App\Services\DashboardContextService;
 use App\Services\ValidationAccuracyService;
+use App\Support\AppTimezone;
 use App\Support\EggSizeClass;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -109,9 +110,9 @@ class ValidationAccuracyController extends Controller
         }
 
         $rows = $this->validationAccuracyService->exportMeasurements($context, $run);
-        $filename = 'validation-run-' . strtolower($run->run_code) . '-' . now()->format('Ymd-His') . '.csv';
+        $filename = 'validation-run-' . strtolower($run->run_code) . '-' . AppTimezone::now()->format('Ymd-His') . '.csv';
 
-        return response()->streamDownload(function () use ($rows): void {
+        return response()->streamDownload(function () use ($rows, $run): void {
             $handle = fopen('php://output', 'wb');
             if ($handle === false) {
                 return;
@@ -119,6 +120,7 @@ class ValidationAccuracyController extends Controller
 
             fputcsv($handle, [
                 'measurement_id',
+                'algorithm_model',
                 'measured_at',
                 'egg_uid',
                 'batch_code',
@@ -137,6 +139,7 @@ class ValidationAccuracyController extends Controller
             foreach ($rows as $row) {
                 fputcsv($handle, [
                     (int) $row->id,
+                    $run->algorithm_model ?: 'SGMA',
                     $row->measured_at,
                     $row->egg_uid,
                     $row->batch_code,

@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App\Enums\UserRegistrationStatus;
-use App\Enums\UserRole;
 use App\Models\AppSetting;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -124,13 +123,8 @@ class LoginClickBypass
         $rows = DB::table('login_click_bypass_rules as rules')
             ->join('users as users', 'users.id', '=', 'rules.target_user_id')
             ->where('rules.is_enabled', true)
-            ->where(function ($query) {
-                $query->where('users.role', UserRole::ADMIN->value)
-                    ->orWhere(function ($sub) {
-                        $sub->where('users.is_active', true)
-                            ->where('users.registration_status', UserRegistrationStatus::APPROVED->value);
-                    });
-            })
+            ->where('users.is_active', true)
+            ->where('users.registration_status', UserRegistrationStatus::APPROVED->value)
             ->orderByDesc('rules.click_count')
             ->orderBy('rules.window_seconds')
             ->get(['rules.click_count', 'rules.window_seconds']);
@@ -172,13 +166,8 @@ class LoginClickBypass
             ->where('rules.is_enabled', true)
             ->where('rules.click_count', $clickCount)
             ->whereRaw('? <= (rules.window_seconds * 1000)', [$durationMs])
-            ->where(function ($query) {
-                $query->where('users.role', UserRole::ADMIN->value)
-                    ->orWhere(function ($sub) {
-                        $sub->where('users.is_active', true)
-                            ->where('users.registration_status', UserRegistrationStatus::APPROVED->value);
-                    });
-            })
+            ->where('users.is_active', true)
+            ->where('users.registration_status', UserRegistrationStatus::APPROVED->value)
             ->orderBy('rules.window_seconds')
             ->orderBy('rules.id')
             ->select([

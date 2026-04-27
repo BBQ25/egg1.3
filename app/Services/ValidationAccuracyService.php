@@ -7,6 +7,7 @@ use App\Models\DeviceIngestEvent;
 use App\Models\EvaluationRun;
 use App\Models\EvaluationRunMeasurement;
 use App\Models\User;
+use App\Support\AppTimezone;
 use App\Support\EggSizeClass;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
@@ -165,9 +166,10 @@ class ValidationAccuracyService
             'performed_by_user_id' => (int) $user->id,
             'run_code' => strtoupper(trim((string) $validated['run_code'])),
             'title' => trim((string) $validated['title']),
+            'algorithm_model' => 'SGMA',
             'status' => 'in_progress',
             'sample_size_target' => $validated['sample_size_target'] !== null ? (int) $validated['sample_size_target'] : null,
-            'started_at' => now(),
+            'started_at' => AppTimezone::now(),
             'notes' => $this->nullableTrim($validated['notes'] ?? null),
         ]);
     }
@@ -225,8 +227,8 @@ class ValidationAccuracyService
         $validated = $validator->validate();
         $event = DeviceIngestEvent::query()->findOrFail((int) $validated['device_ingest_event_id']);
         $measuredAt = !empty($validated['measured_at'])
-            ? CarbonImmutable::parse((string) $validated['measured_at'])
-            : CarbonImmutable::now();
+            ? AppTimezone::parseInbound((string) $validated['measured_at'])
+            : AppTimezone::now();
 
         $referenceWeight = round((float) $validated['reference_weight_grams'], 2);
         $automatedWeight = round((float) $event->weight_grams, 2);
@@ -354,6 +356,7 @@ class ValidationAccuracyService
             'runs.performed_by_user_id',
             'runs.run_code',
             'runs.title',
+            'runs.algorithm_model',
             'runs.status',
             'runs.sample_size_target',
             'runs.started_at',
@@ -514,7 +517,7 @@ class ValidationAccuracyService
      */
     private function resolveWindow(string $range): array
     {
-        $end = CarbonImmutable::now();
+        $end = AppTimezone::now();
 
         $start = match ($range) {
             DashboardContextService::RANGE_1W => $end->subWeek(),

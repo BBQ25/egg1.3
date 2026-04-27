@@ -78,6 +78,8 @@ class LoginController extends Controller
 
             if (!is_numeric($latitude) || !is_numeric($longitude)) {
                 Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
                 throw ValidationException::withMessages([
                     'username' => 'Location access is required to sign in.',
                 ]);

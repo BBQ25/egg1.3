@@ -26,6 +26,17 @@ This module registers ESP32 boards to a Poultry Owner + Farm pair and accepts au
 ### `device_ingest_events`
 - Immutable ingest event log
 - Stores parsed fields and raw payload JSON
+- `recorded_at` is parsed through `App\Support\AppTimezone`; default display is Philippine Standard Time (PST / UTC+8)
+- `created_at` is the server receipt time and is used with `recorded_at` to compute monitoring delay
+
+### `production_batches`
+- Batch Monitoring groups ingest records by `production_batch_id`/`batch_code`
+- The page and CSV export show batch code, farm, device, time window, egg count, reject count, average weight, total weight, status, time per egg, and throughput
+
+### `evaluation_runs` and `evaluation_run_measurements`
+- Store actual validation experiments against reference scale results
+- `algorithm_model` records the final implemented model, currently `SGMA`
+- Exports include exact MAE, MSE, RMSE, class match/accuracy, and per-measurement errors
 
 ## Ingest Endpoint
 - **Route:** `POST /api/devices/ingest`
@@ -66,7 +77,9 @@ This module registers ESP32 boards to a Poultry Owner + Farm pair and accepts au
   "data": {
     "event_id": 123,
     "device_id": 9,
-    "recorded_at": "2026-02-25T23:00:00+00:00"
+    "recorded_at": "2026-02-26T07:00:00+08:00",
+    "recorded_timezone": "Asia/Manila",
+    "recorded_timezone_label": "Philippine Standard Time (PST / UTC+8)"
   }
 }
 ```
@@ -115,9 +128,18 @@ X-Device-Key: dev_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "metadata": {
     "firmware": "1.0.3",
     "sensor": "HX711",
+    "algorithm_model": "SGMA",
     "esp32_mac": "24:6F:28:AA:10:01",
     "router_mac": "F4:EC:38:9B:77:20",
     "wifi_ssid": "PoultryPulse-Lab"
   }
 }
 ```
+
+## Timestamp and PWA Monitoring Flow
+
+1. ESP32 syncs time through NTP and sends `recorded_at` with each egg event.
+2. Laravel parses incoming timestamps through `AppTimezone::parseInbound()`. If the device omits `recorded_at`, the server uses `AppTimezone::now()`.
+3. The database keeps `recorded_at` for the actual egg event and `created_at` for server receipt.
+4. Batch Monitoring and exports display timestamps using the configured application timezone. The default is Philippine Standard Time (PST / UTC+8).
+5. The browser/PWA dashboard reads the stored dataset through Laravel pages/API responses. `public/manifest.webmanifest`, `public/sw.js`, and `resources/js/pwa-register.js` provide installable/offline-aware browser behavior while live monitoring and ingest requests bypass cache.
