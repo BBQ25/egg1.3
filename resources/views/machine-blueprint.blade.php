@@ -7,6 +7,50 @@
   $deviceBlueprintSrc = file_exists($deviceBlueprintPath)
       ? 'data:image/png;base64,' . base64_encode(file_get_contents($deviceBlueprintPath))
       : null;
+  $prototypeSheets = [
+      [
+          'sheet' => 'Sheet 1 of 7',
+          'title' => 'General Assembly',
+          'description' => 'Full assembly drawing with labeled feed ramp, guide rails, weighing tray, sorting gate, collection bins, enclosure, and power indicators.',
+          'src' => asset('assets/machine-blueprint/prototype-sheet-1.png'),
+      ],
+      [
+          'sheet' => 'Sheet 2 of 7',
+          'title' => 'Orthographic Views',
+          'description' => 'Front, side, rear, and orientation views showing the machine envelope and major visible components.',
+          'src' => asset('assets/machine-blueprint/prototype-sheet-2.png'),
+      ],
+      [
+          'sheet' => 'Sheet 3 of 7',
+          'title' => 'Plan, Footprint, and Bin Layout',
+          'description' => 'Top, underside, egg-flow, footprint, and bin class map for the sorting tray and eight output bins.',
+          'src' => asset('assets/machine-blueprint/prototype-sheet-3.png'),
+      ],
+      [
+          'sheet' => 'Sheet 4 of 7',
+          'title' => 'Exploded View and Parts Breakdown',
+          'description' => 'Separated component view with the bill of materials, frame pieces, electronics enclosure, servo diverter, tray, and fasteners.',
+          'src' => asset('assets/machine-blueprint/prototype-sheet-4.png'),
+      ],
+      [
+          'sheet' => 'Sheet 5 of 7',
+          'title' => 'Frame, Ramp, and Guide Detail',
+          'description' => 'Detailed rail, ramp, rear buffer, chute, bracket, side-frame, and support dimensions for fabrication review.',
+          'src' => asset('assets/machine-blueprint/prototype-sheet-5.png'),
+      ],
+      [
+          'sheet' => 'Sheet 6 of 7',
+          'title' => 'Weighing and Sorting Mechanism Detail',
+          'description' => 'Load-cell mounting stack, weighing tray section, servo diverter assembly, drop path, and operating parameters.',
+          'src' => asset('assets/machine-blueprint/prototype-sheet-6.png'),
+      ],
+      [
+          'sheet' => 'Sheet 7 of 7',
+          'title' => 'Electrical, Wiring, and Control Architecture',
+          'description' => 'Power, ESP32, HX711, servo, display, Wi-Fi/PWA, system block diagram, operation flow, and I/O table.',
+          'src' => asset('assets/machine-blueprint/prototype-sheet-7.png'),
+      ],
+  ];
 @endphp
 
 @push('styles')
@@ -136,6 +180,209 @@
 
     .machine-blueprint-annotation-label-text tspan.accent {
       fill: var(--callout-color);
+    }
+
+    .machine-blueprint-sheet-card {
+      border: 1px solid rgba(67, 89, 113, 0.12);
+      border-radius: .5rem;
+      overflow: hidden;
+      box-shadow: 0 18px 36px rgba(18, 38, 63, 0.08);
+    }
+
+    .machine-blueprint-sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(67, 89, 113, 0.1);
+      background: #fff;
+    }
+
+    .machine-blueprint-sheet-title {
+      max-width: 46rem;
+    }
+
+    .machine-blueprint-sheet-stage {
+      --sheet-parallax-x: 0px;
+      --sheet-parallax-y: 0px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(247, 249, 252, 0.96), rgba(255, 255, 255, 0.98)),
+        linear-gradient(90deg, rgba(91, 141, 239, 0.05) 1px, transparent 1px),
+        linear-gradient(rgba(91, 141, 239, 0.05) 1px, transparent 1px);
+      background-size: auto, 28px 28px, 28px 28px;
+    }
+
+    .machine-blueprint-sheet-viewport {
+      position: relative;
+      min-height: 34rem;
+      padding: 1rem;
+    }
+
+    .machine-blueprint-sheet-slide {
+      display: none;
+      opacity: 0;
+    }
+
+    .machine-blueprint-sheet-slide.is-active {
+      display: block;
+      opacity: 1;
+      animation: machine-blueprint-sheet-fade .28s ease-out both;
+    }
+
+    .machine-blueprint-sheet-figure {
+      margin: 0;
+      transform:
+        translate3d(var(--sheet-parallax-x), var(--sheet-parallax-y), 0)
+        scale(1.012);
+      transition: transform .22s ease-out;
+      will-change: transform;
+    }
+
+    .machine-blueprint-sheet-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 72vh;
+      object-fit: contain;
+      border-radius: .5rem;
+      border: 1px solid rgba(67, 89, 113, 0.14);
+      background: #fff;
+      box-shadow: 0 16px 32px rgba(18, 38, 63, 0.1);
+    }
+
+    .machine-blueprint-sheet-slide.is-active .machine-blueprint-sheet-image {
+      animation: machine-blueprint-sheet-zoom 8s ease-in-out infinite alternate;
+      transform-origin: center;
+    }
+
+    .machine-blueprint-sheet-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .85rem .25rem 0;
+      color: #566a7f;
+    }
+
+    .machine-blueprint-carousel-btn {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(67, 89, 113, 0.14);
+      background: rgba(255, 255, 255, 0.94);
+      color: #1f2d3d;
+      box-shadow: 0 12px 28px rgba(18, 38, 63, 0.16);
+      transform: translateY(-50%);
+    }
+
+    .machine-blueprint-carousel-btn:hover,
+    .machine-blueprint-carousel-btn:focus-visible {
+      color: #fff;
+      background: #696cff;
+      border-color: #696cff;
+    }
+
+    .machine-blueprint-carousel-btn.is-prev {
+      left: 1.25rem;
+    }
+
+    .machine-blueprint-carousel-btn.is-next {
+      right: 1.25rem;
+    }
+
+    .machine-blueprint-carousel-control {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      min-height: 2.35rem;
+      white-space: nowrap;
+    }
+
+    .machine-blueprint-thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+      gap: .75rem;
+      padding: 1rem 1.25rem 1.25rem;
+      background: #fff;
+      border-top: 1px solid rgba(67, 89, 113, 0.1);
+    }
+
+    .machine-blueprint-thumb {
+      display: grid;
+      grid-template-columns: 3.25rem minmax(0, 1fr);
+      align-items: center;
+      gap: .65rem;
+      width: 100%;
+      min-height: 4rem;
+      border: 1px solid rgba(67, 89, 113, 0.12);
+      border-radius: .5rem;
+      padding: .45rem;
+      background: #fff;
+      color: #1f2d3d;
+      text-align: left;
+    }
+
+    .machine-blueprint-thumb:hover,
+    .machine-blueprint-thumb:focus-visible,
+    .machine-blueprint-thumb.is-active {
+      border-color: #696cff;
+      box-shadow: 0 10px 22px rgba(105, 108, 255, 0.14);
+    }
+
+    .machine-blueprint-thumb img {
+      width: 3.25rem;
+      height: 2.2rem;
+      object-fit: cover;
+      border-radius: .35rem;
+      border: 1px solid rgba(67, 89, 113, 0.12);
+      background: #fff;
+    }
+
+    .machine-blueprint-thumb-title {
+      display: block;
+      font-size: .78rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .machine-blueprint-thumb-subtitle {
+      display: block;
+      margin-top: .1rem;
+      font-size: .7rem;
+      color: #8592a3;
+      line-height: 1.2;
+    }
+
+    @keyframes machine-blueprint-sheet-fade {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes machine-blueprint-sheet-zoom {
+      from {
+        transform: scale(1);
+      }
+
+      to {
+        transform: scale(1.035);
+      }
     }
 
     @keyframes machine-blueprint-point-in {
@@ -271,6 +518,35 @@
     }
 
     @media (max-width: 767.98px) {
+      .machine-blueprint-sheet-header,
+      .machine-blueprint-sheet-caption {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .machine-blueprint-sheet-viewport {
+        min-height: 18rem;
+        padding: .65rem;
+      }
+
+      .machine-blueprint-carousel-btn {
+        width: 2.35rem;
+        height: 2.35rem;
+      }
+
+      .machine-blueprint-carousel-btn.is-prev {
+        left: .75rem;
+      }
+
+      .machine-blueprint-carousel-btn.is-next {
+        right: .75rem;
+      }
+
+      .machine-blueprint-thumbs {
+        grid-template-columns: 1fr;
+        padding: .85rem;
+      }
+
       .machine-blueprint-spec-table,
       .machine-blueprint-spec-table tbody,
       .machine-blueprint-spec-table tr,
@@ -369,6 +645,80 @@
               </div>
             @endif
           </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-12">
+      <section class="card machine-blueprint-sheet-card" data-blueprint-carousel>
+        <div class="machine-blueprint-sheet-header">
+          <div class="machine-blueprint-sheet-title">
+            <span class="badge bg-label-info mb-2">Prototype Design Sheets</span>
+            <h4 class="mb-1" data-blueprint-title>{{ $prototypeSheets[0]['title'] }}</h4>
+            <p class="text-body-secondary mb-0" data-blueprint-description>{{ $prototypeSheets[0]['description'] }}</p>
+          </div>
+          <div class="d-flex flex-wrap align-items-center justify-content-end gap-2">
+            <span class="badge bg-label-primary" data-blueprint-counter>{{ $prototypeSheets[0]['sheet'] }}</span>
+            <button type="button" class="btn btn-outline-secondary machine-blueprint-carousel-control" data-blueprint-toggle aria-pressed="false">
+              <i class="bx bx-pause"></i>
+              <span>Pause</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="machine-blueprint-sheet-stage" data-blueprint-stage>
+          <button type="button" class="machine-blueprint-carousel-btn is-prev" data-blueprint-prev aria-label="Previous blueprint sheet">
+            <i class="bx bx-chevron-left"></i>
+          </button>
+          <button type="button" class="machine-blueprint-carousel-btn is-next" data-blueprint-next aria-label="Next blueprint sheet">
+            <i class="bx bx-chevron-right"></i>
+          </button>
+
+          <div class="machine-blueprint-sheet-viewport" aria-live="polite">
+            @foreach ($prototypeSheets as $sheetIndex => $sheet)
+              <article
+                class="machine-blueprint-sheet-slide {{ $sheetIndex === 0 ? 'is-active' : '' }}"
+                data-blueprint-slide
+                data-title="{{ $sheet['title'] }}"
+                data-description="{{ $sheet['description'] }}"
+                data-sheet="{{ $sheet['sheet'] }}"
+                @if ($sheetIndex !== 0) hidden @endif>
+                <figure class="machine-blueprint-sheet-figure">
+                  <img
+                    src="{{ $sheet['src'] }}"
+                    alt="{{ $sheet['sheet'] }} - {{ $sheet['title'] }}"
+                    class="machine-blueprint-sheet-image"
+                    width="1491"
+                    height="1055"
+                    loading="{{ $sheetIndex === 0 ? 'eager' : 'lazy' }}"
+                    @if ($sheetIndex === 0) fetchpriority="high" @endif>
+                  <figcaption class="machine-blueprint-sheet-caption">
+                    <span class="fw-semibold">{{ $sheet['title'] }}</span>
+                    <span class="small">{{ $sheet['description'] }}</span>
+                  </figcaption>
+                </figure>
+              </article>
+            @endforeach
+          </div>
+        </div>
+
+        <div class="machine-blueprint-thumbs" role="tablist" aria-label="Prototype design sheets">
+          @foreach ($prototypeSheets as $sheetIndex => $sheet)
+            <button
+              type="button"
+              class="machine-blueprint-thumb {{ $sheetIndex === 0 ? 'is-active' : '' }}"
+              data-blueprint-thumb
+              data-blueprint-index="{{ $sheetIndex }}"
+              role="tab"
+              aria-selected="{{ $sheetIndex === 0 ? 'true' : 'false' }}"
+              aria-label="Open {{ $sheet['sheet'] }} {{ $sheet['title'] }}">
+              <img src="{{ $sheet['src'] }}" alt="" loading="lazy" aria-hidden="true">
+              <span>
+                <span class="machine-blueprint-thumb-title">{{ $sheet['sheet'] }}</span>
+                <span class="machine-blueprint-thumb-subtitle">{{ $sheet['title'] }}</span>
+              </span>
+            </button>
+          @endforeach
         </div>
       </section>
     </div>
@@ -507,3 +857,151 @@
     </div>
   </div>
 @endsection
+
+@push('scripts')
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const carousel = document.querySelector('[data-blueprint-carousel]');
+      if (!carousel) {
+        return;
+      }
+
+      const slides = Array.from(carousel.querySelectorAll('[data-blueprint-slide]'));
+      const thumbs = Array.from(carousel.querySelectorAll('[data-blueprint-thumb]'));
+      const stage = carousel.querySelector('[data-blueprint-stage]');
+      const titleNode = carousel.querySelector('[data-blueprint-title]');
+      const descriptionNode = carousel.querySelector('[data-blueprint-description]');
+      const counterNode = carousel.querySelector('[data-blueprint-counter]');
+      const prevButton = carousel.querySelector('[data-blueprint-prev]');
+      const nextButton = carousel.querySelector('[data-blueprint-next]');
+      const toggleButton = carousel.querySelector('[data-blueprint-toggle]');
+      const toggleIcon = toggleButton ? toggleButton.querySelector('i') : null;
+      const toggleLabel = toggleButton ? toggleButton.querySelector('span') : null;
+
+      if (slides.length === 0) {
+        return;
+      }
+
+      let activeIndex = 0;
+      let autoplayTimer = null;
+      let paused = false;
+
+      function updateToggleButton() {
+        if (!toggleButton || !toggleIcon || !toggleLabel) {
+          return;
+        }
+
+        toggleButton.setAttribute('aria-pressed', paused ? 'true' : 'false');
+        toggleIcon.className = paused ? 'bx bx-play' : 'bx bx-pause';
+        toggleLabel.textContent = paused ? 'Play' : 'Pause';
+      }
+
+      function render(index) {
+        activeIndex = (index + slides.length) % slides.length;
+
+        slides.forEach(function (slide, slideIndex) {
+          const isActive = slideIndex === activeIndex;
+          slide.classList.toggle('is-active', isActive);
+          slide.hidden = !isActive;
+        });
+
+        thumbs.forEach(function (thumb, thumbIndex) {
+          const isActive = thumbIndex === activeIndex;
+          thumb.classList.toggle('is-active', isActive);
+          thumb.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        const activeSlide = slides[activeIndex];
+        if (titleNode) {
+          titleNode.textContent = activeSlide.dataset.title || '';
+        }
+        if (descriptionNode) {
+          descriptionNode.textContent = activeSlide.dataset.description || '';
+        }
+        if (counterNode) {
+          counterNode.textContent = activeSlide.dataset.sheet || '';
+        }
+
+        if (stage) {
+          stage.style.setProperty('--sheet-parallax-x', '0px');
+          stage.style.setProperty('--sheet-parallax-y', '0px');
+        }
+      }
+
+      function stopAutoplay() {
+        if (autoplayTimer) {
+          window.clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      }
+
+      function startAutoplay() {
+        stopAutoplay();
+        if (paused || slides.length < 2) {
+          return;
+        }
+        autoplayTimer = window.setInterval(function () {
+          render(activeIndex + 1);
+        }, 6500);
+      }
+
+      function restartAutoplay() {
+        stopAutoplay();
+        startAutoplay();
+      }
+
+      if (prevButton) {
+        prevButton.addEventListener('click', function () {
+          render(activeIndex - 1);
+          restartAutoplay();
+        });
+      }
+
+      if (nextButton) {
+        nextButton.addEventListener('click', function () {
+          render(activeIndex + 1);
+          restartAutoplay();
+        });
+      }
+
+      thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+          render(Number(thumb.dataset.blueprintIndex || 0));
+          restartAutoplay();
+        });
+      });
+
+      if (toggleButton) {
+        toggleButton.addEventListener('click', function () {
+          paused = !paused;
+          updateToggleButton();
+          restartAutoplay();
+        });
+      }
+
+      if (stage) {
+        stage.addEventListener('pointermove', function (event) {
+          const rect = stage.getBoundingClientRect();
+          const offsetX = ((event.clientX - rect.left) / rect.width - 0.5) * -18;
+          const offsetY = ((event.clientY - rect.top) / rect.height - 0.5) * -12;
+          stage.style.setProperty('--sheet-parallax-x', offsetX.toFixed(2) + 'px');
+          stage.style.setProperty('--sheet-parallax-y', offsetY.toFixed(2) + 'px');
+        });
+
+        stage.addEventListener('pointerleave', function () {
+          stage.style.setProperty('--sheet-parallax-x', '0px');
+          stage.style.setProperty('--sheet-parallax-y', '0px');
+        });
+      }
+
+      carousel.addEventListener('focusin', stopAutoplay);
+      carousel.addEventListener('focusout', startAutoplay);
+      carousel.addEventListener('pointerenter', stopAutoplay);
+      carousel.addEventListener('pointerleave', startAutoplay);
+
+      updateToggleButton();
+      render(0);
+      startAutoplay();
+    });
+  </script>
+@endpush

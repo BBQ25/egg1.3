@@ -30,6 +30,11 @@ class MachineBlueprintPageTest extends TestCase
         $adminResponse->assertSee('Final model: SGMA');
         $adminResponse->assertSee('HX711');
         $adminResponse->assertSee('Browser-based PWA');
+        $adminResponse->assertSee('Prototype Design Sheets');
+        $adminResponse->assertSee('General Assembly');
+        $adminResponse->assertSee('Electrical, Wiring, and Control Architecture');
+        $adminResponse->assertSee('assets/machine-blueprint/prototype-sheet-7.png');
+        $adminResponse->assertSee('data-blueprint-carousel');
 
         $ownerResponse->assertOk();
         $ownerResponse->assertSee('Automated Egg Weighing and Sorting Device Blueprint');
