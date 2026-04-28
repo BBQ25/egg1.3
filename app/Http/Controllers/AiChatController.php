@@ -119,7 +119,20 @@ class AiChatController extends Controller
         ]);
 
         $scopedContext = $this->dataService->build($user, $messageText);
-        $assistantResponse = $this->openAi->respond($messageText, $scopedContext);
+        $history = $session->messages()
+            ->where('id', '<>', (int) $userMessage->id)
+            ->orderByDesc('id')
+            ->limit(8)
+            ->get()
+            ->reverse()
+            ->map(static fn (AiChatMessage $message): array => [
+                'role' => $message->sender === 'assistant' ? 'assistant' : 'user',
+                'content' => (string) $message->content,
+            ])
+            ->values()
+            ->all();
+
+        $assistantResponse = $this->openAi->respond($messageText, $scopedContext, $history);
 
         $assistantMessage = $session->messages()->create([
             'user_id' => (int) $user->id,

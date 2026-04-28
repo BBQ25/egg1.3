@@ -46,9 +46,11 @@ class AiChatDataService
         $deviceIds = $this->accessibleDeviceIds($user, $farmIds);
 
         $context = [
+            'question' => $message,
             'role_key' => $roleKey,
             'role_label' => $user->role?->label() ?? ucfirst($roleKey),
             'intent' => $intent,
+            'question_profile' => $this->questionProfile($message, $intent),
             'generated_at' => AppTimezone::now()->toIso8601String(),
             'scope' => [
                 'farm_count' => count($farmIds),
@@ -59,6 +61,15 @@ class AiChatDataService
             'data' => [],
             'action_draft' => null,
         ];
+
+        if ($intent === 'clarification') {
+            $context['data'] = [
+                'message' => 'I can help with allowed poultry data, forecasts, price monitoring, batch summaries, production trends, and draft-only action notes. What would you like me to check?',
+                'suggested_prompts' => $this->quickPrompts($roleKey),
+            ];
+
+            return $context;
+        }
 
         if ($roleKey === 'customer' && $this->isPrivateOperationalAsk($message, $intent)) {
             return $this->refusal($context, 'Your customer account can use price monitoring and public stock/price summaries, but it cannot access private farm, device, batch, or owner inventory records.');
@@ -256,9 +267,13 @@ class AiChatDataService
 
     private function detectIntent(string $message): string
     {
-        $lower = Str::lower($message);
+        $lower = trim(Str::lower($message));
 
-        if (preg_match('/\b(create|record|update|delete|close|open|notify|inform|send|change|add|remove|do)\b/', $lower)) {
+        if ($this->needsClarification($lower)) {
+            return 'clarification';
+        }
+
+        if ($this->isActionRequest($lower)) {
             return 'action_draft';
         }
 
@@ -287,6 +302,72 @@ class AiChatDataService
         }
 
         return 'inventory_overview';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function questionProfile(string $message, string $intent): array
+    {
+        $lower = trim(Str::lower($message));
+
+        $questionType = 'summary';
+        if (preg_match('/\b(why|reason|explain)\b/', $lower)) {
+            $questionType = 'explanation';
+        } elseif (preg_match('/\b(which|what|best|top|most|highest|lowest|least)\b/', $lower)) {
+            $questionType = 'direct_lookup';
+        } elseif (preg_match('/\b(how many|count|total)\b/', $lower)) {
+            $questionType = 'count';
+        } elseif (preg_match('/\b(can|should|is|are|do|does)\b/', $lower) || str_contains($lower, '?')) {
+            $questionType = 'yes_no_or_guidance';
+        }
+
+        return [
+            'question_type' => $questionType,
+            'intent' => $intent,
+            'direct_answer_expected' => str_contains($lower, '?')
+                || preg_match('/\b(what|which|who|when|where|why|how|can|should|best|top|most|highest|lowest|least)\b/', $lower) === 1,
+            'wants_explanation' => preg_match('/\b(why|reason|explain|logic|because|how)\b/', $lower) === 1,
+            'wants_ranking' => preg_match('/\b(best|top|rank|most|highest|lowest|least)\b/', $lower) === 1,
+            'is_follow_up' => preg_match('/\b(it|that|those|this|them|previous|again)\b/', $lower) === 1,
+        ];
+    }
+
+    private function needsClarification(string $lower): bool
+    {
+        $normalized = trim((string) preg_replace('/[^\pL\pN\s?]/u', '', $lower));
+
+        if ($normalized === '') {
+            return true;
+        }
+
+        if (preg_match('/^(hi|hello|hey|help|ai|chat|thanks|thank you)\??$/', $normalized)) {
+            return true;
+        }
+
+        if (preg_match('/^(what can you do|can you help|help me|start|assist me)\??$/', $normalized)) {
+            return true;
+        }
+
+        $hasDomainTerm = preg_match('/\b(price|pricing|stock|inventory|batch|farm|device|forecast|predict|egg|eggs|selling|sales|production|trend|record|owner|staff)\b/', $normalized) === 1;
+
+        return !$hasDomainTerm && str_word_count($normalized) <= 3;
+    }
+
+    private function isActionRequest(string $lower): bool
+    {
+        if (preg_match('/\b(how do i|how can i|where do i|what should i|should i|can i)\b/', $lower)) {
+            return false;
+        }
+
+        if (
+            preg_match('/\b(show|list|view|summarize|find|tell me|what|which)\b/', $lower)
+            && !preg_match('/\b(record|create|update|delete|close|reopen|notify|inform|send|change|add|remove)\b/', $lower)
+        ) {
+            return false;
+        }
+
+        return preg_match('/\b(record|create|update|delete|close|reopen|notify|inform|send|change|add|remove)\b/', $lower) === 1;
     }
 
     private function isPrivateOperationalAsk(string $message, string $intent): bool
@@ -343,7 +424,9 @@ class AiChatDataService
             'request' => $message,
             'target_route' => $targetRoute,
             'target_label' => $targetLabel,
-            'summary' => 'The assistant can draft this request, but the user must complete any real change manually in the system.',
+            'summary' => $actionType === 'owner_note_request'
+                ? 'Owner note drafted in chat only. No notification was sent outside this conversation.'
+                : 'The assistant can draft this request, but the user must complete any real change manually in the system.',
             'draft_only' => true,
         ];
     }

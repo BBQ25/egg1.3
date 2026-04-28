@@ -62,6 +62,50 @@ class AiChatFeatureTest extends TestCase
         $this->assertStringNotContainsString('PRIVATE-ITEM', $assistant['content']);
     }
 
+    public function test_vague_prompt_returns_clarifying_human_like_guidance(): void
+    {
+        $customer = User::factory()->customer()->create();
+
+        $response = $this->ask($customer, 'hello');
+
+        $response->assertOk();
+        $assistant = $this->assistantMessage($response->json());
+        $this->assertSame('clarification', $assistant['intent']);
+        $this->assertStringContainsString('What would you like me to check?', $assistant['content']);
+        $this->assertStringContainsString('You can ask, for example:', $assistant['content']);
+    }
+
+    public function test_customer_available_stock_question_gets_direct_answer(): void
+    {
+        $owner = User::factory()->owner()->create();
+        $customer = User::factory()->customer()->create();
+        $farm = $this->createFarm($owner, 'Public Price Farm');
+        $this->createItem($farm, 'MEDIUM-AVAILABLE', 120, 'Medium');
+        $this->createItem($farm, 'LARGE-AVAILABLE', 45, 'Large');
+
+        $response = $this->ask($customer, 'Which egg size has the most available stock?');
+
+        $response->assertOk();
+        $assistant = $this->assistantMessage($response->json());
+        $this->assertSame('price_monitoring', $assistant['intent']);
+        $this->assertStringContainsString('The most available size is Medium with 120 eggs', $assistant['content']);
+    }
+
+    public function test_low_stock_guidance_question_is_answered_not_treated_as_action(): void
+    {
+        $owner = User::factory()->owner()->create();
+        $farm = $this->createFarm($owner, 'Advice Farm');
+        $this->createItem($farm, 'LOW-STOCK-AI', 12);
+
+        $response = $this->ask($owner, 'What should I do about low stock risks?');
+
+        $response->assertOk();
+        $assistant = $this->assistantMessage($response->json());
+        $this->assertSame('low_stock', $assistant['intent']);
+        $this->assertStringContainsString('I found 1 low-stock SKU', $assistant['content']);
+        $this->assertDatabaseCount('ai_chat_action_drafts', 0);
+    }
+
     public function test_owner_only_receives_owned_inventory_scope(): void
     {
         $owner = User::factory()->owner()->create();
@@ -154,6 +198,49 @@ class AiChatFeatureTest extends TestCase
         $this->assertStringContainsString('AI service is currently unavailable', $assistant['content']);
     }
 
+    public function test_openai_prompt_receives_history_and_server_prepared_direct_answer(): void
+    {
+        config(['services.openai.key' => 'test-key']);
+        $captured = null;
+        Http::fake(function ($request) use (&$captured) {
+            $captured = $request->data();
+
+            return Http::response([
+                'choices' => [
+                    ['message' => ['content' => 'The most available size is Medium with 120 eggs.']],
+                ],
+            ]);
+        });
+
+        $owner = User::factory()->owner()->create();
+        $customer = User::factory()->customer()->create();
+        $farm = $this->createFarm($owner, 'Prompt Farm');
+        $this->createItem($farm, 'PROMPT-MEDIUM', 120, 'Medium');
+
+        $sessionId = $this->actingAs($customer)
+            ->postJson(route('ai-chat.sessions.store'))
+            ->assertCreated()
+            ->json('session.id');
+
+        $this->actingAs($customer)
+            ->postJson(route('ai-chat.sessions.messages.store', ['session' => $sessionId]), [
+                'message' => 'hello',
+            ])
+            ->assertOk();
+
+        $this->actingAs($customer)
+            ->postJson(route('ai-chat.sessions.messages.store', ['session' => $sessionId]), [
+                'message' => 'Which egg size has the most available stock?',
+            ])
+            ->assertOk();
+
+        $this->assertIsArray($captured);
+        $contents = collect($captured['messages'] ?? [])->pluck('content')->implode("\n---\n");
+        $this->assertStringContainsString('hello', $contents);
+        $this->assertStringContainsString('Server-prepared direct answer', $contents);
+        $this->assertStringContainsString('The most available size is Medium with 120 eggs', $contents);
+    }
+
     private function ask(User $user, string $message)
     {
         $sessionId = $this->actingAs($user)
@@ -194,13 +281,13 @@ class AiChatFeatureTest extends TestCase
         ]);
     }
 
-    private function createItem(Farm $farm, string $itemCode, int $stock): EggItem
+    private function createItem(Farm $farm, string $itemCode, int $stock, string $sizeClass = 'Large'): EggItem
     {
         $item = EggItem::query()->create([
             'farm_id' => $farm->id,
             'item_code' => $itemCode,
             'egg_type' => 'Chicken Egg',
-            'size_class' => 'Large',
+            'size_class' => $sizeClass,
             'unit_cost' => 7.50,
             'selling_price' => 9.00,
             'reorder_level' => 45,
