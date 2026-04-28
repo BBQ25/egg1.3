@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\Admin\DeviceManagementController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\FarmMapController;
@@ -101,6 +102,31 @@ $registerRoutes = static function (string $prefix = '', bool $withNames = false)
     $dashboardDataRoute = Route::middleware(['auth', 'geofence'])->get($uri('/dashboard/data'), [DashboardController::class, 'data']);
     if ($withNames) {
         $dashboardDataRoute->name('dashboard.data');
+    }
+
+    $aiChatBootstrapRoute = Route::middleware(['auth', 'geofence'])->get($uri('/ai-chat/bootstrap'), [AiChatController::class, 'bootstrap']);
+    if ($withNames) {
+        $aiChatBootstrapRoute->name('ai-chat.bootstrap');
+    }
+
+    $aiChatSessionsRoute = Route::middleware(['auth', 'geofence'])->get($uri('/ai-chat/sessions'), [AiChatController::class, 'sessions']);
+    if ($withNames) {
+        $aiChatSessionsRoute->name('ai-chat.sessions.index');
+    }
+
+    $aiChatSessionStoreRoute = Route::middleware(['auth', 'geofence'])->post($uri('/ai-chat/sessions'), [AiChatController::class, 'storeSession']);
+    if ($withNames) {
+        $aiChatSessionStoreRoute->name('ai-chat.sessions.store');
+    }
+
+    $aiChatMessagesRoute = Route::middleware(['auth', 'geofence'])->get($uri('/ai-chat/sessions/{session}/messages'), [AiChatController::class, 'messages']);
+    if ($withNames) {
+        $aiChatMessagesRoute->name('ai-chat.sessions.messages.index');
+    }
+
+    $aiChatMessageStoreRoute = Route::middleware(['auth', 'geofence'])->post($uri('/ai-chat/sessions/{session}/messages'), [AiChatController::class, 'storeMessage']);
+    if ($withNames) {
+        $aiChatMessageStoreRoute->name('ai-chat.sessions.messages.store');
     }
 
     $guidesRoute = Route::middleware(['auth', 'geofence'])->get($uri('/guides'), [GuideCenterController::class, 'index']);

@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="{{ $sneatAssetsBase }}/css/brand.css" />
   <link rel="stylesheet" href="{{ $sneatAssetsBase }}/vendor/libs/apex-charts/apex-charts.css" />
   @include('partials.responsive-shell-styles')
-  @vite(['resources/css/dashboard-network.css', 'resources/js/dashboard-network.js'])
+  @vite(['resources/css/dashboard-network.css', 'resources/js/dashboard-network.js', 'resources/css/ai-chat-widget.css', 'resources/js/ai-chat-widget.js'])
 </head>
 
 <body class="nms-body-root">
@@ -160,6 +160,8 @@
       </main>
     </div>
   </div>
+
+  @include('partials.ai-chat-widget')
 
   <script src="{{ $sneatAssetsBase }}/vendor/libs/apex-charts/apexcharts.js"></script>
   {!! \App\Support\MenuVisibility::inlineScript() !!}

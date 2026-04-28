@@ -76,4 +76,10 @@ return [
         'cache_seconds' => (int) env('REVERSE_GEOCODING_CACHE_SECONDS', 86400),
     ],
 
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+        'chat_model' => env('OPENAI_CHAT_MODEL', 'gpt-4o-mini'),
+        'timeout' => (int) env('OPENAI_CHAT_TIMEOUT', 25),
+    ],
+
 ];

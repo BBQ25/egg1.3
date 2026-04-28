@@ -80,6 +80,7 @@
   @stack('styles')
   <link rel="stylesheet" href="{{ $sneatAssetsBase }}/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
   @include('partials.responsive-shell-styles')
+  @vite(['resources/css/ai-chat-widget.css', 'resources/js/ai-chat-widget.js'])
   <style>
     .app-shell-icon {
       display: inline-block;
@@ -382,6 +383,8 @@
     <div class="layout-overlay layout-menu-toggle"></div>
     <div class="drag-target"></div>
   </div>
+
+  @include('partials.ai-chat-widget')
 
   <script src="{{ $sneatAssetsBase }}/vendor/libs/jquery/jquery.js"></script>
   <script src="{{ $sneatAssetsBase }}/vendor/libs/popper/popper.js"></script>

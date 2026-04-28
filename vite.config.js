@@ -8,8 +8,10 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/css/dashboard-network.css',
+                'resources/css/ai-chat-widget.css',
                 'resources/js/app.js',
                 'resources/js/dashboard-network.js',
+                'resources/js/ai-chat-widget.js',
                 'resources/js/egg-record-explorer-live.js',
                 'resources/js/pwa-register.js',
             ],
