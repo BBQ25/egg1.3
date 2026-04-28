@@ -340,6 +340,8 @@ class AdminFarmManagementTest extends TestCase
         $mapResponse->assertSee('Map Guide');
         $mapResponse->assertSee('Pin Farm Coordinates');
         $mapResponse->assertSee('create_location_picker_map');
+        $mapResponse->assertSee('farm-map-row-action-btn');
+        $mapResponse->assertSee('farm-map-action-label');
 
         $payload = $mapResponse->viewData('farmLocationsMapPayload');
         $this->assertIsArray($payload);

@@ -27,7 +27,7 @@
         </p>
       </div>
       <div class="text-lg-end">
-        <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+        <div class="d-flex flex-wrap justify-content-lg-end gap-2 farm-map-toolbar">
           @include('admin.partials.map-tour', [
             'tourId' => 'farm-management-tour',
             'tourTitle' => 'Farm & Map Guide',
@@ -238,14 +238,14 @@
                 </td>
                 <td class="text-end">
                   @if ($requestRow->status === 'PENDING')
-                    <div class="d-flex flex-column align-items-end gap-2">
+                    <div class="farm-map-request-actions">
                       <form method="POST" action="{{ route('admin.maps.farm-requests.approve', $requestRow) }}">
                         @csrf
-                        <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        <button type="submit" class="btn btn-sm btn-success farm-map-request-action-btn">Approve</button>
                       </form>
                       <form method="POST" action="{{ route('admin.maps.farm-requests.reject', $requestRow) }}">
                         @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger farm-map-request-action-btn">Reject</button>
                       </form>
                     </div>
                   @else
@@ -331,10 +331,10 @@
                   @endif
                 </td>
                 <td class="text-end">
-                  <div class="admin-row-actions justify-content-end">
+                  <div class="admin-row-actions justify-content-end farm-map-row-actions">
                     <button
                       type="button"
-                      class="btn btn-sm btn-icon btn-outline-primary admin-row-action-btn js-edit-farm"
+                      class="btn btn-sm btn-outline-primary admin-row-action-btn farm-map-row-action-btn js-edit-farm"
                       aria-label="Edit farm {{ $farm->farm_name }}"
                       data-action-label="Edit"
                       data-farm-id="{{ $farm->id }}"
@@ -348,15 +348,17 @@
                       data-latitude="{{ $farm->latitude }}"
                       data-longitude="{{ $farm->longitude }}">
                       <i class="bx bx-edit-alt"></i>
+                      <span class="farm-map-action-label">Edit</span>
                     </button>
                     <button
                       type="button"
-                      class="btn btn-sm btn-icon btn-outline-danger admin-row-action-btn js-delete-farm"
+                      class="btn btn-sm btn-outline-danger admin-row-action-btn farm-map-row-action-btn js-delete-farm"
                       aria-label="Delete farm {{ $farm->farm_name }}"
                       data-action-label="Delete"
                       data-farm-id="{{ $farm->id }}"
                       data-farm-name="{{ $farm->farm_name }}">
                       <i class="bx bx-trash"></i>
+                      <span class="farm-map-action-label">Delete</span>
                     </button>
                   </div>
                 </td>
