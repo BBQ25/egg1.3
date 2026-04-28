@@ -3,7 +3,11 @@
 @section('title', 'APEWSD - Farm & Map Management')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('sneat/assets/css/farm-map-admin.css') }}" />
+  @php
+    $farmMapAdminCssPath = public_path('sneat/assets/css/farm-map-admin.css');
+    $farmMapAdminCssVersion = is_file($farmMapAdminCssPath) ? filemtime($farmMapAdminCssPath) : '1';
+  @endphp
+  <link rel="stylesheet" href="{{ asset('sneat/assets/css/farm-map-admin.css') }}?v={{ $farmMapAdminCssVersion }}" />
 @endpush
 
 @section('content')
@@ -183,7 +187,7 @@
               <th>Coordinates</th>
               <th>Geofence</th>
               <th>Status</th>
-              <th class="text-end">Actions</th>
+              <th class="text-end farm-map-actions-column">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -236,7 +240,7 @@
                     <div class="small text-body-secondary mt-1">{{ $requestRow->admin_notes }}</div>
                   @endif
                 </td>
-                <td class="text-end">
+                <td class="text-end farm-map-actions-column">
                   @if ($requestRow->status === 'PENDING')
                     <div class="farm-map-request-actions">
                       <form method="POST" action="{{ route('admin.maps.farm-requests.approve', $requestRow) }}">
@@ -284,7 +288,7 @@
               <th>Location</th>
               <th>Coordinates</th>
               <th>Status</th>
-              <th class="text-end">Actions</th>
+              <th class="text-end farm-map-actions-column">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -330,13 +334,12 @@
                     <span class="farm-map-status-chip" style="--farm-map-chip-color: #8592a3;">Inactive</span>
                   @endif
                 </td>
-                <td class="text-end">
+                <td class="text-end farm-map-actions-column">
                   <div class="admin-row-actions justify-content-end farm-map-row-actions">
                     <button
                       type="button"
-                      class="btn btn-sm btn-outline-primary admin-row-action-btn farm-map-row-action-btn js-edit-farm"
+                      class="btn btn-sm btn-outline-primary farm-map-row-action-btn js-edit-farm"
                       aria-label="Edit farm {{ $farm->farm_name }}"
-                      data-action-label="Edit"
                       data-farm-id="{{ $farm->id }}"
                       data-farm-name="{{ $farm->farm_name }}"
                       data-owner-user-id="{{ $farm->owner_user_id }}"
@@ -352,9 +355,8 @@
                     </button>
                     <button
                       type="button"
-                      class="btn btn-sm btn-outline-danger admin-row-action-btn farm-map-row-action-btn js-delete-farm"
+                      class="btn btn-sm btn-outline-danger farm-map-row-action-btn js-delete-farm"
                       aria-label="Delete farm {{ $farm->farm_name }}"
-                      data-action-label="Delete"
                       data-farm-id="{{ $farm->id }}"
                       data-farm-name="{{ $farm->farm_name }}">
                       <i class="bx bx-trash"></i>

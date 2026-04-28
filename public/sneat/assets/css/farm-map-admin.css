@@ -115,22 +115,27 @@
   min-width: 5.75rem;
 }
 
+.farm-map-actions-column {
+  width: 13rem;
+  min-width: 13rem;
+}
+
 .farm-map-row-actions {
   flex-wrap: nowrap;
+  justify-content: flex-end;
 }
 
 .farm-map-row-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: auto;
-  min-width: 5.25rem;
+  min-width: 5.5rem;
   height: 2.15rem;
   gap: 0.35rem;
   padding: 0 0.65rem;
   white-space: nowrap;
-}
-
-.farm-map-row-action-btn::before,
-.farm-map-row-action-btn::after {
-  display: none;
+  border-radius: 0.45rem;
 }
 
 .farm-map-row-action-btn i {
@@ -237,6 +242,7 @@
 
   .farm-map-row-actions {
     justify-content: flex-start !important;
+    flex-wrap: wrap;
   }
 
   .farm-map-row-action-btn {
