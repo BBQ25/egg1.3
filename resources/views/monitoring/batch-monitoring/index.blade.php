@@ -44,23 +44,12 @@
 
         return number_format($seconds / $totalEggs, 2) . ' s/egg';
     };
-    $durationLabel = static function ($start, $end): string {
-        if (!$start) {
-            return 'N/A';
+    $closedAtLabel = static function ($status, $end) use ($formatDateTime): string {
+        if ((string) $status !== 'closed') {
+            return 'Not closed';
         }
 
-        if (!$end) {
-            return 'In progress';
-        }
-
-        $minutes = \App\Support\AppTimezone::toAppTime($start)
-            ->diffInMinutes(\App\Support\AppTimezone::toAppTime($end));
-
-        if ($minutes < 1) {
-            return 'Under 1 minute';
-        }
-
-        return $minutes . ' min';
+        return $formatDateTime($end);
     };
     $statusTheme = static function ($status): string {
         return match ((string) $status) {
@@ -177,7 +166,7 @@
     }
 
     .batch-monitor-table {
-      min-width: 82rem;
+      min-width: 92rem;
     }
 
     .batch-monitor-table th,
@@ -186,8 +175,8 @@
     }
 
     .batch-monitor-table td:nth-child(1),
-    .batch-monitor-table td:nth-child(3),
-    .batch-monitor-table td:nth-child(4) {
+    .batch-monitor-table td:nth-child(4),
+    .batch-monitor-table td:nth-child(5) {
       white-space: normal;
       min-width: 12rem;
     }
@@ -363,14 +352,15 @@
                 <thead>
                   <tr>
                     <th>Batch</th>
+                    <th>opened_at_pst</th>
+                    <th>closed_at_pst</th>
                     <th>Status</th>
                     <th>Farm</th>
                     <th>Device</th>
-                    <th>Window</th>
-                    <th>Eggs</th>
-                    <th>Rejects</th>
-                    <th>Average Weight</th>
-                    <th>Total Weight</th>
+                    <th>egg_count</th>
+                    <th>reject_count</th>
+                    <th>total_weight_grams</th>
+                    <th>average_weight_grams</th>
                     <th>Time/Egg</th>
                     <th class="text-end">Action</th>
                   </tr>
@@ -382,6 +372,8 @@
                         <div class="fw-semibold">{{ $batch->batch_code }}</div>
                         <div class="text-body-secondary small">{{ $formatWeight($batch->total_weight_grams) }}</div>
                       </td>
+                      <td>{{ $formatDateTime($batch->started_at) }}</td>
+                      <td>{{ $closedAtLabel($batch->status, $batch->ended_at) }}</td>
                       <td>
                         <span class="badge {{ $statusTheme($batch->status) }}">{{ ucfirst((string) $batch->status) }}</span>
                       </td>
@@ -393,15 +385,10 @@
                         <div>{{ $batch->device_name }}</div>
                         <div class="text-body-secondary small">Serial {{ $batch->device_serial }}</div>
                       </td>
-                      <td>
-                        <div>{{ $formatDateTime($batch->started_at) }}</div>
-                        <div class="text-body-secondary small">to {{ $batch->ended_at ? $formatDateTime($batch->ended_at) : 'In progress' }}</div>
-                        <div class="text-body-secondary small">{{ $durationLabel($batch->started_at, $batch->ended_at) }}</div>
-                      </td>
                       <td>{{ $formatInt($batch->total_eggs) }}</td>
                       <td>{{ $formatInt($batch->reject_count) }}</td>
-                      <td>{{ $formatWeight($batch->avg_weight_grams) }}</td>
                       <td>{{ $formatWeight($batch->total_weight_grams) }}</td>
+                      <td>{{ $formatWeight($batch->avg_weight_grams) }}</td>
                       <td>{{ $timePerEggLabel($batch->started_at, $batch->ended_at, $batch->total_eggs) }}</td>
                       <td class="text-end">
                         <a href="{{ route('monitoring.batches.show', [

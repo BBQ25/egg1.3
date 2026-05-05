@@ -11,6 +11,8 @@ use App\Services\BatchMonitoringService;
 use App\Services\DashboardContextService;
 use App\Support\AppTimezone;
 use App\Support\BatchCodeFormatter;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -114,19 +116,19 @@ class BatchMonitoringController extends Controller
 
             fputcsv($handle, [
                 'batch_code',
+                'opened_at_pst',
+                'closed_at_pst',
+                'status',
+                'egg_count',
+                'reject_count',
+                'total_weight_grams',
+                'average_weight_grams',
                 'farm_name',
                 'device_name',
                 'device_serial',
                 'owner_name',
-                'status',
-                'total_eggs',
-                'reject_count',
-                'avg_weight_grams',
-                'total_weight_grams',
                 'time_per_egg_seconds',
                 'throughput_eggs_per_minute',
-                'started_at',
-                'ended_at',
             ]);
 
             foreach ($rows as $row) {
@@ -137,19 +139,19 @@ class BatchMonitoringController extends Controller
 
                 fputcsv($handle, [
                     $row->batch_code,
+                    $this->formatPstDateTime($row->started_at ?? null),
+                    $this->formatClosedAtPst($row->status ?? null, $row->ended_at ?? null),
+                    $row->status,
+                    (int) $row->total_eggs,
+                    (int) $row->reject_count,
+                    number_format((float) $row->total_weight_grams, 2, '.', ''),
+                    number_format((float) $row->avg_weight_grams, 2, '.', ''),
                     $row->farm_name,
                     $row->device_name,
                     $row->device_serial,
                     $row->owner_name,
-                    $row->status,
-                    (int) $row->total_eggs,
-                    (int) $row->reject_count,
-                    number_format((float) $row->avg_weight_grams, 2, '.', ''),
-                    number_format((float) $row->total_weight_grams, 2, '.', ''),
                     $timePerEgg !== null ? number_format($timePerEgg, 2, '.', '') : null,
                     $throughput !== null ? number_format($throughput, 2, '.', '') : null,
-                    BatchCodeFormatter::formatPhilippineDateTime($row->started_at, 'Y-m-d H:i:s'),
-                    $row->ended_at ? BatchCodeFormatter::formatPhilippineDateTime($row->ended_at, 'Y-m-d H:i:s') : null,
                 ]);
             }
 
@@ -342,5 +344,36 @@ class BatchMonitoringController extends Controller
     private function durationSeconds(mixed $start, mixed $end, bool $useCurrentWhenMissingEnd = true): ?float
     {
         return AppTimezone::secondsBetween($start, $end, $useCurrentWhenMissingEnd);
+    }
+
+    private function formatClosedAtPst(mixed $status, mixed $endedAt): ?string
+    {
+        return (string) $status === BatchMonitoringService::STATUS_CLOSED
+            ? $this->formatPstDateTime($endedAt)
+            : null;
+    }
+
+    private function formatPstDateTime(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if ($value instanceof CarbonInterface) {
+            return CarbonImmutable::instance($value)
+                ->setTimezone(AppTimezone::DEFAULT)
+                ->format('Y-m-d H:i:s');
+        }
+
+        $stringValue = trim((string) $value);
+        if ($stringValue === '') {
+            return null;
+        }
+
+        $dateTime = AppTimezone::hasExplicitTimezone($stringValue)
+            ? CarbonImmutable::parse($stringValue)->setTimezone(AppTimezone::DEFAULT)
+            : CarbonImmutable::parse($stringValue, AppTimezone::current())->setTimezone(AppTimezone::DEFAULT);
+
+        return $dateTime->format('Y-m-d H:i:s');
     }
 }

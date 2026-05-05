@@ -62,6 +62,10 @@ class BatchMonitoringPageTest extends TestCase
         $listResponse->assertOk()
             ->assertSee('BATCH-GROUPED')
             ->assertSee('Total Weight')
+            ->assertSee('opened_at_pst')
+            ->assertSee('closed_at_pst')
+            ->assertSee('egg_count')
+            ->assertSee('reject_count')
             ->assertSee('Time/Egg')
             ->assertSee('3')
             ->assertSee('1');
@@ -123,7 +127,8 @@ class BatchMonitoringPageTest extends TestCase
         $response->assertHeader('content-type', 'text/csv; charset=UTF-8');
 
         $content = $response->streamedContent();
-        $this->assertStringContainsString('batch_code,farm_name,device_name,device_serial,owner_name,status', $content);
+        $this->assertStringContainsString('batch_code,opened_at_pst,closed_at_pst,status,egg_count,reject_count,total_weight_grams,average_weight_grams', $content);
+        $this->assertStringContainsString('farm_name,device_name,device_serial,owner_name', $content);
         $this->assertStringContainsString('time_per_egg_seconds,throughput_eggs_per_minute', $content);
         $this->assertStringContainsString('BATCH-CSV', $content);
         $this->assertStringContainsString('Export Farm', $content);
